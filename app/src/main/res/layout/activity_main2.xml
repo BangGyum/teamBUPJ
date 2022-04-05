@@ -4,32 +4,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:orientation="vertical"
+    android:padding="10sp"
+    android:background="@color/pastelBlue"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/test"
-        android:textColor="@color/testColor"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.389"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.183" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <RadioButton
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            ... 기능 구현 ...
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:background="@color/pastelPink"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/bottomMenuDo"
+            android:textColor="#000000"
+
+            android:backgroundTint="@color/pastelBlue"
+
+        />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:background="@color/pastelPink"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/bottomMenuDo"
+            android:textColor="#000000"
+            android:layout_weight="1"
+            android:backgroundTint="@color/pastelBlue"
+            style="?android:attr/borderlessButtonStyle"
             />
-    </RadioGroup>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bottomMenuCalendar"
+            android:textColor="#000000"
+            android:layout_weight="1"
+            android:backgroundTint="@color/pastelBlue"
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bottomMenuMap"
+            android:textColor="#000000"
+            android:layout_weight="1"
+            android:backgroundTint="@color/pastelBlue"
+            />
 
+    </LinearLayout>
 </LinearLayout>

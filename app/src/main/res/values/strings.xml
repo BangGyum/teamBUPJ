@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">test11</string>
     <string name="test">테스트</string>
+    <string name="teamName">석화</string>
+    <string name="today">오늘</string>
+    <string name="tomorrow">내일</string>
+    <string name="bottomMenuDo">할일</string>
+    <string name="bottomMenuCalendar">캘린더</string>
+    <string name="bottomMenuMap">지도</string>
 </resources>

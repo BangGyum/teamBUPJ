@@ -8,8 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="testColor">#D52D2D</color>
-    <color name="newcolor">#DF7474</color>
-    <color name="kimochi">#03A9F4</color>
-    <color name="choseongyun">#03A9F4</color>
     <color name="purple">#673AB7</color>
+    <color name="pastelPink">#F9F3DF</color>
+    <color name="pastelYellow">#FDFCE5</color>
+    <color name="pastelBlue">#D7E9F7</color>
 </resources>
