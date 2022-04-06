@@ -7,4 +7,5 @@
     <string name="bottomMenuDo">할일</string>
     <string name="bottomMenuCalendar">캘린더</string>
     <string name="bottomMenuMap">지도</string>
+    <string name="check">확인</string>
 </resources>

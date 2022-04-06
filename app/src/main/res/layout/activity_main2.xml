@@ -19,8 +19,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            ... 기능 구현 ...
-
         </LinearLayout>
     </ScrollView>
 
@@ -30,13 +28,20 @@
         android:gravity="right"
         android:background="@color/pastelPink"
         android:orientation="horizontal">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/bottomMenuDo"
-            android:textColor="#000000"
 
-            android:backgroundTint="@color/pastelBlue"
+        <TextView
+            android:id="@+id/tv_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="테스트"
+            android:textSize="40sp"
+            />
+        <Button
+            android:id="@+id/btn_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="로그"
+            />
 
         />
 
@@ -47,6 +52,7 @@
 
         android:background="@color/pastelPink"
         android:orientation="horizontal">
+
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
