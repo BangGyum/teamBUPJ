@@ -2,8 +2,8 @@ package com.banggyum.test;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.naver.maps.geometry.LatLng;
@@ -26,7 +26,7 @@ public class MapsNaverActivity extends Activity implements OnMapReadyCallback {
     }
 
     @Override
-    public void onMapReady(@NonNull @androidx.annotation.NonNull NaverMap naverMap) {
+    public void onMapReady(@NonNull NaverMap naverMap) {
         Marker marker = new Marker();
         marker.setPosition(new LatLng(37.5670135, 126.9783740));
         marker.setMap(naverMap);
