@@ -17,9 +17,8 @@
 
         <!--  네이버 지도 연동 api 키  -->
         <meta-data
-            android:name="com.naver.maps.map.8dvuu6gc91"
+            android:name="com.naver.maps.map.CLIENT_ID"
             android:value="8dvuu6gc91" />
-
         <activity
             android:name=".MapsNaverActivity"
             android:exported="true">
@@ -32,6 +31,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
         </activity>
     </application>
 </manifest>
