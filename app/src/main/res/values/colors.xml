@@ -12,4 +12,7 @@
     <color name="pastelPink">#F9F3DF</color>
     <color name="pastelYellow">#FDFCE5</color>
     <color name="pastelBlue">#D7E9F7</color>
+    <color name="colorPrimary">#009688</color>
+    <color name="colorPrimaryDark">#0E3C38</color>
+    <color name="colorAccent">#A12783</color>
 </resources>
