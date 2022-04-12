@@ -46,20 +46,20 @@ public class MainActivity extends AppCompatActivity
         drawerLayout.addDrawerListener(drawerToggle); // 뱅그르 돌게 만들기
 
         // 액션바에 제목이 자동 표시 되지 않도록
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        title_input = findViewById(R.id.title_input);
-        author_input = findViewById(R.id.author_input);
-        pages_input = findViewById(R.id.pages_input);
-        add_button = findViewById(R.id.add_button);
-        add_button.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                MyDatabaseHelper myDb = new MyDatabaseHelper(MainActivity.this);
-                myDb.addBook(title_input.getText().toString().trim(), author_input.getText().toString().trim(), Integer.parseInt(pages_input.getText().toString().trim()));
-            }
-        });
+//        title_input = findViewById(R.id.title_input);
+//        author_input = findViewById(R.id.author_input);
+//        pages_input = findViewById(R.id.pages_input);
+//        add_button = findViewById(R.id.add_button);
+//        add_button.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View v)
+//            {
+//                MyDatabaseHelper myDb = new MyDatabaseHelper(MainActivity.this);
+//                myDb.addBook(title_input.getText().toString().trim(), author_input.getText().toString().trim(), Integer.parseInt(pages_input.getText().toString().trim()));
+//            }
+//        });
     }
 }

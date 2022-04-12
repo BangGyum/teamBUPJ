@@ -19,6 +19,8 @@
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="8dvuu6gc91" />
+
+<!--        네이버 지도 메인 자바            -->
         <activity
             android:name=".MapsNaverActivity"
             android:exported="true">
@@ -32,11 +34,6 @@
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-
         </activity>
     </application>
 </manifest>
