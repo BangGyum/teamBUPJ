@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">test11</string>
+    <string name="app_name">schedule management program</string>
     <string name="test">테스트</string>
     <string name="teamName">석화</string>
     <string name="today">오늘</string>
@@ -8,4 +8,7 @@
     <string name="bottomMenuCalendar">캘린더</string>
     <string name="bottomMenuMap">지도</string>
     <string name="check">확인</string>
+    <string name="yes">네</string>
+    <string name="no">아니요</string>
+    <string name="location_activation_confirm">지도에 현재 위치를 표시하시겠습니까?</string>
 </resources>
