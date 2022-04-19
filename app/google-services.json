@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "611723202572",
+    "project_id": "teambupj",
+    "storage_bucket": "teambupj.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:611723202572:android:b93bb9875987a04d5c9e29",
+        "android_client_info": {
+          "package_name": "com.banggyum.test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "611723202572-7kc773hmequok9rpblef3snn8fg8d8ac.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.banggyum.test",
+            "certificate_hash": "017aae707eef395aa80fd9901ccee577181f0455"
+          }
+        },
+        {
+          "client_id": "611723202572-5md9tm6timonn9apt034g49qch4i2hpk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjCJYZa-sZNXPodsIgV2wuW3MSSLG_eXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "611723202572-5md9tm6timonn9apt034g49qch4i2hpk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
