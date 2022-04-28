@@ -8,7 +8,12 @@
     <string name="bottomMenuCalendar">캘린더</string>
     <string name="bottomMenuMap">지도</string>
     <string name="check">확인</string>
+
     <string name="yes">네</string>
     <string name="no">아니오</string>
     <string name="location_activation_confirm">지도에 현재 위치를 표시하시겠습니까?</string>
+
+    <string name="content_description_icon">아이콘</string>
+    <string name="format_coord">(%1$.5f, %2$.5f)</string>
+
 </resources>

@@ -8,15 +8,11 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        maven {
-            url 'https://maven.google.com'
-        }
         google()
         mavenCentral()
+        maven { url 'https://maven.google.com' }
         //네이버 지도 연동
-        maven {
-            url 'https://naver.jfrog.io/artifactory/maven/'
-        }
+        maven { url 'https://naver.jfrog.io/artifactory/maven/' }
     }
 }
 rootProject.name = "test11"
