@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment_Calendar">
+<!--    캘린더 레이아웃-->
+<!--    버튼은 구별할려고 만든거 지워도 됨. 이구역은 준혁이-->
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="캘린더"/>
+
+</FrameLayout>
