@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--  네이버 지도 사용을 위한 layout  -->
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
     <FrameLayout
         android:id="@+id/map_fragment"

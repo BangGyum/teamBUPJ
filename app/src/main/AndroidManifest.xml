@@ -9,7 +9,6 @@
 
     <!--이거되면 행복은할듯-->
     <application
-
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -26,13 +25,15 @@
             android:value="8dvuu6gc91" />
 
 <!--        네이버 지도 메인 자바            -->
+
         <activity
-            android:name=".MapsNaverActivity"
+            android:name=".MainActivity"
             android:exported="true">
 
         </activity>
+
         <activity
-            android:name=".MainActivity"
+            android:name=".InsertMapDB"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

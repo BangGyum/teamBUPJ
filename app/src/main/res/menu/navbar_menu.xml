@@ -11,7 +11,7 @@
         android:icon="@drawable/ic_baseline_calendar_month_24"
         android:title="캘린더"/>
     <item
-        android:id="@+id/maps_fragment"
+        android:id="@+id/navmap_fragment"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_map_24"
         android:title="지도"/>

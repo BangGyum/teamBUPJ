@@ -13,8 +13,7 @@
         android:contentDescription="@string/content_description_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_place_black_24dp" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/text"
@@ -26,7 +25,6 @@
         android:textSize="16sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/icon"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/icon"
-        tools:text="6월 21일 친구랑 술약속" />
+        app:layout_constraintStart_toEndOf="@+id/icon"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
