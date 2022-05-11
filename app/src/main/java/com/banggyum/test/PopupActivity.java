@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class PopupActivity extends Activity {
 
-    TextView text1;
+    EditText text1;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,7 +20,7 @@ public class PopupActivity extends Activity {
         setContentView(R.layout.popup_activity);
 
         //UI 객체생성
-        text1 = (TextView)findViewById(R.id.text1);
+        text1 = (EditText)findViewById(R.id.text1);
         //데이터 가져오기
         Intent intent = getIntent();
         String data = intent.getStringExtra("data");

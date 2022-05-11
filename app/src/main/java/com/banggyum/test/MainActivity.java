@@ -182,6 +182,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         map.setLocationTrackingMode(LocationTrackingMode.None);
     }
 
+
     // 뒤로가기 버튼 클릭시 메소드
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
