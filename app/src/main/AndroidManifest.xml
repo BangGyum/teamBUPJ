@@ -41,5 +41,8 @@
             android:exported="true">
 
         </activity>
+        <!-- 팝업 Activity -->
+        <activity android:name=".PopupActivity" android:theme="@android:style/Theme.DeviceDefault.Light.Dialog"/>
+
     </application>
 </manifest>
