@@ -9,17 +9,24 @@ import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigation.NavigationView;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.LocationTrackingMode;
@@ -45,19 +52,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .setPositiveButton(R.string.yes, (dialog, whichButton) -> {        //dialog에 네(yes) 버튼 추가
                         Activity activity = getActivity();
                         if (activity != null) {
-                            ((MainActivity)activity).continueLocationTracking(); //클릭시 tracking 모드 활성화
+                            ((MainActivity) activity).continueLocationTracking(); //클릭시 tracking 모드 활성화
                         }
                     })
                     .setNegativeButton(R.string.no, (dialog, whichButton) -> {        //dialog에 아니오(no) 버튼 추가
                         Activity activity = getActivity();
                         if (activity != null) {
-                            ((MainActivity)activity).cancelLocationTracking();  //클릭시 tracking 모드 활성화 취소
+                            ((MainActivity) activity).cancelLocationTracking();  //클릭시 tracking 모드 활성화 취소
                         }
                     })
                     .setOnCancelListener(dialog -> {
                         Activity activity = getActivity();
                         if (activity != null) {
-                            ((MainActivity)activity).cancelLocationTracking();
+                            ((MainActivity) activity).cancelLocationTracking();
                         }
                     })
                     .create();
@@ -85,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             //마커 클릭시 정보창 보여줌
             if (infoWindow.getMarker() != null) {
-                text.setText((String)infoWindow.getMarker().getTag());      //marker.setTag를 통해 일정 내용 보여줌
+                text.setText((String) infoWindow.getMarker().getTag());      //marker.setTag를 통해 일정 내용 보여줌
             } else {    //지도 클릭시 정보창 닫음
                 infoWindow.close();
             }
@@ -107,17 +114,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Nullable
     private Runnable locationActivationCallback;
     private NaverMap map;
-
+    private NavigationView navigationView;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        this.SideMenuBarLayout();//사이드메뉴바 레이아웃
 
         //mapfragment 사용하여 지도를 이용
-        MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.main_frame);
+        MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentById(R.id.main_frame);
         if (mapFragment == null) {
             //location 버튼 활성화, camera 지도의 초기 카메라 위치를 지정합니다. target - 카메라의 좌표 zoom - 카메라의 줌 레벨
             mapFragment = MapFragment.newInstance(new NaverMapOptions().locationButtonEnabled(true).camera(new CameraPosition(
@@ -140,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         getSupportFragmentManager().beginTransaction().add(R.id.main_frame, new Fragment_Schedule()).commit();
         //네비바 안의 아이템 설정
         MapFragment finalMapFragment = mapFragment;
-        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener(){
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @SuppressLint("NonConstantResourceId")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -162,8 +168,39 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mapFragment.getMapAsync(this);
     }
+    //사이드메뉴바 설정 레이아웃
+    public void SideMenuBarLayout() {
 
-    //위치 추적 모드를 run을 통해 실행후 재 실행 방지를 위해 null로 바꿔준다.
+        //toolBar를 통해 App Bar 생성
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        //App Bar의 좌측 영영에 Drawer를 Open 하기 위한 Incon 추가
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_dehaze_24);
+
+        DrawerLayout drawLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawLayout,
+                toolbar,
+                R.string.open,
+                R.string.closed
+        );
+        drawLayout.addDrawerListener(actionBarDrawerToggle);
+    }
+    //이전 버튼 클릭시 Drawer 닫기
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }    //위치 추적 모드를 run을 통해 실행후 재 실행 방지를 위해 null로 바꿔준다.
     private void continueLocationTracking() {
         if (locationActivationCallback != null) {
             locationActivationCallback.run();
