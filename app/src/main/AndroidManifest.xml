@@ -17,11 +17,6 @@
         <activity
             android:name=".testgeocode"
             android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <!-- 네이버 지도 연동 api 키 -->
         <meta-data
@@ -32,6 +27,11 @@
             android:name=".MainActivity"
             android:exported="true">
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".InsertMapDB"
