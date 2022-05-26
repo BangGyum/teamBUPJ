@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.banggyum.test">
-
     <!-- 현재 위치를 가져오기위한 권한 설정 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -15,7 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="p">
+        <activity
+            android:name=".testgeocode"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <!-- 네이버 지도 연동 api 키 -->
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
@@ -24,19 +31,18 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".InsertMapDB"
-            android:exported="true" />
+            android:exported="true" >
+
+        </activity>
 
         <!-- 팝업 Activity -->
-        <activity android:name=".PopupActivity" android:theme="@android:style/Theme.DeviceDefault.Light.Dialog"/>
-
+        <activity
+            android:name=".PopupActivity"
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
     </application>
 
 </manifest>
