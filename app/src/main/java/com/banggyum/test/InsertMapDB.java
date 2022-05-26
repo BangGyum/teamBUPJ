@@ -2,12 +2,12 @@ package com.banggyum.test;
 
 
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.naver.maps.geometry.LatLng;
@@ -20,6 +20,9 @@ import com.naver.maps.map.NaverMapOptions;
 import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;    //권한 코드 번호
@@ -34,12 +37,8 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_fragment);
 
-        //화면 맨 위에 뒤로가기 버튼 생성
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-        }
+        Button btnOpen = findViewById(R.id.btn_open);
+        btnOpen.setOnClickListener(btnListener);
 
         //mapfragment 사용하여 지도를 이용
         MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.map_fragment);
@@ -58,14 +57,28 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
-    // 뒤로가기 버튼 클릭시 메소드
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {        //R.id.home = 뒤로가기
-            finish();
-            return true;
+    View.OnClickListener btnListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            clickOpenBottomSheetFragment();
         }
-        return super.onOptionsItemSelected(item);
+    };
+
+    private void clickOpenBottomSheetFragment() {
+        List<ItemObject> list = new ArrayList<>();
+        list.add(new ItemObject("Item1"));
+        list.add(new ItemObject("Item2"));
+        list.add(new ItemObject("Item3"));
+        list.add(new ItemObject("Item4"));
+        list.add(new ItemObject("Item5"));
+
+        MyBottomSheetFragment myBottomSheetFragment = new MyBottomSheetFragment(list, new IClickListener() {
+            @Override
+            public void clickItem(ItemObject itemObject) {
+                Toast.makeText(InsertMapDB.this, itemObject.getName(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        myBottomSheetFragment.show(getSupportFragmentManager(), myBottomSheetFragment.getTag());
     }
 
     //핸드폰의 위치 추적 권한이 활성화 되어있는지 판단하여 비활성화 면 권한을 얻기위한 코드
