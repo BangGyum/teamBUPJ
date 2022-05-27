@@ -38,14 +38,10 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         rcvData.setLayoutManager(linearLayoutManager);
 
-        ItemAdapter itemAdapter = new ItemAdapter(mListItems, new IClickListener() {
-            @Override
-            public void clickItem(ItemObject itemObject) {
-                iClickListener.clickItem(itemObject);
-            }
-        });
+        ItemAdapter itemAdapter = new ItemAdapter(mListItems, itemObject -> iClickListener.clickItem(itemObject));
 
         rcvData.setAdapter(itemAdapter);
+
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         rcvData.addItemDecoration(itemDecoration);
 

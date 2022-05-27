@@ -1,7 +1,9 @@
 package com.banggyum.test;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -21,10 +23,18 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback {
+    private String[] array;
+    private String[] address;
+    private String[] roadAddress;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;    //권한 코드 번호
     private MapView mapView;
     private FusedLocationSource locationSource;
@@ -60,17 +70,85 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
     View.OnClickListener btnListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            clickOpenBottomSheetFragment();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    requestNaverLocal();
+                    clickOpenBottomSheetFragment();
+                }
+            }).start();
         }
     };
 
+    @SuppressLint("SetTextI18n")
+    public void requestNaverLocal(){
+        try{
+            BufferedReader br;
+            HttpURLConnection conn;
+            StringBuilder sb = new StringBuilder();
+            int display = 5;
+            String sc = "그린팩토리";
+            String addr = URLEncoder.encode(sc, "UTF-8");
+
+            String apiURL = "https://openapi.naver.com/v1/search/local.json?query=" + addr + "&display=" + display + "&"; //
+            URL url = new URL(apiURL);
+            conn = (HttpURLConnection) url.openConnection();
+
+            if(conn != null) {
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(5000);
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("X-Naver-Client-Id", "XMHmR1mRBBOwIr6_QuDz");
+                conn.setRequestProperty("X-Naver-Client-Secret", "uemXpwpf0D");
+                conn.setDoInput(true);
+
+                int responseCode = conn.getResponseCode();
+
+                if(responseCode == 200){
+                    br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                }else{
+                    br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                }
+
+                String line = null;
+
+                while((line = br.readLine()) != null){
+                    sb.append(line + "\n");
+                }
+
+                String data = sb.toString();
+
+                Log.v("결과: ", data);
+
+                array = data.split("\"");
+                address = new String[display];
+                roadAddress = new String[display];
+
+                int k = 0;
+                for (int i = 0; i < array.length; i++) {
+                    if (array[i].equals("address"))
+                        address[k] = array[i + 2];
+                    if (array[i].equals("roadAddress")){
+                        roadAddress[k] = array[i + 2];
+                        k++;
+                    }
+                }
+
+                br.close();
+                conn.disconnect();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private void clickOpenBottomSheetFragment() {
         List<ItemObject> list = new ArrayList<>();
-        list.add(new ItemObject("Item1"));
-        list.add(new ItemObject("Item2"));
-        list.add(new ItemObject("Item3"));
-        list.add(new ItemObject("Item4"));
-        list.add(new ItemObject("Item5"));
+
+        for (int i =0; i< address.length; i++){
+            Log.v("주소: ", address[i]);
+            list.add(new ItemObject(address[i]));
+        }
 
         MyBottomSheetFragment myBottomSheetFragment = new MyBottomSheetFragment(list, new IClickListener() {
             @Override
@@ -78,6 +156,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                 Toast.makeText(InsertMapDB.this, itemObject.getName(), Toast.LENGTH_SHORT).show();
             }
         });
+
         myBottomSheetFragment.show(getSupportFragmentManager(), myBottomSheetFragment.getTag());
     }
 

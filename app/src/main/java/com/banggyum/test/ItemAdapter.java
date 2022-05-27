@@ -29,7 +29,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        final ItemObject itemObject = mListItemms.get(position);
+        ItemObject itemObject = mListItemms.get(position);
         if(itemObject == null){
             return;
         }
