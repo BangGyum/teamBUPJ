@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -17,12 +20,23 @@ import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class PopupActivity extends Activity {
 
     EditText text1;
+    LinearLayout li;
+    Button alarmBtn ;
     Calendar myCalendar = Calendar.getInstance();
+    EditText alarmEdit[];
+    /*String alarmIds[] = new String []{"R.id.alarm1","R.id.alarm2","R.id.alarm3","R.id.alarm4","R.id.alarm5"
+                                        ,"R.id.alarm6","R.id.alarm7","R.id.alarm8","R.id.alarm9","R.id.alarm10","R.id.alarm11"
+                                        ,"R.id.alarm12","R.id.alarm13","R.id.alarm14","R.id.alarm15","R.id.alarm16"
+                                        ,"R.id.alarm17","R.id.alarm18","R.id.alarm19"};
+*/
+
+    int btn_count=0; //버튼 생성에
     //데이트피커다이얼로그
     DatePickerDialog.OnDateSetListener myDatePicker = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -39,18 +53,22 @@ public class PopupActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.popup_activity);
 
+        li = findViewById(R.id.dynamicLayout);
+        alarmBtn = findViewById(R.id.alarmBtn);
+
         //UI 객체생성
-        text1 = (EditText) findViewById(R.id.text1);
-        //데이터 가져오기
-        Intent intent = getIntent();
-        String data = intent.getStringExtra("data");
-        text1.setText(data);
-        TextView data_view = (TextView) findViewById(R.id.date_view);
-        data_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new DatePickerDialog(PopupActivity.this, myDatePicker, myCalendar.get(
-                        Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        text1 = (EditText) findViewById(R.id.text1);
+        //데이터 가져오
+
+                                Intent intent = getIntent();
+                        String data = intent.getStringExtra("data");
+                        text1.setText(data);
+                        TextView data_view = (TextView) findViewById(R.id.date_view);
+                        data_view.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                new DatePickerDialog(PopupActivity.this, myDatePicker, myCalendar.get(
+                                        Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
@@ -80,6 +98,52 @@ public class PopupActivity extends Activity {
                 mTimePicker.show();
             }
         });
+
+        alarmBtn.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                createTextView("ㅇ");
+            }
+        });
+    }
+    public void createTextView(String text){
+        //텍스트뷰 객체 생성
+        //TextView textViewNm = new TextView(getApplicationContext());
+        Button btn = new Button(getApplicationContext());
+        EditText editNm = new EditText(getApplicationContext());
+
+        // 텍스트뷰에 들어갈 문자설정
+        //textViewNm.setText("텍스트생성");
+        btn.setText(text);
+
+        //텍스트뷰 글자크기 설정
+        //textViewNm.setTextSize(12);
+        //textViewNm.setId(0);
+        editNm.setTextSize(9);
+        //String a= alarmIds[btn_count];
+        editNm.setId(R.id.alarm1);
+
+        // 레이아웃설정
+        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT
+                ,LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        param.leftMargin=30;
+
+        //설정한 레이아웃 텍스트뷰에 적용
+        //textViewNm.setLayoutParams(param);
+        btn.setLayoutParams(param);
+        editNm.setLayoutParams(param);
+        btn_count++;
+
+
+        //텍스트뷰 백그라운드 색상 설정
+        //textViewNm.setBackgroundColor(Color.rgb(174,234,174));
+
+        //li.addView(textViewNm);
+        //li.addView(btn);
+        li.addView(editNm);
+
+        //li.setOrientation(LinearLayout.VERTICAL);
     }
     //확인 버튼 클릭
     public void mOnClose(View v){
@@ -102,11 +166,11 @@ public class PopupActivity extends Activity {
         return;
     }
 // 데이트피커 다이얼로그 뜨게만들기
-private void updateLabel() {
-    String myFormat = "yyyy/MM/dd"; //출력형식
-    SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
+    private void updateLabel() {
+        String myFormat = "yyyy/MM/dd"; //출력형식
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
 
-    TextView date_view = (TextView) findViewById(R.id.date_view);
-    date_view.setText(sdf.format(myCalendar.getTime()));
+        TextView date_view = (TextView) findViewById(R.id.date_view);
+        date_view.setText(sdf.format(myCalendar.getTime()));
     }
 }

@@ -14,11 +14,19 @@
       },
       "oauth_client": [
         {
-          "client_id": "611723202572-7kc773hmequok9rpblef3snn8fg8d8ac.apps.googleusercontent.com",
+          "client_id": "611723202572-c3r9vfhr6a29v2s50gh6u3bkaohv5rob.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.banggyum.test",
-            "certificate_hash": "017aae707eef395aa80fd9901ccee577181f0455"
+            "certificate_hash": "31b1932acefcd006f8653ae5994392e6270b45f9"
+          }
+        },
+        {
+          "client_id": "611723202572-t04jd63stds11kqhr8cusngfrvjrr5cc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.banggyum.test",
+            "certificate_hash": "12b2a3ddbb62f163dd6629e2ac6e5d3204e80806"
           }
         },
         {

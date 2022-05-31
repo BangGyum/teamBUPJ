@@ -5,11 +5,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.naver.maps.geometry.LatLng;
@@ -33,6 +36,11 @@ import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    String userEmail, userName, userPhotoUrl;
+    ImageView userImageView;
+
+
 
     //location 버튼을 클릭시 현재위치를 찾을지에 대한 다이아로그를 보여주기 위한 클래스
     public static class LocationConfirmDialogFragment extends DialogFragment {
@@ -113,8 +121,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        userImageView =  findViewById(R.id.userImage);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //shared에 저장되어있는 값 가져오기
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
+        userEmail = preferences.getString("useremail", "");
+        userName = preferences.getString("username", "");
+        userPhotoUrl = preferences.getString("userPhoto","");
+
+        //tvUserName.setText(userName);
+        //tvUserEmail.setText(userEmail);
+
+        Glide.with(this).load(userPhotoUrl).into(userImageView); //url을 통해 이미지 다운?
+
 
         //mapfragment 사용하여 지도를 이용
         MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.main_frame);
