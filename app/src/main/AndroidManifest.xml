@@ -18,6 +18,10 @@
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@menu/drawer_menu" />
+        <activity
+            android:name=".testgeocode"
+            android:exported="true" >
+        </activity>
         <!-- 네이버 지도 연동 api 키 -->
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"

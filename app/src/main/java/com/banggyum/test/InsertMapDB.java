@@ -2,18 +2,15 @@ package com.banggyum.test;
 
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
@@ -26,38 +23,18 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
 public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback {
-
-    //location 버튼을 클릭시 현재위치를 찾을지에 대한 다이아로그를 보여주기 위한 클래스
-    public static class LocationConfirmDialogFragment extends DialogFragment {
-        @SuppressLint("DialogFragmentCallbacksDetector")
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            return new AlertDialog.Builder(requireActivity())
-                    .setTitle(R.string.location_activation_confirm)                    //dialog에 보여질 메세지
-                    .setPositiveButton(R.string.yes, (dialog, whichButton) -> {        //dialog에 네(yes) 버튼 추가
-                        Activity activity = getActivity();
-                        if (activity != null) {
-                            ((InsertMapDB)activity).continueLocationTracking(); //클릭시 tracking 모드 활성화
-                        }
-                    })
-                    .setNegativeButton(R.string.no, (dialog, whichButton) -> {        //dialog에 아니오(no) 버튼 추가
-                        Activity activity = getActivity();
-                        if (activity != null) {
-                            ((InsertMapDB)activity).cancelLocationTracking();  //클릭시 tracking 모드 활성화 취소
-                        }
-                    })
-                    .setOnCancelListener(dialog -> {
-                        Activity activity = getActivity();
-                        if (activity != null) {
-                            ((InsertMapDB)activity).cancelLocationTracking();
-                        }
-                    })
-                    .create();
-        }
-    }
-
+    private String[] array;
+    private String[] address;
+    private String[] roadAddress;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;    //권한 코드 번호
     private MapView mapView;
     private FusedLocationSource locationSource;
@@ -70,12 +47,8 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_fragment);
 
-        //화면 맨 위에 뒤로가기 버튼 생성
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(true);
-        }
+        Button btnOpen = findViewById(R.id.btn_open);
+        btnOpen.setOnClickListener(btnListener);
 
         //mapfragment 사용하여 지도를 이용
         MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.map_fragment);
@@ -87,39 +60,104 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
             getSupportFragmentManager().beginTransaction().add(R.id.map_fragment, mapFragment).commit();
         }
 
+        mapFragment.getMapAsync(this);
+
         //현재위치 사용을 위한 생성자 권한요청코드(LOCATION_PERMISSION_REQUEST_CODE) = 100
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
-        //setActivationHook 위치 기능의 활성화에 대한 훅 객체를 지정합니다.
-        locationSource.setActivationHook(continueCallback -> {
-            locationActivationCallback = continueCallback;
-            new InsertMapDB.LocationConfirmDialogFragment().show(getSupportFragmentManager(), null);
+
+    }
+
+    View.OnClickListener btnListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    requestNaverLocal();
+                    clickOpenBottomSheetFragment();
+                }
+            }).start();
+        }
+    };
+
+    @SuppressLint("SetTextI18n")
+    public void requestNaverLocal(){
+        try{
+            BufferedReader br;
+            HttpURLConnection conn;
+            StringBuilder sb = new StringBuilder();
+            int display = 5;
+            String sc = "그린팩토리";
+            String addr = URLEncoder.encode(sc, "UTF-8");
+
+            String apiURL = "https://openapi.naver.com/v1/search/local.json?query=" + addr + "&display=" + display + "&"; //
+            URL url = new URL(apiURL);
+            conn = (HttpURLConnection) url.openConnection();
+
+            if(conn != null) {
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(5000);
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("X-Naver-Client-Id", "XMHmR1mRBBOwIr6_QuDz");
+                conn.setRequestProperty("X-Naver-Client-Secret", "uemXpwpf0D");
+                conn.setDoInput(true);
+
+                int responseCode = conn.getResponseCode();
+
+                if(responseCode == 200){
+                    br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                }else{
+                    br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                }
+
+                String line = null;
+
+                while((line = br.readLine()) != null){
+                    sb.append(line + "\n");
+                }
+
+                String data = sb.toString();
+
+                Log.v("결과: ", data);
+
+                array = data.split("\"");
+                address = new String[display];
+                roadAddress = new String[display];
+
+                int k = 0;
+                for (int i = 0; i < array.length; i++) {
+                    if (array[i].equals("address"))
+                        address[k] = array[i + 2];
+                    if (array[i].equals("roadAddress")){
+                        roadAddress[k] = array[i + 2];
+                        k++;
+                    }
+                }
+
+                br.close();
+                conn.disconnect();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void clickOpenBottomSheetFragment() {
+        List<ItemObject> list = new ArrayList<>();
+
+        for (int i =0; i< address.length; i++){
+            Log.v("주소: ", address[i]);
+            list.add(new ItemObject(address[i]));
+        }
+
+        MyBottomSheetFragment myBottomSheetFragment = new MyBottomSheetFragment(list, new IClickListener() {
+            @Override
+            public void clickItem(ItemObject itemObject) {
+                Toast.makeText(InsertMapDB.this, itemObject.getName(), Toast.LENGTH_SHORT).show();
+            }
         });
 
-        mapFragment.getMapAsync(this);
-    }
-
-    //위치 추적 모드를 run을 통해 실행후 재 실행 방지를 위해 null로 바꿔준다.
-    private void continueLocationTracking() {
-        if (locationActivationCallback != null) {
-            locationActivationCallback.run();
-            locationActivationCallback = null;
-            locationSource.setActivationHook(null);
-        }
-    }
-
-    //위치 추적 모드를 지정 none, follow, face
-    private void cancelLocationTracking() {
-        map.setLocationTrackingMode(LocationTrackingMode.None);
-    }
-
-    // 뒤로가기 버튼 클릭시 메소드
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {        //R.id.home = 뒤로가기
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        myBottomSheetFragment.show(getSupportFragmentManager(), myBottomSheetFragment.getTag());
     }
 
     //핸드폰의 위치 추적 권한이 활성화 되어있는지 판단하여 비활성화 면 권한을 얻기위한 코드
@@ -148,6 +186,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
             LocationTrackingMode mode = naverMap.getLocationTrackingMode();
             locationSource.setCompassEnabled(mode == LocationTrackingMode.Follow || mode == LocationTrackingMode.Face);
         });
+        naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
 
         Marker marker = new Marker();
         naverMap.setOnMapClickListener((point, coord) -> {
@@ -157,7 +196,6 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
             lng = coord.longitude;
             Toast.makeText(InsertMapDB.this, "위도" + lat + "경도" + lng, Toast.LENGTH_SHORT).show();
         });
-
     }
 }
 
