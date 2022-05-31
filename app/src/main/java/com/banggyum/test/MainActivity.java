@@ -16,13 +16,17 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigation.NavigationView;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.LocationTrackingMode;
@@ -40,37 +44,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     String userEmail, userName, userPhotoUrl;
     ImageView userImageView;
 
-
-
-    //location 버튼을 클릭시 현재위치를 찾을지에 대한 다이아로그를 보여주기 위한 클래스
-    public static class LocationConfirmDialogFragment extends DialogFragment {
-        @SuppressLint("DialogFragmentCallbacksDetector")
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            return new AlertDialog.Builder(requireActivity())
-                    .setTitle(R.string.location_activation_confirm)                    //dialog에 보여질 메세지
-                    .setPositiveButton(R.string.yes, (dialog, whichButton) -> {        //dialog에 네(yes) 버튼 추가
-                        Activity activity = getActivity();
-                        if (activity != null) {
-                            ((MainActivity)activity).continueLocationTracking(); //클릭시 tracking 모드 활성화
-                        }
-                    })
-                    .setNegativeButton(R.string.no, (dialog, whichButton) -> {        //dialog에 아니오(no) 버튼 추가
-                        Activity activity = getActivity();
-                        if (activity != null) {
-                            ((MainActivity)activity).cancelLocationTracking();  //클릭시 tracking 모드 활성화 취소
-                        }
-                    })
-                    .setOnCancelListener(dialog -> {
-                        Activity activity = getActivity();
-                        if (activity != null) {
-                            ((MainActivity)activity).cancelLocationTracking();
-                        }
-                    })
-                    .create();
-        }
-    }
 
     //마커에 정보를 표시해주는 창
     private static class InfoWindowAdapter extends InfoWindow.ViewAdapter {
