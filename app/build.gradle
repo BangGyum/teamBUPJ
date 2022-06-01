@@ -17,6 +17,10 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    lintOptions {
+        disable "ResourceType"
+        //id를 숫자로 넣는데 이것을 해주어야 따로 어노테이션 없이 잘돌아감
+    }
 
     buildTypes {
         release {

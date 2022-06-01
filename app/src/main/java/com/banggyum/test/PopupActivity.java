@@ -1,5 +1,6 @@
 package com.banggyum.test;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -35,6 +37,9 @@ public class PopupActivity extends Activity {
                                         ,"R.id.alarm12","R.id.alarm13","R.id.alarm14","R.id.alarm15","R.id.alarm16"
                                         ,"R.id.alarm17","R.id.alarm18","R.id.alarm19"};
 */
+    int alarmIds[] = new int[]{1000023,1000021,1000029,1000027,1000014,1000011,1000019,1000016,1000035,1000022
+                            ,1000024,1000028,1000030,1000012,1000015,1000017,1000020,1000034,1000036};
+
 
     int btn_count=0; //버튼 생성에
     //데이트피커다이얼로그
@@ -47,6 +52,7 @@ public class PopupActivity extends Activity {
             updateLabel();
         }
     };
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //타이틀바 없앨래
@@ -108,42 +114,45 @@ public class PopupActivity extends Activity {
     public void createTextView(String text){
         //텍스트뷰 객체 생성
         //TextView textViewNm = new TextView(getApplicationContext());
-        Button btn = new Button(getApplicationContext());
-        EditText editNm = new EditText(getApplicationContext());
+        if (btn_count < 19){
+            Button btn = new Button(getApplicationContext());
+            EditText editNm = new EditText(getApplicationContext());
 
-        // 텍스트뷰에 들어갈 문자설정
-        //textViewNm.setText("텍스트생성");
-        btn.setText(text);
+            // 텍스트뷰에 들어갈 문자설정
+            //textViewNm.setText("텍스트생성");
+            btn.setText(text);
 
-        //텍스트뷰 글자크기 설정
-        //textViewNm.setTextSize(12);
-        //textViewNm.setId(0);
-        editNm.setTextSize(9);
-        //String a= alarmIds[btn_count];
-        editNm.setId(R.id.alarm1);
+            //텍스트뷰 글자크기 설정
+            //textViewNm.setTextSize(12);
+            //textViewNm.setId(0);
+            editNm.setTextSize(9);
+            //String a= alarmIds[btn_count];
+            editNm.setId(alarmIds[btn_count]);
 
-        // 레이아웃설정
-        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT
-                ,LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        param.leftMargin=30;
+            // 레이아웃설정
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                    ,LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            param.leftMargin=30;
 
-        //설정한 레이아웃 텍스트뷰에 적용
-        //textViewNm.setLayoutParams(param);
-        btn.setLayoutParams(param);
-        editNm.setLayoutParams(param);
-        btn_count++;
+            //설정한 레이아웃 텍스트뷰에 적용
+            //textViewNm.setLayoutParams(param);
+            btn.setLayoutParams(param);
+            editNm.setLayoutParams(param);
+            btn_count++;
+            //텍스트뷰 백그라운드 색상 설정
+            //textViewNm.setBackgroundColor(Color.rgb(174,234,174));
 
+            //li.addView(textViewNm);
+            //li.addView(btn);
+            li.addView(editNm);
 
-        //텍스트뷰 백그라운드 색상 설정
-        //textViewNm.setBackgroundColor(Color.rgb(174,234,174));
+            //li.setOrientation(LinearLayout.VERTICAL);
+        }else{
+            Toast.makeText(this, "더 이상 알람을 설정할 수 없습니다",Toast.LENGTH_SHORT).show();
+        }
 
-        //li.addView(textViewNm);
-        //li.addView(btn);
-        li.addView(editNm);
-
-        //li.setOrientation(LinearLayout.VERTICAL);
     }
     //확인 버튼 클릭
     public void mOnClose(View v){
