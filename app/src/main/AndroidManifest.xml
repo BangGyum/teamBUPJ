@@ -32,6 +32,10 @@
             android:exported="true">
 
         </activity>
+        <activity android:name=".DrawerHeader"
+            android:exported="true">
+
+        </activity>
 
         <activity
             android:name=".MainActivity"

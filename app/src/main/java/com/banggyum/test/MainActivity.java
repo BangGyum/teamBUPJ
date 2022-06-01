@@ -133,18 +133,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         );
         drawLayout.addDrawerListener(actionBarDrawerToggle);
 
-        userImageView = findViewById(R.id.userImage);
-        //shared에 저장되어있는 값 가져오기
-        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-
-        userEmail = preferences.getString("useremail", "");
-        userName = preferences.getString("username", "");
-        userPhotoUrl = preferences.getString("userPhoto", "");
-
-        //tvUserName.setText(userName);
-        //tvUserEmail.setText(userEmail);
-
-        Glide.with(this).load(userPhotoUrl).into(userImageView); //url을 통해 이미지 다운?
 
 
         //mapfragment 사용하여 지도를 이용

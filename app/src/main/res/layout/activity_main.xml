@@ -29,12 +29,6 @@
             android:layout_above="@id/bottomNav"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-        <ImageView
-            android:id="@+id/userImage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginRight="10dp"
-            android:visibility="invisible"/>
     </RelativeLayout>
     <!--왼쪽에 숨어있는 Drawer메뉴 영역-->
     <com.google.android.material.navigation.NavigationView
