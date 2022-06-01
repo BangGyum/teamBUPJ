@@ -9,8 +9,10 @@ import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -74,30 +77,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return rootView;
         }
     }
-
-    //사이드메뉴바 설정 레이아웃
-    public void SideMenuBarLayout() {
-
-        //toolBar를 통해 App Bar 생성
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        //App Bar의 좌측 영영에 Drawer를 Open 하기 위한 Incon 추가
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_dehaze_24);
-
-        DrawerLayout drawLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
-                this,
-                drawLayout,
-                toolbar,
-                R.string.open,
-                R.string.closed
-        );
-        drawLayout.addDrawerListener(actionBarDrawerToggle);
-    }
     //이전 버튼 클릭시 Drawer 닫기
     @Override
     public void onBackPressed() {
@@ -122,18 +101,33 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.SideMenuBarLayout();//사이드메뉴바 레이아웃
-        userImageView =  findViewById(R.id.userImage);
+        //toolBar를 통해 App Bar 생성
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+        //App Bar의 좌측 영영에 Drawer를 Open 하기 위한 Incon 추가
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_dehaze_24);
 
+        DrawerLayout drawLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawLayout,
+                toolbar,
+                R.string.open,
+                R.string.closed
+        );
+        drawLayout.addDrawerListener(actionBarDrawerToggle);
+
+        userImageView = findViewById(R.id.userImage);
         //shared에 저장되어있는 값 가져오기
         SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
 
         userEmail = preferences.getString("useremail", "");
         userName = preferences.getString("username", "");
-        userPhotoUrl = preferences.getString("userPhoto","");
+        userPhotoUrl = preferences.getString("userPhoto", "");
 
         //tvUserName.setText(userName);
         //tvUserEmail.setText(userEmail);
@@ -181,6 +175,24 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         mapFragment.getMapAsync(this);
+    }
+    //툴바에 main_menu.xml 을 추가함
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu, menu);
+        //검색 버튼 클릭했을 때 searchview 길이 꽉차게 늘려주기
+        SearchView searchView = (SearchView)menu.findItem(R.id.menu_search).getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        //검색 버튼 클릭했을 때 searchview 에 힌트 추가
+        searchView.setQueryHint("장소명으로 검색합니다.");
+
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        return true;
     }
 
     //위치 추적 모드를 지정 none, follow, face
