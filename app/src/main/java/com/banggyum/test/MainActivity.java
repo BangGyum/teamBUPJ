@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.os.Bundle;
@@ -111,7 +112,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         DrawerLayout drawLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
 
+                if (id == R.id.loginform) {
+                    Intent loginIntent = new Intent(MainActivity.this, LoginPage.class);
+                    startActivity(loginIntent);
+                }
+                return true;
+            }
+        });
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 drawLayout,
