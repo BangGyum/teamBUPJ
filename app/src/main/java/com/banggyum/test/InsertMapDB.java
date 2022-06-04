@@ -4,6 +4,8 @@ package com.banggyum.test;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -11,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
@@ -47,8 +51,18 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_fragment);
 
+        //toolBar를 통해 App Bar 생성
+        Toolbar toolbar = findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbar);
+
+        //App Bar의 좌측 영영에 Drawer를 Open 하기 위한 Incon 추가
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_dehaze_24);
+
         Button btnOpen = findViewById(R.id.btn_open);
         btnOpen.setOnClickListener(btnListener);
+
+
 
         //mapfragment 사용하여 지도를 이용
         MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.map_fragment);
@@ -65,6 +79,19 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         //현재위치 사용을 위한 생성자 권한요청코드(LOCATION_PERMISSION_REQUEST_CODE) = 100
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
 
+    }
+    //툴바에 main_menu.xml 을 추가함
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu, menu);
+        //검색 버튼 클릭했을 때 searchview 길이 꽉차게 늘려주기
+        SearchView searchView = (SearchView)menu.findItem(R.id.menu_search).getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        //검색 버튼 클릭했을 때 searchview 에 힌트 추가
+        searchView.setQueryHint("장소명으로 검색합니다.");
+
+        return true;
     }
 
     View.OnClickListener btnListener = new View.OnClickListener() {

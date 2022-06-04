@@ -40,15 +40,18 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
+        </activity>
+
+        <activity
+            android:name=".InsertMapDB"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".InsertMapDB"
-            android:exported="true" /> <!-- 팝업 Activity -->
         <activity
             android:name=".PopupActivity"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
