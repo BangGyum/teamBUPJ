@@ -25,6 +25,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
     private static final String COLUMN_EMAIL = "user_email"; //사용자 id (fk)
     private static final String COLUMN_CONTEXT = "schedule_context"; //내용
     private static final String COLUMN_DATE = "schedule_date"; //일정 날짜
+    private static final String COLUMN_TIME = "schedule_time"; //일정 날짜
     private static final String COLUMN_LOCATION = "schedule_location"; //일정 지도 fk 예정
     private static final String COLUMN_STATE = "schedule_state"; //평범상태 = 1 , 삭제상태 = 0
     private static final String COLUMN_REGISTER_DATE = "schedule_registerDate"; //만든 날짜
@@ -37,6 +38,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
     private static final String TABLE3_NAME = "user"; //테이블명 (유저 테이블)
     private static final String COLUMN3_EMAIL = "user_email";
     private static final String COLUMN3_NAME = "user_name";
+    private static final String COLUMN3_IMAGE_URL = "user_imageUrl";
 
     private static final String TABLE4_NAME = "holiday"; //테이블명 (공휴일 테이블)
     private static final String COLUMN4_NAME = "holiday_name";
@@ -61,6 +63,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
             + COLUMN_EMAIL + " TEXT NOT NULL, "
             + COLUMN_CONTEXT + " TEXT NOT NULL, "
             + COLUMN_DATE + " TEXT NOT NULL, "
+            + COLUMN_TIME + " TEXT NOT NULL, "
             + COLUMN_LOCATION + " TEXT,"
             + COLUMN_STATE + " INTEGER NOT NULL,"
             + COLUMN_REGISTER_DATE + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
@@ -70,7 +73,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
     //알람 table
     String query_alarm = "CREATE TABLE " + TABLE2_NAME
             + " (" + COLUMN2_ID + " INTEGER NOT NULL, "
-            + COLUMN2_TIME + " TIMESTAMP, "
+            + COLUMN2_TIME + " TEXT NOT NULL, "
             + "FOREIGN KEY(" + COLUMN2_ID +")"
             + "REFERENCES " + TABLE_NAME + "(" + COLUMN_ID + ")); ";
 
@@ -80,6 +83,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
     //사용자 table
     String query_user = "CREATE TABLE " + TABLE3_NAME
             + " (" + COLUMN3_EMAIL + " TEXT  PRIMARY KEY NOT NULL, "
+            + COLUMN3_IMAGE_URL + " TEXT,"
             + COLUMN3_NAME + " TEXT );";
 
     String query_calender = "CREATE TABLE " + TABLE4_NAME
@@ -92,7 +96,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
             + COLUMN5_LONGITUDE + " DOUBLE NOT NULL, "
             + "FOREIGN KEY(" + COLUMN5_ID +")"
             + "REFERENCES " + TABLE_NAME + "(" + COLUMN_ID + ")); ";
-
+    
     public void a()  {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(query_user);
@@ -115,6 +119,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
+
         //onUpgrade()는 DB를 업그레이드해야 할 때, 업그레이드는 존재하는 DB 파일에 저장된 버전의 번호가 생성자에서 요청하는 것보다 낮은 경우,
         // 기존의 DB를 삭제하고 다시 생성
         db.execSQL("DROP TABLE " + TABLE_NAME);
@@ -132,17 +137,34 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
             // 쿼리
             String sql = "SELECT * FROM " + TABLE3_NAME + " WHERE " + COLUMN3_EMAIL + " = '" + addEmail + "';";
 
+
             Cursor mCursor = db.rawQuery(sql, null);
 
-            uD.setUser_email(mCursor.getString(0));
-            Toast.makeText(context, "e", Toast.LENGTH_SHORT).show();
+            //uD.setUser_email(mCursor.getString(0)); //여기서 catch로 감
+            //Toast.makeText(context, "q", Toast.LENGTH_SHORT).show();
+            SQLiteDatabase db2 = this.getWritableDatabase();
+            ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
 
-            if ("".equals("")) {// 테이블 끝까지 읽기
-                Toast.makeText(context, "응애2", Toast.LENGTH_SHORT).show();
+            cv.put(COLUMN3_EMAIL ,addEmail);
+            cv.put(COLUMN3_NAME ,addName);
+
+            long result = db2.insert(TABLE3_NAME, null, cv);
+            if (result == -1)
+            {
+                Toast.makeText(context, "기존 사용자", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                Toast.makeText(context, "새로운 사용자", Toast.LENGTH_SHORT).show();
+            }
+
+/*
+            if (mCursor.getString(0).equals("")) {// 테이블 끝까지 읽기
+                Toast.makeText(context, "if문 들어옴", Toast.LENGTH_SHORT).show();
                 Toast.makeText(context, mCursor.getString(0)+"응애", Toast.LENGTH_SHORT).show();
                 return;
             }else{
-                Toast.makeText(context, "응애3", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "else 문 들어옴", Toast.LENGTH_SHORT).show();
                 SQLiteDatabase db2 = this.getWritableDatabase();
                 ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
 
@@ -159,6 +181,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
                     Toast.makeText(context, "알람 데이터 추가 성공", Toast.LENGTH_SHORT).show();
                 }
             }
+
+ */
         }catch (Exception e ) {
             e.printStackTrace();
         }
@@ -168,10 +192,11 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
     public int addSchedule(String addEmail, String addContext, String addDate, String addLocation)
     //사용자 id, 내용, 일정날짜, 알람 정보(이건 배열로?),
     {
-        if(addEmail.equals("")){ addEmail="null"; }
-        if(addContext.equals("")){ addContext="null"; }
-        if(addDate.equals("")){ addDate="null"; }
-        if(addLocation.equals("")){ addLocation="null"; }
+        Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+//        if(addEmail.equals("")){ addEmail="null"; }
+//        if(addContext.equals("")){ addContext="null"; }
+//        if(addDate.equals("")){ addDate="null"; }
+//        if(addLocation.equals("")){ addLocation="null"; }
 
         int scheduleId =0 ; //
         ScheduleDTO scD = new ScheduleDTO();
@@ -187,17 +212,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
 
         cv.put(COLUMN_LOCATION, addLocation);
         cv.put(COLUMN_STATE, 1); //이거 근데 다른테이블에 넣어야될것같은데
-
-        String query = "CREATE TABLE " + TABLE_NAME
-                + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COLUMN_EMAIL + " INTEGER NOT NULL, "
-                + COLUMN_CONTEXT + " TEXT NOT NULL, "
-                + COLUMN_DATE + " TEXT NOT NULL, "
-                + COLUMN_LOCATION + " TEXT,"
-                + COLUMN_STATE + " INTEGER NOT NULL,"
-                + COLUMN_REGISTER_DATE + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
-                + "FOREIGN KEY(" + COLUMN_EMAIL +")"
-                + "REFERENCES " + TABLE3_NAME + "(" + COLUMN3_EMAIL + ")); ";
 
         long result = db.insert(TABLE_NAME, null, cv);
         if (result == -1)
@@ -265,7 +279,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
             //Cursor mCursor = db.query(TABLE_NAME, null, null, null, null, null, null);
 
             Cursor mCursor = db.rawQuery(sql, null);
-
             if (mCursor != null) {// 테이블 끝까지 읽기
 
                 while (mCursor.moveToNext()) {// 다음 Row로 이동

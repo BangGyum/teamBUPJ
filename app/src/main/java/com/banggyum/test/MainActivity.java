@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.Menu;
@@ -45,8 +46,19 @@ import com.naver.maps.map.util.FusedLocationSource;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
+    private Context context;
+
     String userEmail, userName, userPhotoUrl;
     ImageView userImageView;
+    MyDatabaseHelper db ;
+    //SQLiteDatabase database;
+    public String  getUserEmail() {
+        return userEmail;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
 
 
     //마커에 정보를 표시해주는 창
@@ -101,10 +113,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        db = new MyDatabaseHelper(this);
+        userImageView =  findViewById(R.id.userImage);
 
         //toolBar를 통해 App Bar 생성
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        //shared에 저장되어있는 값 가져오기
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
+        userEmail = preferences.getString("useremail", "");
+        userName = preferences.getString("username", "");
+        userPhotoUrl = preferences.getString("userPhoto","");
+        //db.a();
+        db.addUser(userEmail,userName);
 
         //App Bar의 좌측 영영에 Drawer를 Open 하기 위한 Incon 추가
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

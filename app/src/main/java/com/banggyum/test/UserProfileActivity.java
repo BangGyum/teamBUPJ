@@ -17,7 +17,8 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
-
+// 이거는 안쓸꺼임, 여기에 내 테스트 했던 정보들 들어가있음
+// DB 연결, 정보교환 테스트
 public class UserProfileActivity extends AppCompatActivity {
 
     EditText context_input, date_input, location_input, alarm_input;

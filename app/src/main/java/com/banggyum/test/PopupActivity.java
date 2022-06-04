@@ -4,7 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -25,7 +28,16 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+// input 팝업창
 public class PopupActivity extends Activity {
+
+    private android.content.Context context;
+    MainActivity ma = new MainActivity();
+    String userEmail = "";
+    String date; //날짜
+    String time;
+    String Context;
+    String Location="미정";
 
     EditText text1;
     LinearLayout li;
@@ -37,6 +49,7 @@ public class PopupActivity extends Activity {
                                         ,"R.id.alarm12","R.id.alarm13","R.id.alarm14","R.id.alarm15","R.id.alarm16"
                                         ,"R.id.alarm17","R.id.alarm18","R.id.alarm19"};
 */
+    MyDatabaseHelper db ;
     int alarmIds[] = new int[]{1000023,1000021,1000029,1000027,1000014,1000011,1000019,1000016,1000035,1000022
                             ,1000024,1000028,1000030,1000012,1000015,1000017,1000020,1000034,1000036};
 
@@ -49,6 +62,19 @@ public class PopupActivity extends Activity {
             myCalendar.set(Calendar.YEAR, year);
             myCalendar.set(Calendar.MONTH, month);
             myCalendar.set(Calendar.DAY_OF_MONTH, day);
+            String y = Integer.toString(year);
+            String m = Integer.toString(month); // 5월이면 05가 아니라 5임
+            String d = Integer.toString(day);
+            // 10보다 작으면 앞에 0 붙여주기
+            if (month<10) {
+                m = "0" + m;
+            }
+
+            if (day<10){
+                d = "0" + d;
+            }
+            date = y + "-" + m + "-" + d ;
+            Toast.makeText(getApplicationContext(),date, Toast.LENGTH_SHORT).show();
             updateLabel();
         }
     };
@@ -59,25 +85,31 @@ public class PopupActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.popup_activity);
 
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
+        userEmail = preferences.getString("useremail", "");
+
         li = findViewById(R.id.dynamicLayout);
         alarmBtn = findViewById(R.id.alarmBtn);
 
-        //UI 객체생성
-                        text1 = (EditText) findViewById(R.id.text1);
-        //데이터 가져오
+        db = new MyDatabaseHelper(this);
 
-                                Intent intent = getIntent();
-                        String data = intent.getStringExtra("data");
-                        text1.setText(data);
-                        TextView data_view = (TextView) findViewById(R.id.date_view);
-                        data_view.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                new DatePickerDialog(PopupActivity.this, myDatePicker, myCalendar.get(
-                                        Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
+        //UI 객체생성
+        text1 = (EditText) findViewById(R.id.text1);
+//데이터 가져오
+
+        Intent intent = getIntent();
+        String data = intent.getStringExtra("data");
+        text1.setText(data);
+        TextView data_view = (TextView) findViewById(R.id.date_view);
+        data_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DatePickerDialog(PopupActivity.this, myDatePicker, myCalendar.get(
+                        Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+}
+});
         //타임피커다이얼로그 뜨게 만들기
         final TextView time_view = (TextView) findViewById(R.id.time_view);
         time_view.setOnClickListener(new View.OnClickListener() {
@@ -159,8 +191,16 @@ public class PopupActivity extends Activity {
         Intent intent = new Intent();
         intent.putExtra("result","Close");
         setResult(RESULT_OK, intent);
+        int a = 0;
 
+        //Toast.makeText(context, userEmail, Toast.LENGTH_SHORT).show();
+        a = db.addSchedule(userEmail
+                      ,text1.getText().toString()
+                      ,date
+                      ,Location);
         //팝업닫기
+        //Toast.makeText(context, a +"", Toast.LENGTH_SHORT).show();
+
         finish();
     }
     // 밖 레이어 클릭시 문제없게
