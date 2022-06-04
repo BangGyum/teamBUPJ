@@ -71,15 +71,8 @@ public class LoginPage extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        drawerLayout = findViewById(R.id.layout_drawer);
-        navigationView = findViewById(R.id.nav);
-        // 네비게이션뷰의 메뉴아이콘의 색조 제거
-        navigationView.setItemIconTintList(null);
 
-        // 드로우어 조절용 토글버튼 객체 생성
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name); //마지막 두 매개변수는 그냥 써주자
-        drawerToggle.syncState(); //삼선 메뉴 만들기
-        drawerLayout.addDrawerListener(drawerToggle); // 뱅그르 돌게 만들기
+
 
     }
     private void signIn(){ // 구글 로그인 클라이언트를 사용하여 인텐트를 호출, rc로그인 코드를 코드에 전달
