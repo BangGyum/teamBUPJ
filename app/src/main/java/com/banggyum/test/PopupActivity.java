@@ -42,6 +42,7 @@ public class PopupActivity extends Activity {
     EditText text1;
     LinearLayout li;
     Button alarmBtn ;
+    Button mapBtn;
     Calendar myCalendar = Calendar.getInstance();
     EditText alarmEdit[];
     /*String alarmIds[] = new String []{"R.id.alarm1","R.id.alarm2","R.id.alarm3","R.id.alarm4","R.id.alarm5"
@@ -91,6 +92,7 @@ public class PopupActivity extends Activity {
 
         li = findViewById(R.id.dynamicLayout);
         alarmBtn = findViewById(R.id.alarmBtn);
+        mapBtn = findViewById(R.id.mapBtn);
 
         db = new MyDatabaseHelper(this);
 
@@ -140,6 +142,13 @@ public class PopupActivity extends Activity {
         alarmBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 createTextView("ㅇ");
+            }
+        });
+        mapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentmap = new Intent(getApplicationContext(), InsertMapDB.class);
+                startActivity(intentmap);
             }
         });
     }
