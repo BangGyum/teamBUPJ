@@ -2,25 +2,26 @@ package com.banggyum.test;
 
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
+import com.naver.maps.map.CameraUpdate;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
-import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.NaverMapOptions;
 import com.naver.maps.map.OnMapReadyCallback;
@@ -36,15 +37,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback {
-    private String[] array;
-    private String[] address;
     private String[] roadAddress;
+    private double[] lat;
+    private double[] lng;
+    private double llat = 0;
+    private double llng = 0;
+    private MyBottomSheetFragment myBottomSheetFragment;
+    private String sc;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;    //권한 코드 번호
-    private MapView mapView;
     private FusedLocationSource locationSource;
-    @Nullable
-    private Runnable locationActivationCallback;
     private NaverMap map;
+    private int searchNum;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,11 +61,6 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         //App Bar의 좌측 영영에 Drawer를 Open 하기 위한 Incon 추가
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_dehaze_24);
-
-        Button btnOpen = findViewById(R.id.btn_open);
-        btnOpen.setOnClickListener(btnListener);
-
-
 
         //mapfragment 사용하여 지도를 이용
         MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.map_fragment);
@@ -78,7 +76,6 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
 
         //현재위치 사용을 위한 생성자 권한요청코드(LOCATION_PERMISSION_REQUEST_CODE) = 100
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
-
     }
     //툴바에 main_menu.xml 을 추가함
     @Override
@@ -86,24 +83,33 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main_menu, menu);
         //검색 버튼 클릭했을 때 searchview 길이 꽉차게 늘려주기
-        SearchView searchView = (SearchView)menu.findItem(R.id.menu_search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
         searchView.setMaxWidth(Integer.MAX_VALUE);
         //검색 버튼 클릭했을 때 searchview 에 힌트 추가
         searchView.setQueryHint("장소명으로 검색합니다.");
-
+        searchView.setOnQueryTextListener(searchListener);
         return true;
     }
 
-    View.OnClickListener btnListener = new View.OnClickListener() {
+    SearchView.OnQueryTextListener searchListener = new SearchView.OnQueryTextListener() {
         @Override
-        public void onClick(View view) {
+        public boolean onQueryTextSubmit(String query) {
+            sc = query;
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     requestNaverLocal();
+                    requestGeocode();
                     clickOpenBottomSheetFragment();
+//                    onMapSearch();
                 }
             }).start();
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            return false;
         }
     };
 
@@ -113,10 +119,9 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
             BufferedReader br;
             HttpURLConnection conn;
             StringBuilder sb = new StringBuilder();
-            int display = 5;
-            String sc = "그린팩토리";
+            Log.v("sc", sc);
             String addr = URLEncoder.encode(sc, "UTF-8");
-
+            int display = 5;
             String apiURL = "https://openapi.naver.com/v1/search/local.json?query=" + addr + "&display=" + display + "&"; //
             URL url = new URL(apiURL);
             conn = (HttpURLConnection) url.openConnection();
@@ -147,19 +152,20 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
 
                 Log.v("결과: ", data);
 
-                array = data.split("\"");
-                address = new String[display];
+                String[] array = data.split("\"");
                 roadAddress = new String[display];
 
                 int k = 0;
                 for (int i = 0; i < array.length; i++) {
-                    if (array[i].equals("address"))
-                        address[k] = array[i + 2];
                     if (array[i].equals("roadAddress")){
                         roadAddress[k] = array[i + 2];
                         k++;
                     }
                 }
+
+                lat = new double[display];
+                lng = new double[display];
+                searchNum = 0;
 
                 br.close();
                 conn.disconnect();
@@ -169,17 +175,139 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    public void requestGeocode() {
+        try {
+            if(searchNum == roadAddress.length){
+                return;
+            }
+
+            BufferedReader br;
+            StringBuilder sb = new StringBuilder();
+            String addr = URLEncoder.encode(roadAddress[searchNum], "UTF-8");
+            String query = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=" + addr;
+            URL url = new URL(query);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            if (conn != null) {
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(5000);
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("X-NCP-APIGW-API-KEY-ID", "8dvuu6gc91");
+                conn.setRequestProperty("X-NCP-APIGW-API-KEY", "L7HyUUXIRUoxUvLZkeawiNCOmxxclCCgaM0WFfwG");
+                conn.setDoInput(true);
+
+                int responseCode = conn.getResponseCode();
+
+                if (responseCode == 200) {
+                    br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                } else {
+                    br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                }
+
+                String line = null;
+
+                while ((line = br.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+
+                int indexFirst, indexLast;
+
+                indexFirst = sb.indexOf("\"x\":\"");
+                indexLast = sb.indexOf("\",\"y\":");
+                lng[searchNum] = Double.parseDouble(sb.substring(indexFirst + 5, indexLast));
+
+                indexFirst = sb.indexOf("\"y\":\"");
+                indexLast = sb.indexOf("\",\"distance\":");
+                lat[searchNum] = Double.parseDouble(sb.substring(indexFirst + 5, indexLast));
+
+                if(searchNum < roadAddress.length){
+                    Log.v("sea:", String.valueOf(searchNum));
+                    Log.v("lat:", String.valueOf(lat[searchNum]));
+                    Log.v("lat:", String.valueOf(lng[searchNum]));
+                    searchNum += 1;
+                    br.close();
+                    conn.disconnect();
+                    requestGeocode();
+                }
+                br.close();
+                conn.disconnect();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void requestGeocodeOne(String addrone) {
+        try {
+            BufferedReader br;
+            StringBuilder sb = new StringBuilder();
+            Log.v("addr", addrone);
+            addrone = URLEncoder.encode(addrone, "UTF-8");
+            String query = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=" + addrone;
+            URL url = new URL(query);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            if (conn != null) {
+                conn.setConnectTimeout(5000);
+                conn.setReadTimeout(5000);
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("X-NCP-APIGW-API-KEY-ID", "8dvuu6gc91");
+                conn.setRequestProperty("X-NCP-APIGW-API-KEY", "L7HyUUXIRUoxUvLZkeawiNCOmxxclCCgaM0WFfwG");
+                conn.setDoInput(true);
+
+                int responseCode = conn.getResponseCode();
+
+                if (responseCode == 200) {
+                    br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                } else {
+                    br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                }
+
+                String line = null;
+
+                while ((line = br.readLine()) != null) {
+                    sb.append(line + "\n");
+                }
+
+                int indexFirst, indexLast;
+
+                indexFirst = sb.indexOf("\"x\":\"");
+                indexLast = sb.indexOf("\",\"y\":");
+                llng = Double.parseDouble(sb.substring(indexFirst + 5, indexLast));
+
+                indexFirst = sb.indexOf("\"y\":\"");
+                indexLast = sb.indexOf("\",\"distance\":");
+                llat = Double.parseDouble(sb.substring(indexFirst + 5, indexLast));
+
+                Log.v("lllat", String.valueOf(llat));
+                br.close();
+                conn.disconnect();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void clickOpenBottomSheetFragment() {
         List<ItemObject> list = new ArrayList<>();
 
-        for (int i =0; i< address.length; i++){
-            Log.v("주소: ", address[i]);
-            list.add(new ItemObject(address[i]));
+        for (int i =0; i< roadAddress.length; i++){
+            Log.v("주소: ", roadAddress[i]);
+            list.add(new ItemObject(roadAddress[i]));
         }
 
-        MyBottomSheetFragment myBottomSheetFragment = new MyBottomSheetFragment(list, new IClickListener() {
+        myBottomSheetFragment = new MyBottomSheetFragment(list, new IClickListener() {
             @Override
             public void clickItem(ItemObject itemObject) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        requestGeocodeOne(itemObject.getName());
+                        onMapSearch();
+                    }
+                }).start();
                 Toast.makeText(InsertMapDB.this, itemObject.getName(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -200,29 +328,62 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    private double lat;
-    private double lng;
+    public void onMapSearch(){
+        Marker onemarker = new Marker();
+        View v = null;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.v("llat", String.valueOf(llat));
+                        onemarker.setPosition(new LatLng(llat, llng));
+                        onemarker.setMap(map);
+                        CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(llat, llng));
+                        map.moveCamera(cameraUpdate);
+                        myBottomSheetFragment.dismiss();
+                        onemarker.setOnClickListener(overlay -> {
+                            startActivity(new Intent(v.getContext(), Mappopup.class));
+                            return true;
+                        });
+//                        for(int i=0;i<roadAddress.length;i++){
+//                            Marker marker = new Marker();
+//                            marker.setPosition(new LatLng(lat[i], lng[i]));
+//                            marker.setMap(map);
+//                            CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(lat[0], lng[0]));
+//                            map.moveCamera(cameraUpdate);
+//                        }
+                    }
+                });
+            }
+        }).start();
+    }
 
+    @UiThread
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         map = naverMap;
-
         naverMap.setLocationSource(locationSource);
+
         //위치 추적 버튼 클릭시 마다 위치추적모드를 변경
         naverMap.addOnOptionChangeListener(() -> {
             LocationTrackingMode mode = naverMap.getLocationTrackingMode();
             locationSource.setCompassEnabled(mode == LocationTrackingMode.Follow || mode == LocationTrackingMode.Face);
         });
+
         naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
 
-        Marker marker = new Marker();
-        naverMap.setOnMapClickListener((point, coord) -> {
-            marker.setPosition(new LatLng(coord.latitude, coord.longitude));
-            marker.setMap(naverMap);
-            lat = coord.latitude;
-            lng = coord.longitude;
-            Toast.makeText(InsertMapDB.this, "위도" + lat + "경도" + lng, Toast.LENGTH_SHORT).show();
-        });
+//        Marker imarker = new Marker();
+//        naverMap.setOnMapClickListener((point, coord) -> {
+//            imarker.setPosition(new LatLng(coord.latitude, coord.longitude));
+//            imarker.setMap(naverMap);
+//
+//            double clat = coord.latitude;
+//            double clng = coord.longitude;
+//
+//            Toast.makeText(InsertMapDB.this, "위도" + clat + "경도" + clng, Toast.LENGTH_SHORT).show();
+//        });
     }
 }
 

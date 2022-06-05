@@ -18,10 +18,6 @@
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@menu/drawer_menu" />
-        <activity
-            android:name=".testgeocode"
-            android:exported="true" >
-        </activity>
         <!-- 네이버 지도 연동 api 키 -->
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
@@ -40,17 +36,16 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
 
         <activity
             android:name=".InsertMapDB"
             android:exported="true" >
-
         </activity>
 
         <activity
