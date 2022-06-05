@@ -5,21 +5,33 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigation.NavigationView;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.LocationTrackingMode;
@@ -34,35 +46,20 @@ import com.naver.maps.map.util.FusedLocationSource;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    //location 버튼을 클릭시 현재위치를 찾을지에 대한 다이아로그를 보여주기 위한 클래스
-    public static class LocationConfirmDialogFragment extends DialogFragment {
-        @SuppressLint("DialogFragmentCallbacksDetector")
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            return new AlertDialog.Builder(requireActivity())
-                    .setTitle(R.string.location_activation_confirm)                    //dialog에 보여질 메세지
-                    .setPositiveButton(R.string.yes, (dialog, whichButton) -> {        //dialog에 네(yes) 버튼 추가
-                        Activity activity = getActivity();
-                        if (activity != null) {
-                            ((MainActivity)activity).continueLocationTracking(); //클릭시 tracking 모드 활성화
-                        }
-                    })
-                    .setNegativeButton(R.string.no, (dialog, whichButton) -> {        //dialog에 아니오(no) 버튼 추가
-                        Activity activity = getActivity();
-                        if (activity != null) {
-                            ((MainActivity)activity).cancelLocationTracking();  //클릭시 tracking 모드 활성화 취소
-                        }
-                    })
-                    .setOnCancelListener(dialog -> {
-                        Activity activity = getActivity();
-                        if (activity != null) {
-                            ((MainActivity)activity).cancelLocationTracking();
-                        }
-                    })
-                    .create();
-        }
+    private Context context;
+
+    String userEmail, userName, userPhotoUrl;
+    ImageView userImageView;
+    MyDatabaseHelper db ;
+    //SQLiteDatabase database;
+    public String  getUserEmail() {
+        return userEmail;
     }
+
+    public String getUserName() {
+        return userName;
+    }
+
 
     //마커에 정보를 표시해주는 창
     private static class InfoWindowAdapter extends InfoWindow.ViewAdapter {
@@ -93,11 +90,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return rootView;
         }
     }
-
+    //이전 버튼 클릭시 Drawer 닫기
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-        return true;
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     BottomNavigationView bottomNavigationView; //네비게이션뷰
@@ -112,9 +113,51 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        db = new MyDatabaseHelper(this);
+        userImageView =  findViewById(R.id.userImage);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //toolBar를 통해 App Bar 생성
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        //shared에 저장되어있는 값 가져오기
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+
+        userEmail = preferences.getString("useremail", "");
+        userName = preferences.getString("username", "");
+        userPhotoUrl = preferences.getString("userPhoto","");
+        //db.a();
+        db.addUser(userEmail,userName);
+
+        //App Bar의 좌측 영영에 Drawer를 Open 하기 위한 Incon 추가
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_dehaze_24);
+
+        DrawerLayout drawLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+
+                if (id == R.id.loginform) {
+                    Intent loginIntent = new Intent(MainActivity.this, LoginPage.class);
+                    startActivity(loginIntent);
+                }
+                return true;
+            }
+        });
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                drawLayout,
+                toolbar,
+                R.string.open,
+                R.string.closed
+        );
+        drawLayout.addDrawerListener(actionBarDrawerToggle);
+
+
 
         //mapfragment 사용하여 지도를 이용
         MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.main_frame);
@@ -128,11 +171,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         //현재위치 사용을 위한 생성자 권한요청코드(LOCATION_PERMISSION_REQUEST_CODE) = 100
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
-        //setActivationHook 위치 기능의 활성화에 대한 훅 객체를 지정합니다.
-        locationSource.setActivationHook(continueCallback -> {
-            locationActivationCallback = continueCallback;
-            new MainActivity.LocationConfirmDialogFragment().show(getSupportFragmentManager(), null);
-        });
 
         bottomNavigationView = findViewById(R.id.bottomNav);
 
@@ -162,30 +200,28 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mapFragment.getMapAsync(this);
     }
+    //툴바에 main_menu.xml 을 추가함
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu, menu);
+        //검색 버튼 클릭했을 때 searchview 길이 꽉차게 늘려주기
+        SearchView searchView = (SearchView)menu.findItem(R.id.menu_search).getActionView();
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+        //검색 버튼 클릭했을 때 searchview 에 힌트 추가
+        searchView.setQueryHint("장소명으로 검색합니다.");
 
-    //위치 추적 모드를 run을 통해 실행후 재 실행 방지를 위해 null로 바꿔준다.
-    private void continueLocationTracking() {
-        if (locationActivationCallback != null) {
-            locationActivationCallback.run();
-            locationActivationCallback = null;
-            locationSource.setActivationHook(null);
-        }
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        return true;
     }
 
     //위치 추적 모드를 지정 none, follow, face
     private void cancelLocationTracking() {
         map.setLocationTrackingMode(LocationTrackingMode.None);
-    }
-
-
-    // 뒤로가기 버튼 클릭시 메소드
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {        //R.id.home = 뒤로가기
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     //핸드폰의 위치 추적 권한이 활성화 되어있는지 판단하여 비활성화 면 권한을 얻기위한 코드
@@ -233,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             LocationTrackingMode mode = naverMap.getLocationTrackingMode();
             locationSource.setCompassEnabled(mode == LocationTrackingMode.Follow || mode == LocationTrackingMode.Face);
         });
+        naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
 
         infoWindow.open(marker);
 

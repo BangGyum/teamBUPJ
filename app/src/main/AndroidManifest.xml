@@ -15,28 +15,47 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="p">
-
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@menu/drawer_menu" />
+        <activity
+            android:name=".testgeocode"
+            android:exported="true" >
+        </activity>
         <!-- 네이버 지도 연동 api 키 -->
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="8dvuu6gc91" />
 
         <activity
+            android:name=".LoginPage"
+            android:exported="true">
+
+        </activity>
+        <activity android:name=".DrawerHeader"
+            android:exported="true">
+
+        </activity>
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
+
         <activity
             android:name=".InsertMapDB"
-            android:exported="true" />
+            android:exported="true" >
 
-        <!-- 팝업 Activity -->
-        <activity android:name=".PopupActivity" android:theme="@android:style/Theme.DeviceDefault.Light.Dialog"/>
+        </activity>
 
+        <activity
+            android:name=".PopupActivity"
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
     </application>
 
 </manifest>

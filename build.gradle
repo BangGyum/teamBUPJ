@@ -1,3 +1,15 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+//        여기새로추가
+    }
+    dependencies {
+        classpath 'com.google.gms:google-services:4.3.8'
+    }
+}
+
 plugins {
     id 'com.android.application' version '7.2.1' apply false
     id 'com.android.library' version '7.2.1' apply false
@@ -6,4 +18,4 @@ plugins {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-
+// ./gradlew signingReport 하고 alt 엔터 치니깐 됨

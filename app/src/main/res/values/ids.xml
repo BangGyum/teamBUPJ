@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="alarm1" type="id"/>
+    <item name="alarm2" type="id"/>
+    <item name="alarm3" type="id"/>
+    <item name="alarm4" type="id"/>
+    <item name="alarm5" type="id"/>
+    <item name="alarm6" type="id"/>
+    <item name="alarm7" type="id"/>
+    <item name="alarm8" type="id"/>
+    <item name="alarm9" type="id"/>
+    <item name="alarm10" type="id"/>
+    <item name="alarm11" type="id"/>
+    <item name="alarm12" type="id"/>
+    <item name="alarm13" type="id"/>
+    <item name="alarm14" type="id"/>
+    <item name="alarm15" type="id"/>
+    <item name="alarm16" type="id"/>
+    <item name="alarm17" type="id"/>
+    <item name="alarm18" type="id"/>
+    <item name="alarm19" type="id"/>
+
+</resources>

@@ -18,6 +18,8 @@
             android:background="#ff7a00"
             android:layout_width="match_parent"
             android:layout_height="53dp" />
+
+
     </LinearLayout>
     <!-- //end 타이틀바 -->
 
@@ -46,6 +48,19 @@
             android:text="날짜"
             android:gravity="center"
             android:clickable="true"/>
+        <LinearLayout
+            android:id="@+id/dynamicLayout"
+            android:padding="24dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/alarmBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="알람 추가"
+                />
+        </LinearLayout>
     </LinearLayout>
     <!-- Notice -->
 

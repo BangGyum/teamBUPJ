@@ -57,7 +57,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
 
     //일정 table
     String query_schedule = "CREATE TABLE " + TABLE_NAME
-            + " (" + COLUMN_ID + " INTEGER PRIMARY KEY, "
+            + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + COLUMN_EMAIL + " TEXT NOT NULL, "
             + COLUMN_CONTEXT + " TEXT NOT NULL, "
             + COLUMN_DATE + " TEXT NOT NULL, "
@@ -168,12 +168,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
     public int addSchedule(String addEmail, String addContext, String addDate, String addLocation)
     //사용자 id, 내용, 일정날짜, 알람 정보(이건 배열로?),
     {
-        int scheduleId = (int)(Math.random()*1000000000);
         if(addEmail.equals("")){ addEmail="null"; }
         if(addContext.equals("")){ addContext="null"; }
         if(addDate.equals("")){ addDate="null"; }
         if(addLocation.equals("")){ addLocation="null"; }
 
+        int scheduleId =0 ; //
         ScheduleDTO scD = new ScheduleDTO();
 
         SQLiteDatabase db = this.getWritableDatabase(); //SQLiteDatabase 객체를 만든 뒤 이 객체를 쓰기(Write)가 가능하도록 설정한다는 내용이다.
@@ -181,7 +181,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
         ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
 
         //cv.put();// 사용자 id 추가
-        cv.put(COLUMN_ID, scheduleId);
         cv.put(COLUMN_EMAIL, addEmail);
         cv.put(COLUMN_CONTEXT, addContext);
         cv.put(COLUMN_DATE, addDate);
