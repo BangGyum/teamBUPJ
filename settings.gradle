@@ -13,7 +13,9 @@ dependencyResolutionManagement {
         maven { url 'https://maven.google.com' }
         //네이버 지도 연동
         maven { url 'https://naver.jfrog.io/artifactory/maven/' }
+        //matrial캘린더 연동
+        maven { url 'https://jitpack.io'}
     }
 }
-rootProject.name = "test11"
+rootProject.name = "test22"
 include ':app'

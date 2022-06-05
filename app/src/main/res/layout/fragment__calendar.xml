@@ -3,9 +3,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Fragment_Calendar">
-<!--    캘린더 레이아웃-->
-<!--    버튼은 구별할려고 만든거 지워도 됨. 이구역은 준혁이-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            android:id="@+id/materialCalendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="날짜를 선택해주세요!"
+            android:gravity="center"/>
 
 
+
+    </LinearLayout>
 </FrameLayout>

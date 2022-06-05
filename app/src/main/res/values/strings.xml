@@ -7,7 +7,7 @@
     <string name="bottomMenuDo">할일</string>
     <string name="bottomMenuCalendar">캘린더</string>
     <string name="bottomMenuMap">지도</string>
-    <string name="check">확인</string>
+    <string name="check">닫기</string>
 
     <string name="yes">네</string>
     <string name="no">아니오</string>
