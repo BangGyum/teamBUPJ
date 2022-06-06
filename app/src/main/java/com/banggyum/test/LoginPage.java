@@ -71,9 +71,6 @@ public class LoginPage extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
-
     }
     private void signIn(){ // 구글 로그인 클라이언트를 사용하여 인텐트를 호출, rc로그인 코드를 코드에 전달
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();

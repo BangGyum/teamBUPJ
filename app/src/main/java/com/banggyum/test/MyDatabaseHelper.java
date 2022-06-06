@@ -25,6 +25,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
     private static final String COLUMN_EMAIL = "user_email"; //사용자 id (fk)
     private static final String COLUMN_CONTEXT = "schedule_context"; //내용
     private static final String COLUMN_DATE = "schedule_date"; //일정 날짜
+    private static final String COLUMN_TIME = "schedule_time"; //일정 시각
     private static final String COLUMN_LOCATION = "schedule_location"; //일정 지도 fk 예정
     private static final String COLUMN_STATE = "schedule_state"; //평범상태 = 1 , 삭제상태 = 0
     private static final String COLUMN_REGISTER_DATE = "schedule_registerDate"; //만든 날짜
@@ -61,6 +62,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
             + COLUMN_EMAIL + " TEXT NOT NULL, "
             + COLUMN_CONTEXT + " TEXT NOT NULL, "
             + COLUMN_DATE + " TEXT NOT NULL, "
+            + COLUMN_TIME + " TEXT NOT NULL, "
             + COLUMN_LOCATION + " TEXT,"
             + COLUMN_STATE + " INTEGER NOT NULL,"
             + COLUMN_REGISTER_DATE + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
@@ -165,7 +167,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
 
     }
 
-    public int addSchedule(String addEmail, String addContext, String addDate, String addLocation)
+    public int addSchedule(String addEmail, String addContext, String addDate, String addTime, String addLocation)
     //사용자 id, 내용, 일정날짜, 알람 정보(이건 배열로?),
     {
         if(addEmail.equals("")){ addEmail="null"; }
@@ -184,20 +186,10 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
         cv.put(COLUMN_EMAIL, addEmail);
         cv.put(COLUMN_CONTEXT, addContext);
         cv.put(COLUMN_DATE, addDate);
-
+        cv.put(COLUMN_TIME, addTime);
         cv.put(COLUMN_LOCATION, addLocation);
         cv.put(COLUMN_STATE, 1); //이거 근데 다른테이블에 넣어야될것같은데
 
-        String query = "CREATE TABLE " + TABLE_NAME
-                + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COLUMN_EMAIL + " INTEGER NOT NULL, "
-                + COLUMN_CONTEXT + " TEXT NOT NULL, "
-                + COLUMN_DATE + " TEXT NOT NULL, "
-                + COLUMN_LOCATION + " TEXT,"
-                + COLUMN_STATE + " INTEGER NOT NULL,"
-                + COLUMN_REGISTER_DATE + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
-                + "FOREIGN KEY(" + COLUMN_EMAIL +")"
-                + "REFERENCES " + TABLE3_NAME + "(" + COLUMN3_EMAIL + ")); ";
 
         long result = db.insert(TABLE_NAME, null, cv);
         if (result == -1)

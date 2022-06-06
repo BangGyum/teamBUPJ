@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -53,7 +54,8 @@ public class PopupActivity extends Activity {
     MyDatabaseHelper db ;
     int alarmIds[] = new int[]{1000023,1000021,1000029,1000027,1000014,1000011,1000019,1000016,1000035,1000022
                             ,1000024,1000028,1000030,1000012,1000015,1000017,1000020,1000034,1000036};
-
+    int addCount = 0 ; // db에 넣을때, 알람이 어려개라 for ( int i ... 에서 int i 대신에 만든 것.
+                // 리스너에서도 이걸 사용해서 alarmEdit[addCount] 로 id값 찾으려고
 
     int btn_count=0; //버튼 생성에
     //데이트피커다이얼로그
@@ -126,12 +128,25 @@ public class PopupActivity extends Activity {
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         String state = "AM";
                         //선택한 시간이 12시를 넘을 경우 "PM"으로 변경
+
+                        String h = Integer.toString(selectedHour);
+                        String m = Integer.toString(selectedMinute);
+                        if (selectedHour<10){
+                            h = "0"+h;
+                        }
+                        if (selectedMinute<10){
+                            m = "0"+m;
+                        }
+
                         if (selectedHour > 12) {
                             selectedHour -= 12;
                             state = "PM";
                         }
                         //TextView에 출력할 형식 지정
                         time_view.setText(state + " " + selectedHour + "시 " + selectedMinute + "분 ");
+                        //Log.v("test","test:"+h + m);
+                        time=h + m;
+
                     }
                 }, hour, minute, false); //true의 경우24시간 형식의 TimePicker출현
                 mTimePicker.setTitle("Select Time");
@@ -152,6 +167,7 @@ public class PopupActivity extends Activity {
             }
         });
     }
+
     public void createTextView(String text){
         //텍스트뷰 객체 생성
         //TextView textViewNm = new TextView(getApplicationContext());
@@ -169,6 +185,7 @@ public class PopupActivity extends Activity {
             editNm.setTextSize(9);
             //String a= alarmIds[btn_count];
             editNm.setId(alarmIds[btn_count]);
+            editNm.setOnClickListener(TimeAddClickList);
 
             // 레이아웃설정
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
@@ -200,24 +217,79 @@ public class PopupActivity extends Activity {
         Intent intent = new Intent();
         intent.putExtra("result","Close");
         setResult(RESULT_OK, intent);
-        int a = 0;
-
-        //Toast.makeText(context, userEmail, Toast.LENGTH_SHORT).show();
-        a = db.addSchedule(userEmail
-                      ,text1.getText().toString()
-                      ,date
-                      ,Location);
-
-        //Toast.makeText(context, a +"", Toast.LENGTH_SHORT).show();
-
-        //알람 갯수만큼 입력
-        for (int i=0; i<btn_count;i++){
-
-        }
+//        int a = 0; //해당 스케줄 아이디
+//
+//        //Toast.makeText(context, userEmail, Toast.LENGTH_SHORT).show();
+//        a = db.addSchedule(userEmail
+//                      ,text1.getText().toString()
+//                      ,date
+//                      ,Location);
+//
+//        //Toast.makeText(context, a +"", Toast.LENGTH_SHORT).show();
+//
+//        //알람 갯수만큼 입력
+//        for (; addCount<btn_count;addCount++){
+//            TextView time_view = (TextView) findViewById(alarmIds[addCount]); //메소드에 getText해서 넣어서 db에 넣어야되니깐 생성한거임
+//            db.addAlarm(a
+//                        ,time_view.getText().toString());
+//        }
 
         //팝업닫기
         finish();
     }
+    public void mOnConfirm(View v){
+        Intent intent = new Intent();
+        intent.putExtra("result","Close");
+        setResult(RESULT_OK, intent);
+        int a = 0; //해당 스케줄 아이디
+
+        //Toast.makeText(context, userEmail, Toast.LENGTH_SHORT).show();
+        a = db.addSchedule(userEmail
+                ,text1.getText().toString()
+                ,date
+                ,time
+                ,Location);
+
+        //Toast.makeText(context, a +"", Toast.LENGTH_SHORT).show();
+
+        //알람 갯수만큼 입력
+        for (; addCount<btn_count;addCount++){
+            TextView time_view = (TextView) findViewById(alarmIds[addCount]); //메소드에 getText해서 넣어서 db에 넣어야되니깐 생성한거임
+            db.addAlarm(a
+                    ,time_view.getText().toString());
+        }
+
+        finish();
+    }
+
+
+    View.OnClickListener TimeAddClickList = new View.OnClickListener(){
+        public void onClick(View v) {
+            Calendar mcurrentTime = Calendar.getInstance();
+            TextView time_view = (TextView) findViewById(alarmIds[btn_count]);
+            int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+            int minute = mcurrentTime.get(Calendar.MINUTE);
+            TimePickerDialog mTimePicker;
+            mTimePicker = new TimePickerDialog(PopupActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                    String state = "AM";
+                    //선택한 시간이 12시를 넘을 경우 "PM"으로 변경
+                    if (selectedHour > 12) {
+                        selectedHour -= 12;
+                        state = "PM";
+                    }
+                    //TextView에 출력할 형식 지정
+                    time_view.setText(state + " " + selectedHour + "시 " + selectedMinute + "분 ");
+                }
+            }, hour, minute, false); //true의 경우24시간 형식의 TimePicker출현
+            mTimePicker.setTitle("Select Time");
+            mTimePicker.show();
+        }
+    };
+
+
+
     // 밖 레이어 클릭시 문제없게
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction()==MotionEvent.ACTION_OUTSIDE){
