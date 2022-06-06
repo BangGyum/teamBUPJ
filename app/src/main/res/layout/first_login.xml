@@ -8,101 +8,26 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="16dp"
+    android:background="@color/black"
     tools:context=".MainActivity">
-    <TextView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="LOGIN"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textSize="24sp"
-        android:layout_marginBottom="16dp"/>
-
+        android:layout_height="?attr/actionBarSize"
+        android:background="#3C3938"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null"
-        android:src="@mipmap/ic_launcher"
-        android:layout_marginBottom="16dp"
-        android:layout_gravity="center"/>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:hint="Email"
-            android:layout_height="50dp"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:hint="Password"
-            android:layout_height="50dp"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/bin_blue"
-        android:textColor="@color/white"
-        android:text="Log in"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Or"/>
-    <androidx.appcompat.widget.AppCompatButton
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@drawable/bin_darkblue"
-        android:layout_marginBottom="16dp"
-        android:textColor="@color/white"
-        android:text="Log in with Google"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="10">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="5"
-            android:textSize="24sp"
-            android:text="Find Password"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="5"
-            android:textSize="24sp"
-            android:text="Sign Up"/>
-    </LinearLayout>
-
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="아래쪽은 id위에있는걸로 지정해서 바꿔"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"/>
-
-
-
+        android:src="@drawable/life_manager"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
             <TextView
                 android:id="@+id/status_textview"
                 android:layout_width="wrap_content"
@@ -111,16 +36,12 @@
                 />
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/sing_in_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
                 />
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                />
-            <Button
-                android:layout_width="100dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Sign Out"
                 android:id="@+id/signOutButton"
