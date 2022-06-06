@@ -13,11 +13,6 @@
         android:background="@color/teal_200"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-    <Button
-        android:id="@+id/btn11"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="확인"/>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
