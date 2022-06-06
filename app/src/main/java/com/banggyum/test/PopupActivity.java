@@ -1,16 +1,11 @@
 package com.banggyum.test;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -24,7 +19,6 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 
 // input 팝업창
@@ -42,7 +36,6 @@ public class PopupActivity extends Activity {
     LinearLayout li;
     Button alarmBtn ;
     Button mapBtn;
-    Intent intentmap;
     Calendar myCalendar = Calendar.getInstance();
     EditText alarmEdit[];
     /*String alarmIds[] = new String []{"R.id.alarm1","R.id.alarm2","R.id.alarm3","R.id.alarm4","R.id.alarm5"
@@ -161,11 +154,25 @@ public class PopupActivity extends Activity {
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intentmap = new Intent(getApplicationContext(), InsertMapDB.class);
+                Intent intentmap = new Intent(getApplicationContext(), InsertMapDB.class);
                 startActivityIfNeeded(intentmap, 1);
             }
         });
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                String roadAddress = data.getStringExtra("roadAddress");
+                String searchName = data.getStringExtra("searchname");
+                Double lat = data.getDoubleExtra("lat", 0);
+                Double lng = data.getDoubleExtra("lng", 0);
+            }
+        }
+    }
+
     public void createTextView(String text){
         //텍스트뷰 객체 생성
         //TextView textViewNm = new TextView(getApplicationContext());

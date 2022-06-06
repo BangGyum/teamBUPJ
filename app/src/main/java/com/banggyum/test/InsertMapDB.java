@@ -40,7 +40,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
     private double llat = 0;
     private double llng = 0;
     private MyBottomSheetFragment myBottomSheetFragment;
-    private String sc;
+    private String searchthing;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;    //권한 코드 번호
     private FusedLocationSource locationSource;
     private NaverMap map;
@@ -94,7 +94,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
     SearchView.OnQueryTextListener searchListener = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String query) {
-            sc = query;
+            searchthing = query;
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -119,7 +119,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
             BufferedReader br;
             HttpURLConnection conn;
             StringBuilder sb = new StringBuilder();
-            String addr = URLEncoder.encode(sc, "UTF-8");
+            String addr = URLEncoder.encode(searchthing, "UTF-8");
             int display = 5;
             String apiURL = "https://openapi.naver.com/v1/search/local.json?query=" + addr + "&display=" + display + "&"; //
             URL url = new URL(apiURL);
@@ -337,6 +337,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
 
                             Intent data = new Intent();
                             data.putExtra("roadAddress", roadAddress);
+                            data.putExtra("searchname", searchthing);
                             data.putExtra("lat", llat);
                             data.putExtra("lng", llng);
                             setResult(RESULT_OK, data);
