@@ -1,6 +1,5 @@
 package com.banggyum.test;
 
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -48,6 +48,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
     private FusedLocationSource locationSource;
     private NaverMap map;
     private int searchNum;
+    private Marker onemarker;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,6 +62,15 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         //App Bar의 좌측 영영에 Drawer를 Open 하기 위한 Incon 추가
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_dehaze_24);
+
+        onemarker = new Marker();
+        Button btn11 = findViewById(R.id.btn11);
+        btn11.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         //mapfragment 사용하여 지도를 이용
         MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.map_fragment);
@@ -99,7 +109,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                 @Override
                 public void run() {
                     requestNaverLocal();
-                    requestGeocode();
+//                    requestGeocode();
                     clickOpenBottomSheetFragment();
 //                    onMapSearch();
                 }
@@ -305,7 +315,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                     @Override
                     public void run() {
                         requestGeocodeOne(itemObject.getName());
-                        onMapSearch();
+                        onMapSearch(itemObject.getName());
                     }
                 }).start();
                 Toast.makeText(InsertMapDB.this, itemObject.getName(), Toast.LENGTH_SHORT).show();
@@ -328,8 +338,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void onMapSearch(){
-        Marker onemarker = new Marker();
+    public void onMapSearch(String roadAddress){
         View v = null;
         new Thread(new Runnable() {
             @Override
@@ -344,7 +353,11 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                         map.moveCamera(cameraUpdate);
                         myBottomSheetFragment.dismiss();
                         onemarker.setOnClickListener(overlay -> {
-                            startActivity(new Intent(v.getContext(), Mappopup.class));
+                            Intent mapintent = new Intent(InsertMapDB.this, Mappopup.class);
+                            mapintent.putExtra("roadAddress", roadAddress);
+                            mapintent.putExtra("lat", llat);
+                            mapintent.putExtra("lng", llng);
+                            startActivity(mapintent);
                             return true;
                         });
 //                        for(int i=0;i<roadAddress.length;i++){
