@@ -1,14 +1,11 @@
 package com.banggyum.test;
 
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,6 +45,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
     private FusedLocationSource locationSource;
     private NaverMap map;
     private int searchNum;
+    private Marker onemarker;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,6 +59,8 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         //App Bar의 좌측 영영에 Drawer를 Open 하기 위한 Incon 추가
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_dehaze_24);
+
+        onemarker = new Marker();
 
         //mapfragment 사용하여 지도를 이용
         MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.map_fragment);
@@ -99,7 +99,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                 @Override
                 public void run() {
                     requestNaverLocal();
-                    requestGeocode();
+//                    requestGeocode();
                     clickOpenBottomSheetFragment();
 //                    onMapSearch();
                 }
@@ -119,7 +119,6 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
             BufferedReader br;
             HttpURLConnection conn;
             StringBuilder sb = new StringBuilder();
-            Log.v("sc", sc);
             String addr = URLEncoder.encode(sc, "UTF-8");
             int display = 5;
             String apiURL = "https://openapi.naver.com/v1/search/local.json?query=" + addr + "&display=" + display + "&"; //
@@ -149,8 +148,6 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                 }
 
                 String data = sb.toString();
-
-                Log.v("결과: ", data);
 
                 String[] array = data.split("\"");
                 roadAddress = new String[display];
@@ -222,9 +219,6 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                 lat[searchNum] = Double.parseDouble(sb.substring(indexFirst + 5, indexLast));
 
                 if(searchNum < roadAddress.length){
-                    Log.v("sea:", String.valueOf(searchNum));
-                    Log.v("lat:", String.valueOf(lat[searchNum]));
-                    Log.v("lat:", String.valueOf(lng[searchNum]));
                     searchNum += 1;
                     br.close();
                     conn.disconnect();
@@ -243,7 +237,6 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         try {
             BufferedReader br;
             StringBuilder sb = new StringBuilder();
-            Log.v("addr", addrone);
             addrone = URLEncoder.encode(addrone, "UTF-8");
             String query = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=" + addrone;
             URL url = new URL(query);
@@ -281,7 +274,6 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                 indexLast = sb.indexOf("\",\"distance\":");
                 llat = Double.parseDouble(sb.substring(indexFirst + 5, indexLast));
 
-                Log.v("lllat", String.valueOf(llat));
                 br.close();
                 conn.disconnect();
             }
@@ -294,7 +286,6 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         List<ItemObject> list = new ArrayList<>();
 
         for (int i =0; i< roadAddress.length; i++){
-            Log.v("주소: ", roadAddress[i]);
             list.add(new ItemObject(roadAddress[i]));
         }
 
@@ -305,10 +296,9 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                     @Override
                     public void run() {
                         requestGeocodeOne(itemObject.getName());
-                        onMapSearch();
+                        onMapSearch(itemObject.getName());
                     }
                 }).start();
-                Toast.makeText(InsertMapDB.this, itemObject.getName(), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -328,8 +318,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void onMapSearch(){
-        Marker onemarker = new Marker();
+    public void onMapSearch(String roadAddress){
         View v = null;
         new Thread(new Runnable() {
             @Override
@@ -337,14 +326,20 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.v("llat", String.valueOf(llat));
                         onemarker.setPosition(new LatLng(llat, llng));
                         onemarker.setMap(map);
                         CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(llat, llng));
                         map.moveCamera(cameraUpdate);
                         myBottomSheetFragment.dismiss();
                         onemarker.setOnClickListener(overlay -> {
-                            startActivity(new Intent(v.getContext(), Mappopup.class));
+                            Intent mapintent = new Intent(InsertMapDB.this, Mappopup.class);
+                            startActivityIfNeeded(mapintent, 1);
+
+                            Intent data = new Intent();
+                            data.putExtra("roadAddress", roadAddress);
+                            data.putExtra("lat", llat);
+                            data.putExtra("lng", llng);
+                            setResult(RESULT_OK, data);
                             return true;
                         });
 //                        for(int i=0;i<roadAddress.length;i++){
@@ -358,6 +353,16 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                 });
             }
         }).start();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                finish();
+            }
+        }
     }
 
     @UiThread

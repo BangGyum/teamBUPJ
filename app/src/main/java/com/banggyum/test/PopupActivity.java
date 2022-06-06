@@ -22,8 +22,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -44,6 +42,7 @@ public class PopupActivity extends Activity {
     LinearLayout li;
     Button alarmBtn ;
     Button mapBtn;
+    Intent intentmap;
     Calendar myCalendar = Calendar.getInstance();
     EditText alarmEdit[];
     /*String alarmIds[] = new String []{"R.id.alarm1","R.id.alarm2","R.id.alarm3","R.id.alarm4","R.id.alarm5"
@@ -162,12 +161,11 @@ public class PopupActivity extends Activity {
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentmap = new Intent(getApplicationContext(), InsertMapDB.class);
-                startActivity(intentmap);
+                intentmap = new Intent(getApplicationContext(), InsertMapDB.class);
+                startActivityIfNeeded(intentmap, 1);
             }
         });
     }
-
     public void createTextView(String text){
         //텍스트뷰 객체 생성
         //TextView textViewNm = new TextView(getApplicationContext());

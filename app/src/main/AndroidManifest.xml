@@ -51,6 +51,10 @@
         <activity
             android:name=".PopupActivity"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
+
+        <activity
+            android:name=".Mappopup"
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog" />
     </application>
 
 </manifest>
