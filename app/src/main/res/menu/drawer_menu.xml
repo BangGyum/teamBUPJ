@@ -13,5 +13,9 @@
         android:id="@+id/setting"
         android:title="setting"
         android:icon="@drawable/ic_baseline_settings_24"/>
+    <item
+        android:id="@+id/gone_schedule"
+        android:title="gone schedule"
+        android:icon="@drawable/ic_baseline_settings_24"/>
 
 </menu>
