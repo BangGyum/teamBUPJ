@@ -4,16 +4,16 @@
         android:id="@+id/schedule_fragment"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_schedule_24"
-        android:title="일정"/>
+        android:title="schedule"/>
     <item
         android:id="@+id/calender_fragment"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_calendar_month_24"
-        android:title="캘린더"/>
+        android:title="calendar"/>
     <item
         android:id="@+id/navmap_fragment"
         android:enabled="true"
         android:icon="@drawable/ic_baseline_map_24"
-        android:title="지도"/>
+        android:title="map"/>
 
 </menu>

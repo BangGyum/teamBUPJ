@@ -24,9 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
             android:background="#fff"
-            app:labelVisibilityMode="unlabeled"
             app:menu="@menu/navbar_menu"/>
         <FrameLayout
             android:id="@+id/main_frame"
