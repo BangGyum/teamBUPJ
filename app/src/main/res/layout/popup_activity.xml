@@ -48,6 +48,17 @@
             android:text="날짜"
             android:gravity="center"
             android:clickable="true"/>
+        <EditText
+            android:id="@+id/addra_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="장소명"/>
+        <TextView
+            android:id="@+id/addr_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="주소"
+            android:clickable="true"/>
         <LinearLayout
             android:id="@+id/dynamicLayout"
             android:padding="24dp"

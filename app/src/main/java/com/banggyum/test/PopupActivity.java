@@ -74,6 +74,8 @@ public class PopupActivity extends Activity {
         }
     };
 
+    private EditText addr_name;
+    private TextView addr_view;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //타이틀바 없앨래
@@ -87,12 +89,14 @@ public class PopupActivity extends Activity {
         li = findViewById(R.id.dynamicLayout);
         alarmBtn = findViewById(R.id.alarmBtn);
         mapBtn = findViewById(R.id.mapBtn);
+        addr_name = findViewById(R.id.addra_name);
+        addr_view = findViewById(R.id.addr_view);
 
         db = new MyDatabaseHelper(this);
 
         //UI 객체생성
         text1 = (EditText) findViewById(R.id.text1);
-//데이터 가져오
+        //데이터 가져오
 
         Intent intent = getIntent();
         String data = intent.getStringExtra("data");
@@ -160,15 +164,20 @@ public class PopupActivity extends Activity {
         });
     }
 
+    String roadAddress, searchName;
+    Double lat, lng;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-                String roadAddress = data.getStringExtra("roadAddress");
-                String searchName = data.getStringExtra("searchname");
-                Double lat = data.getDoubleExtra("lat", 0);
-                Double lng = data.getDoubleExtra("lng", 0);
+                roadAddress = data.getStringExtra("roadAddress");
+                searchName = data.getStringExtra("searchname");
+                lat = data.getDoubleExtra("lat", 0);
+                lng = data.getDoubleExtra("lng", 0);
+
+                addr_name.setText(searchName);
+                addr_view.setText(roadAddress);
             }
         }
     }
@@ -242,6 +251,7 @@ public class PopupActivity extends Activity {
         //팝업닫기
         finish();
     }
+
     public void mOnConfirm(View v){
         Intent intent = new Intent();
         intent.putExtra("result","Close");
