@@ -14,8 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyDatabaseHelper extends SQLiteOpenHelper
-{
+public class MyDatabaseHelper extends SQLiteOpenHelper {
     private Context context;
     private Context context_alarm;
     private static final String DATABASE_NAME = "schedule.db"; //db이름
@@ -43,16 +42,15 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
     private static final String COLUMN4_NAME = "holiday_name";
     private static final String COLUMN4_DATE = "holiday_date";
 
+
     private static final String TABLE5_NAME = "map"; //테이블명 (지도 테이블)
     private static final String COLUMN5_ID = "schedule_id_fk";
     private static final String COLUMN5_NAME = "map_name";
     private static final String COLUMN5_LATITUDE = "map_latitude";
     private static final String COLUMN5_LONGITUDE = "map_longitude";
-
     //List mList = new ArrayList();; //select해서 가져올 객체
 
-    public MyDatabaseHelper(@Nullable Context context)
-    {
+    public MyDatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
     }
@@ -66,14 +64,14 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
             + COLUMN_LOCATION + " TEXT,"
             + COLUMN_STATE + " INTEGER NOT NULL,"
             + COLUMN_REGISTER_DATE + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
-            + "FOREIGN KEY(" + COLUMN_EMAIL +")"
+            + "FOREIGN KEY(" + COLUMN_EMAIL + ")"
             + "REFERENCES " + TABLE3_NAME + "(" + COLUMN3_EMAIL + ")); ";
 
     //알람 table
     String query_alarm = "CREATE TABLE " + TABLE2_NAME
             + " (" + COLUMN2_ID + " INTEGER NOT NULL, "
             + COLUMN2_TIME + " TIMESTAMP, "
-            + "FOREIGN KEY(" + COLUMN2_ID +")"
+            + "FOREIGN KEY(" + COLUMN2_ID + ")"
             + "REFERENCES " + TABLE_NAME + "(" + COLUMN_ID + ")); ";
 
     //외래키가 활성화가 안돼있을수도 있기에
@@ -93,10 +91,10 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
             + COLUMN5_NAME + " TEXT, "
             + COLUMN5_LATITUDE + " DOUBLE NOT NULL, "
             + COLUMN5_LONGITUDE + " DOUBLE NOT NULL, "
-            + "FOREIGN KEY(" + COLUMN5_ID +")"
+            + "FOREIGN KEY(" + COLUMN5_ID + ")"
             + "REFERENCES " + TABLE_NAME + "(" + COLUMN_ID + ")); ";
 
-    public void a()  {
+    public void a() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(query_user);
         db.execSQL(query_schedule);
@@ -104,6 +102,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
         db.execSQL(query_pragma);
         db.execSQL(query_calender);
     }
+
     @Override
     public void onCreate(SQLiteDatabase db)
     //db가 처음 생성될때 호출되는 메소드, execsql을 호출해 데이터를 채우는 작업
@@ -115,9 +114,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
         db.execSQL(query_calender);
         db.execSQL(query_map);
     }
+
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
-    {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         //onUpgrade()는 DB를 업그레이드해야 할 때, 업그레이드는 존재하는 DB 파일에 저장된 버전의 번호가 생성자에서 요청하는 것보다 낮은 경우,
         // 기존의 DB를 삭제하고 다시 생성
         db.execSQL("DROP TABLE " + TABLE_NAME);
@@ -142,33 +141,30 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
 
             if ("".equals("")) {// 테이블 끝까지 읽기
                 Toast.makeText(context, "응애2", Toast.LENGTH_SHORT).show();
-                Toast.makeText(context, mCursor.getString(0)+"응애", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, mCursor.getString(0) + "응애", Toast.LENGTH_SHORT).show();
                 return;
-            }else{
+            } else {
                 Toast.makeText(context, "응애3", Toast.LENGTH_SHORT).show();
                 SQLiteDatabase db2 = this.getWritableDatabase();
                 ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
 
-                cv.put(COLUMN3_EMAIL ,addEmail);
-                cv.put(COLUMN3_NAME ,addName);
+                cv.put(COLUMN3_EMAIL, addEmail);
+                cv.put(COLUMN3_NAME, addName);
 
                 long result = db2.insert(TABLE3_NAME, null, cv);
-                if (result == -1)
-                {
+                if (result == -1) {
                     Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
+                } else {
                     Toast.makeText(context, "알람 데이터 추가 성공", Toast.LENGTH_SHORT).show();
                 }
             }
-        }catch (Exception e ) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    public void addMap(int schedule_id, String addName,Double lat, Double lng)
+    public void addMap(int schedule_id, String addName, Double lat, Double lng)
     //사용자 id, 내용, 일정날짜, 알람 정보(이건 배열로?),
     {
         if (addName.equals("")) {
@@ -206,6 +202,58 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
 
         }
     }
+
+    @SuppressLint("Range")
+    public List<MapDTO> selectMap() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<MapDTO> mList = new ArrayList<MapDTO>();
+        //Cursor mCursor = null;
+        try {
+            // 테이블 정보를 저장할 List
+
+            // 쿼리
+            String sql = "SELECT * FROM " + TABLE5_NAME;
+
+            // 테이블 데이터를 읽기 위한 Cursor
+            //mCursor = db.query(TABLE_NAME, null, "AGE" + " < ?"
+            //        , new String[]{age.toString()}, null, null, "NAME");
+            //Cursor mCursor = db.query(TABLE_NAME, null, null, null, null, null, null);
+
+            Cursor mCursor = db.rawQuery(sql, null);
+
+            if (mCursor != null) {// 테이블 끝까지 읽기
+
+                while (mCursor.moveToNext()) {// 다음 Row로 이동
+                    // 해당 Row 저장
+                    MapDTO MD = new MapDTO();
+
+                    //MD.setSchedule_id(mCursor.getInt(0));
+                    int a = mCursor.getInt(0);
+                    MD.getMap_latitude(mCursor.getDouble(2));
+                    //1은 사용자
+
+
+                    //SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    //scD.setSchedule_registerDate1(sdf.format(scD.getTimestamp(7)));
+
+                    //scD.setSchedule_registerDate(mCursor.getString(6));
+                    //Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
+                    //위가 문제
+                    // List에 해당 Row 추가
+                    mList.add(MD);
+                }
+            } else {
+                Toast.makeText(context, "데이터 안읽힘", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return mList;
+    }
+
+
+
+
 
     public int addSchedule(String addEmail, String addContext, String addDate, String addTime, String addLocation)
     //사용자 id, 내용, 일정날짜, 알람 정보(이건 배열로?),
@@ -332,6 +380,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
         }
         return mList;
     }
+
+
+
     public ScheduleDTO selectSchedule(int state) {
         SQLiteDatabase db = this.getReadableDatabase();
         ScheduleDTO scD = new ScheduleDTO();
