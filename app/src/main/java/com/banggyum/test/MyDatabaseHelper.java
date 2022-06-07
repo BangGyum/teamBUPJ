@@ -25,7 +25,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
     private static final String COLUMN_EMAIL = "user_email"; //사용자 id (fk)
     private static final String COLUMN_CONTEXT = "schedule_context"; //내용
     private static final String COLUMN_DATE = "schedule_date"; //일정 날짜
-    private static final String COLUMN_TIME = "schedule_time"; //일정 시각
+    private static final String COLUMN_TIME = "schedule_time"; //일정 날짜
     private static final String COLUMN_LOCATION = "schedule_location"; //일정 지도 fk 예정
     private static final String COLUMN_STATE = "schedule_state"; //평범상태 = 1 , 삭제상태 = 0
     private static final String COLUMN_REGISTER_DATE = "schedule_registerDate"; //만든 날짜
@@ -45,6 +45,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
 
     private static final String TABLE5_NAME = "map"; //테이블명 (지도 테이블)
     private static final String COLUMN5_ID = "schedule_id_fk";
+    private static final String COLUMN5_NAME = "map_name";
     private static final String COLUMN5_LATITUDE = "map_latitude";
     private static final String COLUMN5_LONGITUDE = "map_longitude";
 
@@ -62,7 +63,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
             + COLUMN_EMAIL + " TEXT NOT NULL, "
             + COLUMN_CONTEXT + " TEXT NOT NULL, "
             + COLUMN_DATE + " TEXT NOT NULL, "
-            + COLUMN_TIME + " TEXT NOT NULL, "
             + COLUMN_LOCATION + " TEXT,"
             + COLUMN_STATE + " INTEGER NOT NULL,"
             + COLUMN_REGISTER_DATE + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
@@ -90,6 +90,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
 
     String query_map = "CREATE TABLE " + TABLE5_NAME
             + " (" + COLUMN5_ID + " INTEGER NOT NULL, "
+            + COLUMN5_NAME + " TEXT, "
             + COLUMN5_LATITUDE + " DOUBLE NOT NULL, "
             + COLUMN5_LONGITUDE + " DOUBLE NOT NULL, "
             + "FOREIGN KEY(" + COLUMN5_ID +")"
@@ -167,6 +168,45 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
 
     }
 
+    public void addMap(int schedule_id, String addName,Double lat, Double lng)
+    //사용자 id, 내용, 일정날짜, 알람 정보(이건 배열로?),
+    {
+        if (addName.equals("")) {
+            addName = "null";
+        }
+        if (lat.equals("null")) {
+            addName = null;
+        }
+        if (lat.equals(null)) {
+            lat = 0.0;
+        }
+        if (lng.equals(null)) {
+            lng = 0.0;
+        }
+
+        int scheduleId = 0; //
+        ScheduleDTO scD = new ScheduleDTO();
+
+        SQLiteDatabase db = this.getWritableDatabase(); //SQLiteDatabase 객체를 만든 뒤 이 객체를 쓰기(Write)가 가능하도록 설정한다는 내용이다.
+        // 이 처리를 해줘야 테이블에 데이터를 추가할 수 있다.
+        ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
+
+        //cv.put();// 사용자 id 추가
+        cv.put(COLUMN5_ID, schedule_id);
+        cv.put(COLUMN5_NAME, addName);
+        cv.put(COLUMN5_LATITUDE, lat);
+        cv.put(COLUMN5_LONGITUDE, lng);
+
+        long result = db.insert(TABLE5_NAME, null, cv);
+        if (result == -1) {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+        } else {
+            SQLiteDatabase db2 = this.getReadableDatabase();
+            Toast.makeText(context, "맵 데이터 추가 성공", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
     public int addSchedule(String addEmail, String addContext, String addDate, String addTime, String addLocation)
     //사용자 id, 내용, 일정날짜, 알람 정보(이건 배열로?),
     {
@@ -187,9 +227,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper
         cv.put(COLUMN_CONTEXT, addContext);
         cv.put(COLUMN_DATE, addDate);
         cv.put(COLUMN_TIME, addTime);
+
         cv.put(COLUMN_LOCATION, addLocation);
         cv.put(COLUMN_STATE, 1); //이거 근데 다른테이블에 넣어야될것같은데
-
 
         long result = db.insert(TABLE_NAME, null, cv);
         if (result == -1)
