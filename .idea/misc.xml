@@ -15,101 +15,16 @@
         <entry key="..\:/Users/dede9/AndroidStudioProjects/teamBUPJ/app/src/main/res/layout/search.xml" value="0.3351449275362319" />
         <entry key="..\:/Users/dede9/AndroidStudioProjects/teamBUPJ/app/src/main/res/layout/view_custom_info_window.xml" value="0.17477203647416414" />
         <entry key="..\:/Users/uj052/AndroidStudioProjects/teamBUPJ/app/src/main/res/layout/activity_main.xml" value="0.42552083333333335" />
+        <entry key="..\:/teamBUPJ/app/src/main/res/layout/activity_map_fragment.xml" value="0.23802083333333332" />
+        <entry key="..\:/teamBUPJ/app/src/main/res/layout/first_login.xml" value="0.13020833333333334" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/fragment__calendar.xml" value="0.25364583333333335" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/fragment__schedule.xml" value="0.25364583333333335" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/layout_item.xml" value="0.25364583333333335" />
-        <entry key="..\:/teamBUPJ/app/src/main/res/layout/schedule_list.xml" value="0.25364583333333335" />
+        <entry key="..\:/teamBUPJ/app/src/main/res/layout/map_marker_popup.xml" value="0.23802083333333332" />
+        <entry key="..\:/teamBUPJ/app/src/main/res/layout/popup_activity.xml" value="0.1890625" />
+        <entry key="..\:/teamBUPJ/app/src/main/res/layout/schedule_list.xml" value="0.264" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/schedule_list_fg.xml" value="0.25364583333333335" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/search.xml" value="0.25364583333333335" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/activity_main.xml" value="0.34270833333333334" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/activity_testgeocode.xml" value="0.23177083333333334" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/drawer_header.xml" value="0.31145833333333334" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/first_layout.xml" value="0.41394927536231885" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/first_login.xml" value="0.42552083333333335" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/fragment__schedule.xml" value="0.228125" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/popup_activity.xml" value="0.41394927536231885" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/view_custom_info_window.xml" value="0.42552083333333335" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/menu/drawer_menu.xml" value="0.228125" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/xml/drawer_menu.xml" value="0.1703125" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1235" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_action_search.xml" value="0.105" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.105" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_baseline_calendar_month_24.xml" value="0.1235" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.105" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_baseline_map_24.xml" value="0.1235" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.1235" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_baseline_schedule_24.xml" value="0.1235" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_info_black_24dp.xml" value="0.1845" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1235" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_my_location_black_24dp.xml" value="0.1845" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_place_black_24dp.xml" value="0.1845" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/activity_map_fragment.xml" value="0.1125" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/activity_maps_naver.xml" value="0.25" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/drawer_header.xml" value="0.10989583333333333" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/fragment__calendar.xml" value="0.25364583333333335" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/fragment__map.xml" value="0.25364583333333335" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/fragment__schedule.xml" value="0.25364583333333335" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/layout_bottom_sheet.xml" value="0.25" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/layout_item.xml" value="0.25" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/popup_activity.xml" value="0.25" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/recycler.xml" value="0.25364583333333335" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/schedule_list.xml" value="0.1125" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/search.xml" value="0.25" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/test_searchlist.xml" value="0.24947916666666667" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/toolbar.xml" value="0.1125" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/view_custom_info_window.xml" value="0.25" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/menu/actionbar_menu.xml" value="0.25364583333333335" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/menu/navbar_menu.xml" value="0.25364583333333335" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/xml/network_security_config.xml" value="0.26614583333333336" />
-        <entry key="..\:/team_BUPJ/app/src/main/res/layout/activity_main2.xml" value="0.25" />
-        <entry key="..\:/team_BUPJ/app/src/main/res/layout/popup_activity.xml" value="0.23802083333333332" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/activity_main.xml" value="0.34270833333333334" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/drawer_header.xml" value="0.31145833333333334" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/first_layout.xml" value="0.41394927536231885" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/first_login.xml" value="0.42552083333333335" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/fragment__schedule.xml" value="0.228125" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/popup_activity.xml" value="0.41394927536231885" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/view_custom_info_window.xml" value="0.42552083333333335" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/menu/drawer_menu.xml" value="0.228125" />
-        <entry key="..\:/_teamBUPJ/app/src/main/res/xml/drawer_menu.xml" value="0.1703125" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1235" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_action_search.xml" value="0.105" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.105" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_baseline_calendar_month_24.xml" value="0.1235" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.105" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_baseline_map_24.xml" value="0.1235" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.1235" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_baseline_schedule_24.xml" value="0.1235" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.1955" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_info_black_24dp.xml" value="0.1845" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1235" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_my_location_black_24dp.xml" value="0.1845" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/drawable/ic_place_black_24dp.xml" value="0.1845" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/activity_map_fragment.xml" value="0.264" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/activity_maps_naver.xml" value="0.25" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/drawer_header.xml" value="0.10989583333333333" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/first_login.xml" value="0.10833333333333334" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/fragment__calendar.xml" value="0.25364583333333335" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/fragment__map.xml" value="0.25364583333333335" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/fragment__schedule.xml" value="0.264" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/layout_bottom_sheet.xml" value="0.25" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/layout_item.xml" value="0.25" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/map_marker_popup.xml" value="0.25" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/popup_activity.xml" value="0.25" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/recycler.xml" value="0.25364583333333335" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/schedule_list.xml" value="0.1125" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/schedule_list_fg.xml" value="0.19384057971014493" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/search.xml" value="0.25" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/test_searchlist.xml" value="0.24947916666666667" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/toolbar.xml" value="0.1125" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/layout/view_custom_info_window.xml" value="0.25" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/menu/actionbar_menu.xml" value="0.25364583333333335" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/menu/main_menu.xml" value="0.24947916666666667" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/menu/navbar_menu.xml" value="0.25364583333333335" />
-        <entry key="..\:/android/teamBUPJ/app/src/main/res/xml/network_security_config.xml" value="0.26614583333333336" />
-        <entry key="..\:/team_BUPJ/app/src/main/res/layout/activity_main2.xml" value="0.25" />
-        <entry key="..\:/team_BUPJ/app/src/main/res/layout/popup_activity.xml" value="0.23802083333333332" />
       </map>
     </option>
   </component>
@@ -122,7 +37,7 @@
   <component name="VisualizationToolProject">
     <option name="state">
       <ProjectState>
-        <option name="scale" value="0.10462962962962963" />
+        <option name="scale" value="0.264" />
       </ProjectState>
     </option>
   </component>

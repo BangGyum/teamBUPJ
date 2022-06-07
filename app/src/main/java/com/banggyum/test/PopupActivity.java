@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -30,7 +31,8 @@ public class PopupActivity extends Activity {
     String date; //날짜
     String time;
     String Context;
-    String Location="미정";
+    String LocationName="미정";
+
 
     EditText text1;
     LinearLayout li;
@@ -257,13 +259,13 @@ public class PopupActivity extends Activity {
         intent.putExtra("result","Close");
         setResult(RESULT_OK, intent);
         int a = 0; //해당 스케줄 아이디
-
+//        searchName = " d";
         //Toast.makeText(context, userEmail, Toast.LENGTH_SHORT).show();
         a = db.addSchedule(userEmail
                 ,text1.getText().toString()
                 ,date
                 ,time
-                ,Location);
+                ,searchName);
 
         //Toast.makeText(context, a +"", Toast.LENGTH_SHORT).show();
 
@@ -274,6 +276,13 @@ public class PopupActivity extends Activity {
                     ,time_view.getText().toString());
         }
 
+//        lat=1.1;
+//        lng=1.1;
+        db.addMap(a
+                ,searchName
+                , lat
+                , lng) ;
+
         finish();
     }
 
@@ -281,7 +290,8 @@ public class PopupActivity extends Activity {
     View.OnClickListener TimeAddClickList = new View.OnClickListener(){
         public void onClick(View v) {
             Calendar mcurrentTime = Calendar.getInstance();
-            TextView time_view = (TextView) findViewById(alarmIds[btn_count]);
+            //TextView time_view = (TextView) findViewById(alarmIds[btn_count]);
+            TextView time_view = (TextView) findViewById(v.getId());
             int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
             int minute = mcurrentTime.get(Calendar.MINUTE);
             TimePickerDialog mTimePicker;
@@ -294,6 +304,10 @@ public class PopupActivity extends Activity {
                         selectedHour -= 12;
                         state = "PM";
                     }
+//                    Log.v("state","state:" + state);
+//                    Log.v("state1","hour:" + selectedHour);
+//                    Log.v("state2","min:" + selectedMinute);
+
                     //TextView에 출력할 형식 지정
                     time_view.setText(state + " " + selectedHour + "시 " + selectedMinute + "분 ");
                 }

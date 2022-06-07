@@ -61,6 +61,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_EMAIL + " TEXT NOT NULL, "
             + COLUMN_CONTEXT + " TEXT NOT NULL, "
             + COLUMN_DATE + " TEXT NOT NULL, "
+            + COLUMN_TIME + " TEXT NOT NULL, "
             + COLUMN_LOCATION + " TEXT,"
             + COLUMN_STATE + " INTEGER NOT NULL,"
             + COLUMN_REGISTER_DATE + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "

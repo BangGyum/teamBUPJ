@@ -34,7 +34,6 @@ public class Fragment_Schedule extends Fragment {
             }
         });
 
-
 //        @Override
 //        public View onCreateView(LayoutInflater inflater, ViewGroup container,
 //                Bundle savedInstanceState) {
