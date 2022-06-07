@@ -14,7 +14,7 @@ public class MapDTO {
         this.schedule_id_fk = schedule_id_fk;
     }
 
-    public String getMap_name() {
+    public String getMap_name(String string) {
         return map_name;
     }
 
@@ -30,7 +30,7 @@ public class MapDTO {
         this.map_latitude = map_latitude;
     }
 
-    public Double getMap_longitude() {
+    public Double getMap_longitude(double aDouble) {
         return map_longitude;
     }
 

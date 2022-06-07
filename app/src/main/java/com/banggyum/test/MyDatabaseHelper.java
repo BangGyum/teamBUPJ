@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -208,12 +207,13 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public List<MapDTO> selectMap() {
         SQLiteDatabase db = this.getReadableDatabase();
         List<MapDTO> mList = new ArrayList<MapDTO>();
+        List<ScheduleDTO> sList = new ArrayList<ScheduleDTO>();
         //Cursor mCursor = null;
         try {
             // 테이블 정보를 저장할 List
 
             // 쿼리
-            String sql = "SELECT * FROM " + TABLE5_NAME;
+            String sql = "SELECT * FROM " + TABLE5_NAME + ", " + TABLE_NAME + " WHERE " + COLUMN5_ID + " = " + COLUMN_ID + ";";
 
             // 테이블 데이터를 읽기 위한 Cursor
             //mCursor = db.query(TABLE_NAME, null, "AGE" + " < ?"
@@ -227,12 +227,17 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 while (mCursor.moveToNext()) {// 다음 Row로 이동
                     // 해당 Row 저장
                     MapDTO MD = new MapDTO();
+                    ScheduleDTO SD = new ScheduleDTO();
 
-                    //MD.setSchedule_id(mCursor.getInt(0));
-                    int a = mCursor.getInt(0);
+                    MD.getMap_name(mCursor.getString(1));
                     MD.getMap_latitude(mCursor.getDouble(2));
-                    //1은 사용자
+                    MD.getMap_longitude(mCursor.getDouble(3));
 
+                    SD.setSchedule_id(mCursor.getInt(4));
+                    SD.setSchedule_context(mCursor.getString(5));
+                    SD.setSchedule_date(mCursor.getString(6));
+                    SD.setSchedule_location(mCursor.getString(7));
+                    SD.setSchedule_state(mCursor.getShort(8));
 
                     //SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     //scD.setSchedule_registerDate1(sdf.format(scD.getTimestamp(7)));
@@ -242,6 +247,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                     //위가 문제
                     // List에 해당 Row 추가
                     mList.add(MD);
+                    sList.add(SD);
                 }
             } else {
                 Toast.makeText(context, "데이터 안읽힘", Toast.LENGTH_SHORT).show();
@@ -251,10 +257,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
         return mList;
     }
-
-
-
-
 
     public int addSchedule(String addEmail, String addContext, String addDate, String addTime, String addLocation)
     //사용자 id, 내용, 일정날짜, 알람 정보(이건 배열로?),
@@ -382,8 +384,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return mList;
     }
 
-
-
     public ScheduleDTO selectSchedule(int state) {
         SQLiteDatabase db = this.getReadableDatabase();
         ScheduleDTO scD = new ScheduleDTO();
@@ -474,6 +474,4 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             Toast.makeText(context, "알람 데이터 수정 성공", Toast.LENGTH_SHORT).show();
         }
     }
-
-
 }
