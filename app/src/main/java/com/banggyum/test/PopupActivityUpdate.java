@@ -6,7 +6,6 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -23,7 +22,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 // input 팝업창
-public class PopupActivity extends Activity {
+public class PopupActivityUpdate extends Activity {
 
     private android.content.Context context;
     MainActivity ma = new MainActivity();
@@ -40,11 +39,7 @@ public class PopupActivity extends Activity {
     Button mapBtn;
     Calendar myCalendar = Calendar.getInstance();
     EditText alarmEdit[];
-    /*String alarmIds[] = new String []{"R.id.alarm1","R.id.alarm2","R.id.alarm3","R.id.alarm4","R.id.alarm5"
-                                        ,"R.id.alarm6","R.id.alarm7","R.id.alarm8","R.id.alarm9","R.id.alarm10","R.id.alarm11"
-                                        ,"R.id.alarm12","R.id.alarm13","R.id.alarm14","R.id.alarm15","R.id.alarm16"
-                                        ,"R.id.alarm17","R.id.alarm18","R.id.alarm19"};
-*/
+
     MyDatabaseHelper db ;
     int alarmIds[] = new int[]{1000023,1000021,1000029,1000027,1000014,1000011,1000019,1000016,1000035,1000022
                             ,1000024,1000028,1000030,1000012,1000015,1000017,1000020,1000034,1000036};
@@ -82,7 +77,7 @@ public class PopupActivity extends Activity {
         super.onCreate(savedInstanceState);
         //타이틀바 없앨래
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.popup_activity);
+        setContentView(R.layout.popup_activity_update);
 
         SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
 
@@ -107,7 +102,7 @@ public class PopupActivity extends Activity {
         data_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(PopupActivity.this, myDatePicker, myCalendar.get(
+                new DatePickerDialog(PopupActivityUpdate.this, myDatePicker, myCalendar.get(
                         Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
 }
@@ -121,7 +116,7 @@ public class PopupActivity extends Activity {
                 int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                 int minute = mcurrentTime.get(Calendar.MINUTE);
                 TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(PopupActivity.this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, new TimePickerDialog.OnTimeSetListener() {
+                mTimePicker = new TimePickerDialog(PopupActivityUpdate.this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         String state = "AM";
@@ -295,7 +290,7 @@ public class PopupActivity extends Activity {
             int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
             int minute = mcurrentTime.get(Calendar.MINUTE);
             TimePickerDialog mTimePicker;
-            mTimePicker = new TimePickerDialog(PopupActivity.this, new TimePickerDialog.OnTimeSetListener() {
+            mTimePicker = new TimePickerDialog(PopupActivityUpdate.this, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                     String state = "AM";
