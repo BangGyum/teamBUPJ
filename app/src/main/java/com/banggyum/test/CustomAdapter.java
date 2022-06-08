@@ -6,11 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.GenericLifecycleObserver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,10 +45,10 @@ public class CustomAdapter extends ArrayAdapter implements AdapterView.OnItemCli
         viewHolder.sd_text = (TextView) v.findViewById(R.id.sd_text);
         viewHolder.sd_posit = (TextView) v.findViewById(R.id.sd_posit);
 
-        final Schedule schedule = (Schedule) list.get(position);
-        viewHolder.sd_time.setText(schedule.getTime1());
-        viewHolder.sd_text.setText(schedule.getText1());
-        viewHolder.sd_posit.setText(schedule.getPosition());
+//        final Schedule schedule = (Schedule) list.get(position);
+//        viewHolder.sd_time.setText(schedule.getTime1());
+//        viewHolder.sd_text.setText(schedule.getText1());
+//        viewHolder.sd_posit.setText(schedule.getPosition());
 
 
         return v;

@@ -6,7 +6,6 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -265,7 +264,7 @@ public class PopupActivity extends Activity {
                 ,text1.getText().toString()
                 ,date
                 ,time
-                ,searchName);
+                ,addr_name.getText().toString());
 
         //Toast.makeText(context, a +"", Toast.LENGTH_SHORT).show();
 
@@ -276,10 +275,8 @@ public class PopupActivity extends Activity {
                     ,time_view.getText().toString());
         }
 
-//        lat=1.1;
-//        lng=1.1;
         db.addMap(a
-                ,searchName
+                , addr_name.getText().toString()
                 , lat
                 , lng) ;
 

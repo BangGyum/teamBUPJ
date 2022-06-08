@@ -1,6 +1,4 @@
 package com.banggyum.test;
-import java.sql.*;
-import java.text.SimpleDateFormat;
 
 public class ScheduleDTO {
     private int schedule_id;
@@ -10,16 +8,28 @@ public class ScheduleDTO {
     private String schedule_location;
     private short schedule_state;
     private String schedule_registerDate1;
+    private String schedule_registerDate;
+
+    public ScheduleDTO() {
+    }
 
     public String getSchedule_registerDate() {
         return schedule_registerDate;
     }
 
-    public void setSchedule_registerDate(String schedule_registerDate) {
+    public ScheduleDTO(int schedule_id, String schedule_context, String schedule_date, String schedule_location, short schedule_state, String schedule_registerDate1, String schedule_registerDate) {
+        this.schedule_id = schedule_id;
+        this.schedule_context = schedule_context;
+        this.schedule_date = schedule_date;
+        this.schedule_location = schedule_location;
+        this.schedule_state = schedule_state;
+        this.schedule_registerDate1 = schedule_registerDate1;
         this.schedule_registerDate = schedule_registerDate;
     }
 
-    private String schedule_registerDate;
+    public void setSchedule_registerDate(String schedule_registerDate) {
+        this.schedule_registerDate = schedule_registerDate;
+    }
 
     public int getSchedule_id() {
         return schedule_id;
