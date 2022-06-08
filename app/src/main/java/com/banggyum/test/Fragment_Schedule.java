@@ -26,13 +26,14 @@ public class Fragment_Schedule extends Fragment {
         View v = inflater.inflate(R.layout.fragment__schedule, container, false);
         FloatingActionButton floatingActionButton = v.findViewById(R.id.btn_fab);
 
-
+        //
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(view.getContext(), PopupActivity.class));
             }
         });
+
 
 //        @Override
 //        public View onCreateView(LayoutInflater inflater, ViewGroup container,

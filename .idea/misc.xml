@@ -15,6 +15,12 @@
         <entry key="..\:/Users/dede9/AndroidStudioProjects/teamBUPJ/app/src/main/res/layout/search.xml" value="0.3351449275362319" />
         <entry key="..\:/Users/dede9/AndroidStudioProjects/teamBUPJ/app/src/main/res/layout/view_custom_info_window.xml" value="0.17477203647416414" />
         <entry key="..\:/Users/uj052/AndroidStudioProjects/teamBUPJ/app/src/main/res/layout/activity_main.xml" value="0.42552083333333335" />
+        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/activity_main.xml" value="0.264" />
+        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/fragment__calendar.xml" value="0.21920289855072464" />
+        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/layout_item.xml" value="0.21920289855072464" />
+        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/map_marker_popup.xml" value="0.21920289855072464" />
+        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/popup_activity_update.xml" value="0.28396739130434784" />
+        <entry key="..\:/_teamBUPJ/app/src/main/res/layout/schedule_list.xml" value="0.21920289855072464" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/activity_map_fragment.xml" value="0.23802083333333332" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/first_login.xml" value="0.13020833333333334" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/fragment__calendar.xml" value="0.25364583333333335" />
@@ -37,7 +43,7 @@
   <component name="VisualizationToolProject">
     <option name="state">
       <ProjectState>
-        <option name="scale" value="0.264" />
+        <option name="scale" value="0.21920289855072464" />
       </ProjectState>
     </option>
   </component>
