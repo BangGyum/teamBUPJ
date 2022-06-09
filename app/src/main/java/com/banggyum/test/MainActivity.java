@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private Context context;
 
+
+
     String userEmail, userName, userPhotoUrl;
     ImageView userImageView;
     MyDatabaseHelper db ;
@@ -108,6 +110,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_main);
         db = new MyDatabaseHelper(this);
         userImageView =  findViewById(R.id.userImage);
+
+
 
         //toolBar를 통해 App Bar 생성
         Toolbar toolbar = findViewById(R.id.toolbar);

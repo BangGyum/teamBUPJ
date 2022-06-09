@@ -24,14 +24,13 @@ import java.util.Locale;
 // input 팝업창
 public class PopupActivity extends Activity {
 
+
+
     private android.content.Context context;
     MainActivity ma = new MainActivity();
     String userEmail = "";
     String date; //날짜
     String time;
-    String Context;
-    String LocationName="미정";
-
 
     EditText text1;
     LinearLayout li;
@@ -82,6 +81,8 @@ public class PopupActivity extends Activity {
         //타이틀바 없앨래
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.popup_activity);
+
+
 
         SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
 
