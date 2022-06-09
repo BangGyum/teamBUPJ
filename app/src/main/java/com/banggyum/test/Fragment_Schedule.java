@@ -1,10 +1,15 @@
 package com.banggyum.test;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,13 +46,24 @@ public class Fragment_Schedule extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ScheduleDTO SD = new ScheduleDTO(1, "context", "date", "location", (short) 123, "regdate", "redate");
-                listItem.add(SD);
-                scheduleItemAdapter.notifyDataSetChanged();
-                //                startActivity(new Intent(view.getContext(), PopupActivity.class));
+                Intent intentDB = new Intent(view.getContext(), PopupActivity.class);
+                startActivityForResult(intentDB, 1);
             }
         });
         return view;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                ScheduleDTO SD = new ScheduleDTO(1, "context", "date", "location", (short) 123, "regdate", "redate");
+                listItem.add(SD);
+                scheduleItemAdapter.notifyDataSetChanged();
+            }
+        }
     }
 }
 //

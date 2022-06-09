@@ -170,9 +170,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         if (addName.equals("")) {
             addName = "null";
         }
-        if (lat.equals("null")) {
-            addName = null;
-        }
         if (lat.equals(null)) {
             lat = 0.0;
         }
