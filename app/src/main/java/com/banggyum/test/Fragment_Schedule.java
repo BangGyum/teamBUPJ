@@ -82,25 +82,3 @@ public class Fragment_Schedule extends Fragment {
         }
     }
 }
-//
-//    class Schedule {
-//        private String time1;
-//        private String text1;
-//        private String position;
-//
-//        public Schedule(String time1, String text1, String position){
-//            this.time1 = time1;
-//            this.text1 = text1;
-//            this.position = position;
-//        }
-//
-//        public String getTime1(){
-//            return time1;
-//        }
-//        public String getText1(){
-//            return text1;
-//        }
-//        public String getPosition(){
-//            return position;
-//        }
-//    }
