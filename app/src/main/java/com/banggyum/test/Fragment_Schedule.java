@@ -5,6 +5,7 @@ import static android.app.Activity.RESULT_OK;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Fragment_Schedule extends Fragment {
@@ -25,7 +27,13 @@ public class Fragment_Schedule extends Fragment {
     private RecyclerView recyclerView;
     private ScheduleItemAdapter scheduleItemAdapter;
     private LinearLayoutManager linearLayoutManager;
-
+    List<ScheduleDTO> selectScheList = new ArrayList<ScheduleDTO>();
+    MyDatabaseHelper db ;
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//
+//        super.onCreate(savedInstanceState);
+//
+//    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -39,6 +47,8 @@ public class Fragment_Schedule extends Fragment {
         recyclerView.addItemDecoration(itemDecoration);
 
         listItem = new ArrayList<>();
+
+        db = new MyDatabaseHelper(view.getContext());
 
         scheduleItemAdapter = new ScheduleItemAdapter(listItem);
         recyclerView.setAdapter(scheduleItemAdapter);
@@ -68,7 +78,13 @@ public class Fragment_Schedule extends Fragment {
     }
 
     public void addRecylerItem(){
-        
+        selectScheList=db.selectSchedules();
+        for (int i=0; i<selectScheList.size(); i++){
+            ScheduleDTO sd = new ScheduleDTO();
+            sd= selectScheList.get(i);
+
+            Log.v("aaaa",sd.getSchedule_context());
+        }
     }
 }
 //

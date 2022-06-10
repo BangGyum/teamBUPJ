@@ -3,6 +3,7 @@ package com.banggyum.test;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
@@ -14,6 +15,8 @@ import com.bumptech.glide.Glide;
 public class DrawerHeader extends AppCompatActivity {
     String userEmail, userName, userPhotoUrl;
     ImageView userImageView;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,5 +34,6 @@ public class DrawerHeader extends AppCompatActivity {
         //tvUserEmail.setText(userEmail);
 
         Glide.with(this).load(userPhotoUrl).into(userImageView); //url을 통해 이미지 다운?
+        Log.v("wewe","wewe"+userPhotoUrl);
     }
 }
