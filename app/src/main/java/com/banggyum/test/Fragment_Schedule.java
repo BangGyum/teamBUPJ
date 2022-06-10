@@ -50,6 +50,7 @@ public class Fragment_Schedule extends Fragment {
                 startActivityForResult(intentDB, 1);
             }
         });
+        addRecylerItem();
         return view;
     }
 
@@ -64,6 +65,10 @@ public class Fragment_Schedule extends Fragment {
                 scheduleItemAdapter.notifyDataSetChanged();
             }
         }
+    }
+
+    public void addRecylerItem(){
+        
     }
 }
 //

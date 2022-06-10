@@ -228,32 +228,14 @@ public class PopupActivity extends Activity {
         }
 
     }
-    //확인 버튼 클릭
-    public void mOnClose(View v){
-        Intent intent = new Intent();
-        intent.putExtra("result","Close");
-        setResult(RESULT_OK, intent);
-//        int a = 0; //해당 스케줄 아이디
-//
-//        //Toast.makeText(context, userEmail, Toast.LENGTH_SHORT).show();
-//        a = db.addSchedule(userEmail
-//                      ,text1.getText().toString()
-//                      ,date
-//                      ,Location);
-//
-//        //Toast.makeText(context, a +"", Toast.LENGTH_SHORT).show();
-//
-//        //알람 갯수만큼 입력
-//        for (; addCount<btn_count;addCount++){
-//            TextView time_view = (TextView) findViewById(alarmIds[addCount]); //메소드에 getText해서 넣어서 db에 넣어야되니깐 생성한거임
-//            db.addAlarm(a
-//                        ,time_view.getText().toString());
-//        }
 
+    //닫기 버튼 클릭
+    public void mOnClose(View v){
         //팝업닫기
         finish();
     }
 
+    //확인 버튼 클릭
     public void mOnConfirm(View v){
         Intent intent = new Intent();
         intent.putExtra("result","Close");
@@ -276,6 +258,7 @@ public class PopupActivity extends Activity {
                     ,time_view.getText().toString());
         }
 
+        //맵 정보 저장
         db.addMap(a
                 , addr_name.getText().toString()
                 , lat
