@@ -5,7 +5,6 @@ import static android.app.Activity.RESULT_OK;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +26,8 @@ public class Fragment_Schedule extends Fragment {
     private RecyclerView recyclerView;
     private ScheduleItemAdapter scheduleItemAdapter;
     private LinearLayoutManager linearLayoutManager;
-    List<ScheduleDTO> selectScheList = new ArrayList<ScheduleDTO>();
-    MyDatabaseHelper db ;
-//    public void onCreate(@Nullable Bundle savedInstanceState) {
-//
-//        super.onCreate(savedInstanceState);
-//
-//    }
+    private List<ScheduleDTO> selectScheList = new ArrayList<ScheduleDTO>();
+    private MyDatabaseHelper db ;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -70,42 +64,21 @@ public class Fragment_Schedule extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-                ScheduleDTO SD = new ScheduleDTO(1, "context", "date", "location", (short) 123, "regdate", "redate");
-                listItem.add(SD);
-                scheduleItemAdapter.notifyDataSetChanged();
+                addRecylerItem();
             }
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void addRecylerItem(){
-        selectScheList=db.selectSchedules();
+        selectScheList = db.selectSchedules();
         for (int i=0; i<selectScheList.size(); i++){
-            ScheduleDTO sd = new ScheduleDTO();
-            sd= selectScheList.get(i);
+            ScheduleDTO sdSelect = new ScheduleDTO();
+            sdSelect = selectScheList.get(i);
 
-            Log.v("aaaa",sd.getSchedule_context());
+            ScheduleDTO SD = new ScheduleDTO(sdSelect.getSchedule_id(), sdSelect.getSchedule_context(), sdSelect.getSchedule_date(), sdSelect.getSchedule_location(), sdSelect.getSchedule_state(), sdSelect.getSchedule_registerDate(), sdSelect.getSchedule_registerDate1());
+            listItem.add(SD);
+            scheduleItemAdapter.notifyDataSetChanged();
         }
     }
 }
-//
-//    class Schedule {
-//        private String time1;
-//        private String text1;
-//        private String position;
-//
-//        public Schedule(String time1, String text1, String position){
-//            this.time1 = time1;
-//            this.text1 = text1;
-//            this.position = position;
-//        }
-//
-//        public String getTime1(){
-//            return time1;
-//        }
-//        public String getText1(){
-//            return text1;
-//        }
-//        public String getPosition(){
-//            return position;
-//        }
-//    }

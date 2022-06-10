@@ -1,5 +1,6 @@
 package com.banggyum.test;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
         return itemViewHolder;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         ScheduleDTO SD = mListItems.get(position);
@@ -36,7 +38,7 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
         }
 
         holder.itemView.setTag(position);
-        holder.tv.setText(SD.getSchedule_context());
+        holder.tv.setText("제목 : " + SD.getSchedule_context() + "\n");
         holder.rb.setChecked(false);
         holder.rb.setOnClickListener(new View.OnClickListener() {
             @Override

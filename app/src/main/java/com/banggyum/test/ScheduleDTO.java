@@ -17,6 +17,10 @@ public class ScheduleDTO {
         return schedule_registerDate;
     }
 
+    public ScheduleDTO(String schedule_context) {
+        this.schedule_context = schedule_context;
+    }
+
     public ScheduleDTO(int schedule_id, String schedule_context, String schedule_date, String schedule_location, short schedule_state, String schedule_registerDate1, String schedule_registerDate) {
         this.schedule_id = schedule_id;
         this.schedule_context = schedule_context;

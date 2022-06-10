@@ -210,8 +210,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             // 테이블 정보를 저장할 List
 
             // 쿼리
-            String sql = "SELECT * FROM " + TABLE5_NAME + ", " + TABLE_NAME + " WHERE " + COLUMN5_ID + " = " + COLUMN_ID + ";";
-
+//            String sql = "SELECT * FROM " + TABLE5_NAME + ", " + TABLE_NAME + " WHERE " + COLUMN5_ID + " = " + COLUMN_ID + ";";
+            String sql = "SELECT * FROM " + TABLE5_NAME;
             // 테이블 데이터를 읽기 위한 Cursor
             //mCursor = db.query(TABLE_NAME, null, "AGE" + " < ?"
             //        , new String[]{age.toString()}, null, null, "NAME");
@@ -226,15 +226,15 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                     MapDTO MD = new MapDTO();
                     ScheduleDTO SD = new ScheduleDTO();
 
-                    MD.getMap_name(mCursor.getString(1));
-                    MD.getMap_latitude(mCursor.getDouble(2));
-                    MD.getMap_longitude(mCursor.getDouble(3));
-
-                    SD.setSchedule_id(mCursor.getInt(4));
-                    SD.setSchedule_context(mCursor.getString(5));
-                    SD.setSchedule_date(mCursor.getString(6));
-                    SD.setSchedule_location(mCursor.getString(7));
-                    SD.setSchedule_state(mCursor.getShort(8));
+                    MD.setMap_name(mCursor.getString(1));
+                    MD.setMap_latitude(mCursor.getDouble(2));
+                    MD.setMap_longitude(mCursor.getDouble(3));
+//
+//                    SD.setSchedule_id(mCursor.getInt(4));
+//                    SD.setSchedule_context(mCursor.getString(5));
+//                    SD.setSchedule_date(mCursor.getString(6));
+//                    SD.setSchedule_location(mCursor.getString(7));
+//                    SD.setSchedule_state(mCursor.getShort(8));
 
                     //SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     //scD.setSchedule_registerDate1(sdf.format(scD.getTimestamp(7)));
@@ -244,7 +244,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                     //위가 문제
                     // List에 해당 Row 추가
                     mList.add(MD);
-                    sList.add(SD);
+//                    sList.add(SD);
                 }
             } else {
                 Toast.makeText(context, "데이터 안읽힘", Toast.LENGTH_SHORT).show();
@@ -328,6 +328,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             Toast.makeText(context, "알람 데이터 추가 성공", Toast.LENGTH_SHORT).show();
         }
     }
+
     @SuppressLint("Range")
     public List<ScheduleDTO> selectSchedules() {
         SQLiteDatabase db = this.getReadableDatabase();
