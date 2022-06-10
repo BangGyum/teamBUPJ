@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,7 +22,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -43,6 +41,9 @@ import com.naver.maps.map.OnMapReadyCallback;
 import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -267,6 +268,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    private List<MapDTO> selectMapList = new ArrayList<MapDTO>();
+
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         map = naverMap;
@@ -283,15 +286,22 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return true;
         });
 
-        //마커를 표시하고 마커 클릭시 정보창 띄워줌
-        Marker marker = new Marker();
-        marker.setPosition(new LatLng(37.5666102, 126.9783881));
-        marker.setOnClickListener(overlay -> {
+        selectMapList = db.selectMap();
+        for (int i=0; i<selectMapList.size(); i++){
+            MapDTO mdselect = new MapDTO();
+            mdselect = selectMapList.get(i);
+
+            //마커를 표시하고 마커 클릭시 정보창 띄워줌
+            Marker marker = new Marker();
+            marker.setPosition(new LatLng(mdselect.getMap_latitude(), mdselect.getMap_longitude()));
+            marker.setOnClickListener(overlay -> {
+                infoWindow.open(marker);
+                return true;
+            });
+            marker.setTag(mdselect.getMap_name());
+            marker.setMap(naverMap);
             infoWindow.open(marker);
-            return true;
-        });
-        marker.setTag("오늘의 일정");
-        marker.setMap(naverMap);
+        }
 
         naverMap.setLocationSource(locationSource);
         //위치 추적 버튼 클릭시 마다 위치추적모드를 변경
@@ -300,8 +310,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             locationSource.setCompassEnabled(mode == LocationTrackingMode.Follow || mode == LocationTrackingMode.Face);
         });
         naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
-
-        infoWindow.open(marker);
 
         naverMap.setOnMapClickListener((point, coord) -> {
             infoWindow.setPosition(coord);
