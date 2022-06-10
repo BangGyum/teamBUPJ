@@ -190,6 +190,8 @@ public class PopupActivity extends Activity {
         if (btn_count < 19){
             Button btn = new Button(getApplicationContext());
             EditText editNm = new EditText(getApplicationContext());
+            //getApplicationContext 는 application context를 가르킴
+            //application context:  application 자체와 연동, 어플리케이션의 life cycle이 지속되는 동안 동일한 객체
 
             // 텍스트뷰에 들어갈 문자설정
             //textViewNm.setText("텍스트생성");

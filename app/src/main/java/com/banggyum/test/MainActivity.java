@@ -1,5 +1,7 @@
 package com.banggyum.test;
 
+import static android.view.View.inflate;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -7,11 +9,13 @@ import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +27,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -52,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     String userEmail, userName, userPhotoUrl;
     ImageView userImageView;
     MyDatabaseHelper db ;
+    TextView TVemail;
     //SQLiteDatabase database;
     public String  getUserEmail() {
         return userEmail;
@@ -77,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         public View getView(@NonNull InfoWindow infoWindow) {
             if (rootView == null) {
-                rootView = View.inflate(context, R.layout.view_custom_info_window, null);
+                rootView = inflate(context, R.layout.view_custom_info_window, null);
                 text = rootView.findViewById(R.id.text);
             }
 
@@ -110,19 +116,25 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Runnable locationActivationCallback;
     private NaverMap map;
 
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         db = new MyDatabaseHelper(this);
-        userImageView =  findViewById(R.id.userImage);
 
-
+        userImageView =  findViewById(R.id.userImageView);
+        LayoutInflater inflater = getLayoutInflater();
+        View header_view = inflater.inflate(R.layout.drawer_header,null);
+        //XML 객체화 시키기
+        // 위 객체를 메모리위에 올려놓아 객체화 시킴
+        // 알고보니 view 자체만 사용하나봐
+        TVemail = (TextView) header_view.findViewById(R.id.email);
 
         //toolBar를 통해 App Bar 생성
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         //shared에 저장되어있는 값 가져오기
         SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
@@ -133,11 +145,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //db.a();
         db.addUser(userEmail,userName);
 
+        TVemail.setText(userEmail);
+
+
         //App Bar의 좌측 영영에 Drawer를 Open 하기 위한 Incon 추가
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_baseline_dehaze_24);
 
         DrawerLayout drawLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //DrawerLayout drawLayout = (DrawerLayout) findViewById(header_view.getId());
+        Log.v("qwer1",""+header_view.getId());
+        Log.v("qwer2",""+drawLayout.getId());
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -169,7 +187,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 drawLayout,
@@ -178,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 R.string.closed
         );
         drawLayout.addDrawerListener(actionBarDrawerToggle);
+        Log.v("qwer3",""+drawLayout.getId());
 
         //mapfragment 사용하여 지도를 이용
         MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.main_frame);
@@ -219,6 +237,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         mapFragment.getMapAsync(this);
+
+        //drawer 안에 사용자 정보
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView navUserEmail = (TextView) headerView.findViewById(R.id.email);
+        navUserEmail.setText(userEmail);
+        TextView navUserName = (TextView) headerView.findViewById(R.id.name);
+        navUserName.setText(userName);
+        ImageView userImageView = (ImageView) headerView.findViewById(R.id.userImageView) ;
+
+        Glide.with(this).load(userPhotoUrl).into(userImageView);
     }
     private void revokeAccess(GoogleSignInClient googleSignInClient){
         mGoogleSignInClient.revokeAccess()
