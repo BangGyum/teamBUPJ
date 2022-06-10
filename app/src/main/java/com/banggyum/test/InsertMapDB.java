@@ -380,16 +380,13 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
 
         naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
 
-//        Marker imarker = new Marker();
-//        naverMap.setOnMapClickListener((point, coord) -> {
-//            imarker.setPosition(new LatLng(coord.latitude, coord.longitude));
-//            imarker.setMap(naverMap);
-//
-//            double clat = coord.latitude;
-//            double clng = coord.longitude;
-//
-//            Toast.makeText(InsertMapDB.this, "위도" + clat + "경도" + clng, Toast.LENGTH_SHORT).show();
-//        });
+        naverMap.setOnMapClickListener((point, coord) -> {
+            onemarker.setPosition(new LatLng(coord.latitude, coord.longitude));
+            onemarker.setMap(naverMap);
+
+            llat = coord.latitude;
+            llng = coord.longitude;
+        });
     }
 }
 

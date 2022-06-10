@@ -24,8 +24,6 @@ import java.util.Locale;
 // input 팝업창
 public class PopupActivity extends Activity {
 
-
-
     private android.content.Context context;
     MainActivity ma = new MainActivity();
     String userEmail = "";
@@ -82,8 +80,6 @@ public class PopupActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.popup_activity);
 
-
-
         SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
 
         userEmail = preferences.getString("useremail", "");
@@ -110,8 +106,9 @@ public class PopupActivity extends Activity {
                 new DatePickerDialog(PopupActivity.this, myDatePicker, myCalendar.get(
                         Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-}
-});
+            }
+        });
+
         //타임피커다이얼로그 뜨게 만들기
         final TextView time_view = (TextView) findViewById(R.id.time_view);
         time_view.setOnClickListener(new View.OnClickListener() {
@@ -144,7 +141,6 @@ public class PopupActivity extends Activity {
                         time_view.setText(state + " " + selectedHour + "시 " + selectedMinute + "분 ");
                         //Log.v("test","test:"+h + m);
                         time=h + m;
-
                     }
                 }, hour, minute, false); //true의 경우24시간 형식의 TimePicker출현
                 mTimePicker.setTitle("Select Time");
@@ -266,7 +262,6 @@ public class PopupActivity extends Activity {
 
         finish();
     }
-
 
     View.OnClickListener TimeAddClickList = new View.OnClickListener(){
         public void onClick(View v) {

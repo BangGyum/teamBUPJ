@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         >
 
@@ -31,7 +31,7 @@
 
     <!-- Notice -->
     <LinearLayout
-        android:padding="24dp"
+        android:padding="10dp"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -39,11 +39,13 @@
             android:id="@+id/text1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:hint="일정"/>
         <TextView
             android:id="@+id/time_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:text="시간"
             android:gravity="center"
             android:clickable="true"/>
@@ -58,23 +60,26 @@
             android:id="@+id/addra_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:hint="장소명"/>
         <TextView
             android:id="@+id/addr_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:text="주소"
             android:clickable="true"/>
         <LinearLayout
             android:id="@+id/dynamicLayout"
             android:padding="24dp"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <Button
                 android:id="@+id/alarmBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:text="알람 추가"
                 />
             <Button
