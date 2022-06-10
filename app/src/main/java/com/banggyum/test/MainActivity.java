@@ -174,9 +174,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     mGoogleSignInClient=lp.getmGoogleSignInClient();
                     //Log.v("ddd",mGoogleSignInClient.toString());
                     //mGoogleSignInClient.signOut()
-                    GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(getApplicationContext(), GoogleSignInOptions.DEFAULT_SIGN_IN);
+                    //GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(getApplicationContext(), GoogleSignInOptions.DEFAULT_SIGN_IN);
 //                    lp.requestGoogleSignIn();
-                    lp.signOut(googleSignInClient);
+                    lp.signOut();
+                    //mGoogleSignInClient.signOut();
                     //revokeAccess(googleSignInClient);
                     //signOut();
 //                    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -241,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mapFragment.getMapAsync(this);
 
-        //drawer 안에 사용자 정보
+        //drawer 안에 사용자 정보 변경
         View headerView = navigationView.getHeaderView(0);
 
         TextView navUserEmail = (TextView) headerView.findViewById(R.id.email);
