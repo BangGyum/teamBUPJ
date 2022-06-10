@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +23,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
@@ -40,8 +47,7 @@ import com.naver.maps.map.util.FusedLocationSource;
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private Context context;
-
-
+    private GoogleSignInClient mGoogleSignInClient; //로그아웃을 위해서
 
     String userEmail, userName, userPhotoUrl;
     ImageView userImageView;
@@ -141,10 +147,29 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (id == R.id.loginform) {
                     Intent loginIntent = new Intent(MainActivity.this, LoginPage.class);
                     startActivity(loginIntent);
+                }else if (id == R.id.logoutform){
+//                    Log.v("sds","sdsd");
+                    LoginPage lp = new LoginPage();
+                    mGoogleSignInClient=lp.getmGoogleSignInClient();
+                    //Log.v("ddd",mGoogleSignInClient.toString());
+                    //mGoogleSignInClient.signOut()
+                    GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(getApplicationContext(), GoogleSignInOptions.DEFAULT_SIGN_IN);
+//                    lp.requestGoogleSignIn();
+                    lp.signOut(googleSignInClient);
+                    //revokeAccess(googleSignInClient);
+                    //signOut();
+//                    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                            .requestEmail()
+//                            .build();
+//
+//// Build a GoogleSignInClient with the options specified by gso.
+//                    mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
                 }
                 return true;
             }
         });
+
+
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 drawLayout,
@@ -195,6 +220,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mapFragment.getMapAsync(this);
     }
+    private void revokeAccess(GoogleSignInClient googleSignInClient){
+        mGoogleSignInClient.revokeAccess()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // ...
+                    }
+                });
+    }
+
     //툴바에 main_menu.xml 을 추가함
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -273,5 +308,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             infoWindow.open(naverMap);
         });
     }
+
 }
 

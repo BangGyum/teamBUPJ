@@ -20,7 +20,6 @@ public class CustomAdapter extends ArrayAdapter implements AdapterView.OnItemCli
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
     }
 
     class ViewHolder {

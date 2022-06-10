@@ -51,6 +51,9 @@ public class LoginPage extends AppCompatActivity
     public static final int RC_SIGN_IN= 123;
     private FirebaseAuth mAuth; //인증 생성
 
+    public GoogleSignInClient getmGoogleSignInClient() {
+        return mGoogleSignInClient;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +133,23 @@ public class LoginPage extends AppCompatActivity
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        Log.v("ddd",mGoogleSignInClient.toString());
+
+        SharedPreferences.Editor client = getApplicationContext()
+                .getSharedPreferences("MyPrefs", MODE_PRIVATE)
+                .edit();
+        client.putString("mGoogleSignInClient", mGoogleSignInClient.toString());
+        client.apply(); //구글 사용자의 이름, 이메일, 프로필사진을 가져옴
+
+    }
+    public void signOut(GoogleSignInClient googleSignInClient) {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // ...
+                    }
+                });
     }
 
 }
