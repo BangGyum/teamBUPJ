@@ -48,11 +48,11 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
             @Override
             public void onClick(View view) {
                 remove(holder.getAbsoluteAdapterPosition());
-                @SuppressLint("ShowToast") Snackbar snackbar = Snackbar.make(holder.rootView, "완료했습니다.", BaseTransientBottomBar.LENGTH_LONG);
+                @SuppressLint("ShowToast") Snackbar snackbar = Snackbar.make(holder.cl, "완료했습니다.", BaseTransientBottomBar.LENGTH_LONG);
                 snackbar.setAction("실행취소", new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        undoItem(SD, holder.getAbsoluteAdapterPosition());
+                        undoItem(SD, position);
                     }
                 });
                 snackbar.setTextColor(Color.WHITE);
@@ -78,10 +78,11 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void undoItem(ScheduleDTO SD, int position){
         try{
             mListItems.add(position, SD);
-            notifyItemRemoved(position);
+            notifyDataSetChanged();
         }catch (IndexOutOfBoundsException ex){
             ex.printStackTrace();
         }
@@ -91,14 +92,12 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
         private RadioButton rb;
         private TextView tv;
         private ConstraintLayout cl;
-        private ConstraintLayout rootView;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             rb = itemView.findViewById(R.id.itemrb);
             tv = itemView.findViewById(R.id.itemtv);
             cl = itemView.findViewById(R.id.Layout11);
-            rootView = itemView.findViewById(R.id.Layout11);
         }
     }
 }

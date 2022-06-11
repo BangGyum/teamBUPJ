@@ -116,9 +116,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         db = new MyDatabaseHelper(this);
-        userImageView =  findViewById(R.id.userImage);
-
-
+        userImageView =  findViewById(R.id.userImageView);
 
         //toolBar를 통해 App Bar 생성
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -156,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                     //mGoogleSignInClient.signOut()
                     GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(getApplicationContext(), GoogleSignInOptions.DEFAULT_SIGN_IN);
 //                    lp.requestGoogleSignIn();
-                    lp.signOut(googleSignInClient);
+                    lp.signOut();
                     //revokeAccess(googleSignInClient);
                     //signOut();
 //                    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

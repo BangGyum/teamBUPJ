@@ -6,7 +6,7 @@ buildscript {
 //        여기새로추가
     }
     dependencies {
-        classpath 'com.google.gms:google-services:4.3.8'
+        classpath 'com.google.gms:google-services:4.3.10'
     }
 }
 

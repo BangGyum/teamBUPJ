@@ -73,7 +73,7 @@ public class Fragment_Schedule extends Fragment {
     public void addRecylerItem(){
         selectScheList = db.selectSchedules();
         for (int i=0; i<selectScheList.size(); i++){
-            ScheduleDTO sdSelect = new ScheduleDTO();
+            ScheduleDTO sdSelect;
             sdSelect = selectScheList.get(i);
 
             ScheduleDTO SD = new ScheduleDTO(sdSelect.getSchedule_id(), sdSelect.getSchedule_context(), sdSelect.getSchedule_date(), sdSelect.getSchedule_location(), sdSelect.getSchedule_state(), sdSelect.getSchedule_registerDate(), sdSelect.getSchedule_registerDate1());
