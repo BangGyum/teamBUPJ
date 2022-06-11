@@ -40,8 +40,9 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 public class LoginPage extends AppCompatActivity
 {
     SignInButton btnSign;
+
     EditText title_input, author_input, pages_input;
-    Button add_button;
+    Button btnLogout;
 
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -62,11 +63,15 @@ public class LoginPage extends AppCompatActivity
 
         mAuth = FirebaseAuth.getInstance(); //값 할당
         btnSign = findViewById(R.id.sing_in_button);
+        btnLogout = findViewById(R.id.signOutButton);
 
         requestGoogleSignIn();
 
         btnSign.setOnClickListener(view -> {
             signIn(); //클릭시 호출
+        });
+        btnLogout.setOnClickListener(view -> {
+            signOut(); //클릭시 호출
         });
 
         // 사이드 메뉴바 입니다.
@@ -142,12 +147,22 @@ public class LoginPage extends AppCompatActivity
         client.apply(); //구글 사용자의 이름, 이메일, 프로필사진을 가져옴
 
     }
-    public void signOut(GoogleSignInClient googleSignInClient) {
+    public void signOut2() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         // ...
+                    }
+                });
+    }
+    public void signOut() {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        finish();
+                        startActivity(new Intent(getApplicationContext(),LoginPage.class));
                     }
                 });
     }
