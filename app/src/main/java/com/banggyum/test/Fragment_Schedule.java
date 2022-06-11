@@ -81,4 +81,5 @@ public class Fragment_Schedule extends Fragment {
             scheduleItemAdapter.notifyDataSetChanged();
         }
     }
+
 }

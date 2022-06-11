@@ -1,6 +1,7 @@
 package com.banggyum.test;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -31,7 +35,7 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ItemViewHolder holder, @SuppressLint("RecyclerView") int position) {
         ScheduleDTO SD = mListItems.get(position);
         if (SD == null){
             return;
@@ -44,6 +48,15 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
             @Override
             public void onClick(View view) {
                 remove(holder.getAbsoluteAdapterPosition());
+                @SuppressLint("ShowToast") Snackbar snackbar = Snackbar.make(holder.rootView, "완료했습니다.", BaseTransientBottomBar.LENGTH_LONG);
+                snackbar.setAction("실행취소", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        undoItem(SD, holder.getAbsoluteAdapterPosition());
+                    }
+                });
+                snackbar.setTextColor(Color.WHITE);
+                snackbar.show();
             }
         });
     }
@@ -64,15 +77,28 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
             ex.printStackTrace();
         }
     }
+
+    public void undoItem(ScheduleDTO SD, int position){
+        try{
+            mListItems.add(position, SD);
+            notifyItemRemoved(position);
+        }catch (IndexOutOfBoundsException ex){
+            ex.printStackTrace();
+        }
+    }
+
     public class ItemViewHolder extends RecyclerView.ViewHolder{
         private RadioButton rb;
         private TextView tv;
         private ConstraintLayout cl;
+        private ConstraintLayout rootView;
+
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             rb = itemView.findViewById(R.id.itemrb);
             tv = itemView.findViewById(R.id.itemtv);
             cl = itemView.findViewById(R.id.Layout11);
+            rootView = itemView.findViewById(R.id.Layout11);
         }
     }
 }

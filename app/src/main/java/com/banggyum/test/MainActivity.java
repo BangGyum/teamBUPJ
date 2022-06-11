@@ -19,7 +19,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -62,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return userName;
     }
 
-
     //마커에 정보를 표시해주는 창
     private static class InfoWindowAdapter extends InfoWindow.ViewAdapter {
         @NonNull
@@ -92,16 +90,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             return rootView;
         }
     }
-    //이전 버튼 클릭시 Drawer 닫기
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
 
     BottomNavigationView bottomNavigationView; //네비게이션뷰
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;    //권한 코드 번호
@@ -118,12 +106,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         db = new MyDatabaseHelper(this);
         userImageView =  findViewById(R.id.userImage);
 
-
-
         //toolBar를 통해 App Bar 생성
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         //shared에 저장되어있는 값 가져오기
         SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
@@ -169,7 +154,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             }
         });
-
 
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(
                 this,
@@ -221,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mapFragment.getMapAsync(this);
     }
+
     private void revokeAccess(GoogleSignInClient googleSignInClient){
         mGoogleSignInClient.revokeAccess()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
@@ -244,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -300,7 +286,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             });
             marker.setTag(mdselect.getMap_name());
             marker.setMap(naverMap);
-            infoWindow.open(marker);
         }
 
         naverMap.setLocationSource(locationSource);
