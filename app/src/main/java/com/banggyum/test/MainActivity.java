@@ -31,6 +31,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
@@ -267,13 +268,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private List<MapDTO> selectMapList = new ArrayList<MapDTO>();
-
+    private InfoWindow infoWindow;
+    private Marker[] markers;
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         map = naverMap;
 
         // 정보창을 띄어주는 코드
-        InfoWindow infoWindow = new InfoWindow();
+        infoWindow = new InfoWindow();
         infoWindow.setAnchor(new PointF(0, 1));
         //
         infoWindow.setOffsetX(getResources().getDimensionPixelSize(R.dimen.custom_info_window_offset_x));
@@ -285,6 +287,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         selectMapList = db.selectMap();
+        markers = new Marker[selectMapList.size()];
+        LatLngBounds bounds = map.getCoveringBounds();
         for (int i=0; i<selectMapList.size(); i++){
             MapDTO mdselect = new MapDTO();
             mdselect = selectMapList.get(i);
@@ -296,9 +300,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 infoWindow.open(marker);
                 return true;
             });
+
             marker.setTag(mdselect.getMap_name());
-            marker.setMap(naverMap);
-            infoWindow.open(marker);
+            markers[i] = marker;
+            LatLng position = marker.getPosition();
+
+            if(bounds.contains(position)){
+                showMarker(map, marker);
+            }else{
+                hideMarker(map, marker);
+            }
         }
 
         naverMap.setLocationSource(locationSource);
@@ -313,6 +324,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             infoWindow.setPosition(coord);
             infoWindow.open(naverMap);
         });
+    }
+
+    public void hideMarker(NaverMap map, Marker marker) {
+        if(marker.isAdded())return;
+        marker.setMap(map);
+    }
+
+    public void showMarker(NaverMap map, Marker marker) {
+        if(!marker.isAdded())return;
+        marker.setMap(null);
     }
 
 }
