@@ -388,7 +388,62 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return mList;
     }
 
-    public ScheduleDTO selectSchedule(int state) {
+
+    @SuppressLint("Range")
+    public List<ScheduleDTO> selectDateSchedules(String scheduleDate)
+    //날짜를 기준으로 select
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<ScheduleDTO> mList = new ArrayList<ScheduleDTO>();
+        //Cursor mCursor = null;
+        try {
+            // 테이블 정보를 저장할 List
+
+            // 쿼리
+            String sql =
+                    "SELECT * FROM " + TABLE_NAME +
+                            " WHERE " + COLUMN_STATE + " = '1' AND "
+                            + COLUMN_DATE + "= "+scheduleDate ;
+
+
+            Cursor mCursor = db.rawQuery(sql, null);
+
+            if (mCursor != null) {// 테이블 끝까지 읽기
+
+                while (mCursor.moveToNext()) {// 다음 Row로 이동
+                    // 해당 Row 저장
+                    ScheduleDTO scD = new ScheduleDTO();
+
+                    scD.setSchedule_id(mCursor.getInt(0));
+
+                    //1은 사용자
+                    scD.setSchedule_context(mCursor.getString(2));
+                    //위가 문제
+
+                    scD.setSchedule_date(mCursor.getString(3));
+                    scD.setSchedule_location(mCursor.getString(4));
+                    scD.setSchedule_state(mCursor.getShort(5));
+
+                    //SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    //scD.setSchedule_registerDate1(sdf.format(scD.getTimestamp(7)));
+
+                    //scD.setSchedule_registerDate(mCursor.getString(6));
+
+                    // List에 해당 Row 추가
+                    mList.add(scD);
+                }
+            } else{
+                Toast.makeText(context, "데이터 안읽힘", Toast.LENGTH_SHORT).show();
+            }
+        }catch (Exception e ) {
+            e.printStackTrace();
+        }
+        return mList;
+    }
+
+    public ScheduleDTO selectSchedule(int state)
+    //일정 데이터 하나만 select
+    {
         SQLiteDatabase db = this.getReadableDatabase();
         ScheduleDTO scD = new ScheduleDTO();
         try {
@@ -439,16 +494,16 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return scD;
     }
 
-    public void updateSchedule(String updateHolidayName, String updateHolidayDate)
-    //알람 테이블에 삽입
+    public void updateSchedule(int scheduleId)
+    //일정 데이터 표면상 삭제
     {
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
 
-        cv.put(COLUMN4_DATE ,updateHolidayDate);
+        cv.put(COLUMN_STATE ,0);
 
-        long result = db.update(TABLE4_NAME, cv,COLUMN4_NAME + "='" + updateHolidayName + "'",  null);
+        long result = db.update(TABLE_NAME, cv,COLUMN_ID + "='" + scheduleId + "'",  null);
         if (result == -1)
         {
             Toast.makeText(context, "수정 Failed", Toast.LENGTH_SHORT).show();
@@ -456,6 +511,21 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         else
         {
             Toast.makeText(context, "알람 데이터 수정 성공", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void deleteSchedule(int scheduleId)
+    //일정 데이터 실제로 삭제
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long result = db.delete(TABLE_NAME,COLUMN_ID + "='" + scheduleId + "'",  null);
+        if (result == -1)
+        {
+            Toast.makeText(context, "삭제 실패", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(context, "데이터 삭제 성공", Toast.LENGTH_SHORT).show();
         }
     }
 
