@@ -43,6 +43,8 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
 
         holder.itemView.setTag(position);
         holder.tv.setText("제목 : " + SD.getSchedule_context() + "\n");
+        holder.tv.append("날짜 : " + SD.getSchedule_date() + "\n");
+        holder.tv.append("시간 : " + SD.getSchedule_time() + "\n");
         holder.rb.setChecked(false);
         holder.rb.setOnClickListener(new View.OnClickListener() {
             @Override

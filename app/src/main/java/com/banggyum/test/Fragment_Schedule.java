@@ -28,6 +28,7 @@ public class Fragment_Schedule extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private List<ScheduleDTO> selectScheList = new ArrayList<ScheduleDTO>();
     private MyDatabaseHelper db ;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -50,34 +51,43 @@ public class Fragment_Schedule extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //플롱팅버튼 클릭시 일정 추가위한 팝업 띄어줌
                 Intent intentDB = new Intent(view.getContext(), PopupActivity.class);
                 startActivityForResult(intentDB, 1);
             }
         });
+
+        //DB에 있는 정보 recyleview에 추가
         addRecylerItem();
         return view;
     }
 
+    //일정 추가 팝업 창에서 확인 버튼 클릭시 실행
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
+                //리사이클뷰 초기화
                 listItem.clear();
+                //다시 추가
                 addRecylerItem();
             }
         }
     }
 
+    //리사이클뷰에 DB에 있는 일정들 추가
     @SuppressLint("NotifyDataSetChanged")
     public void addRecylerItem(){
+        //일정 select
         selectScheList = db.selectSchedules();
+        //DB에 일정들 순서대로 추가
         for (int i=0; i<selectScheList.size(); i++){
             ScheduleDTO sdSelect;
             sdSelect = selectScheList.get(i);
 
-            ScheduleDTO SD = new ScheduleDTO(sdSelect.getSchedule_id(), sdSelect.getSchedule_context(), sdSelect.getSchedule_date(), sdSelect.getSchedule_location(), sdSelect.getSchedule_state(), sdSelect.getSchedule_registerDate(), sdSelect.getSchedule_registerDate1());
+            ScheduleDTO SD = new ScheduleDTO(sdSelect.getSchedule_id(), sdSelect.getSchedule_context(), sdSelect.getSchedule_date(), sdSelect.getSchedule_time(),sdSelect.getSchedule_location(), sdSelect.getSchedule_state(), sdSelect.getSchedule_registerDate(), sdSelect.getSchedule_registerDate1());
             listItem.add(SD);
             scheduleItemAdapter.notifyDataSetChanged();
         }

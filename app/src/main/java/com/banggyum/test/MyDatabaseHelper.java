@@ -56,7 +56,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     //일정 table
     String query_schedule = "CREATE TABLE " + TABLE_NAME
-            + " (" + COLUMN_ID + " INTEGER PRIMARY KEY, "
+            + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
             + COLUMN_EMAIL + " TEXT NOT NULL, "
             + COLUMN_CONTEXT + " TEXT NOT NULL, "
             + COLUMN_DATE + " TEXT NOT NULL, "
@@ -229,7 +229,19 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                     MD.setMap_name(mCursor.getString(1));
                     MD.setMap_latitude(mCursor.getDouble(2));
                     MD.setMap_longitude(mCursor.getDouble(3));
+//
+//                    SD.setSchedule_id(mCursor.getInt(4));
+//                    SD.setSchedule_context(mCursor.getString(5));
+//                    SD.setSchedule_date(mCursor.getString(6));
+//                    SD.setSchedule_location(mCursor.getString(7));
+//                    SD.setSchedule_state(mCursor.getShort(8));
 
+                    //SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    //scD.setSchedule_registerDate1(sdf.format(scD.getTimestamp(7)));
+
+                    //scD.setSchedule_registerDate(mCursor.getString(6));
+                    //Toast.makeText(context, "1", Toast.LENGTH_SHORT).show();
+                    //위가 문제
                     // List에 해당 Row 추가
                     mList.add(MD);
 //                    sList.add(SD);
@@ -243,15 +255,16 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return mList;
     }
 
-    public int addSchedule(int scheduleId, String addEmail, String addContext,
-                           String addDate, String addTime, String addLocation)
+    public int addSchedule(String addEmail, String addContext, String addDate, String addTime, String addLocation)
     //사용자 id, 내용, 일정날짜, 알람 정보(이건 배열로?),
     {
         if(addEmail.equals("")){ addEmail="null"; }
         if(addContext.equals("")){ addContext="null"; }
         if(addDate.equals("")){ addDate="null"; }
+        if(addTime.equals("")){ addTime="null"; }
         if(addLocation.equals("")){ addLocation="null"; }
 
+        int scheduleId =0 ; //
         ScheduleDTO scD = new ScheduleDTO();
 
         SQLiteDatabase db = this.getWritableDatabase(); //SQLiteDatabase 객체를 만든 뒤 이 객체를 쓰기(Write)가 가능하도록 설정한다는 내용이다.
@@ -259,12 +272,10 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
 
         //cv.put();// 사용자 id 추가
-        cv.put(COLUMN_ID,scheduleId);
         cv.put(COLUMN_EMAIL, addEmail);
         cv.put(COLUMN_CONTEXT, addContext);
         cv.put(COLUMN_DATE, addDate);
         cv.put(COLUMN_TIME, addTime);
-
         cv.put(COLUMN_LOCATION, addLocation);
         cv.put(COLUMN_STATE, 1); //이거 근데 다른테이블에 넣어야될것같은데
 
@@ -327,24 +338,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             // 테이블 정보를 저장할 List
 
             // 쿼리
-            String sql =
-                    "SELECT * FROM " + TABLE_NAME +
-                    " WHERE " + COLUMN_STATE + " = '1' AND strftime('%Y-%m-%d',"
-                            + COLUMN_DATE + ") >= strftime('%Y-%m-%d','now')" ;
-
-              /*
-            String sql =
-                    "SELECT * FROM " + TABLE_NAME +
-                            " WHERE " + COLUMN_STATE + " = '1' AND "
-                            + COLUMN_DATE + " >= strftime('%Y-%m-%d','now')" ;
-                            */
-            /*
-            String sql =
-                    "SELECT * FROM " + TABLE_NAME +
-                            " WHERE " + COLUMN_STATE + " = '1' AND "
-                            + COLUMN_DATE + " < '20220601'" ;
-
-             */
+            String sql = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_STATE + " = '1' and " + COLUMN_DATE + " < '2022-06-12'";
 
             // 테이블 데이터를 읽기 위한 Cursor
             //mCursor = db.query(TABLE_NAME, null, "AGE" + " < ?"
@@ -367,8 +361,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                     //위가 문제
 
                     scD.setSchedule_date(mCursor.getString(3));
-                    scD.setSchedule_location(mCursor.getString(4));
-                    scD.setSchedule_state(mCursor.getShort(5));
+                    scD.setSchedule_time(mCursor.getString(4));
+                    scD.setSchedule_location(mCursor.getString(5));
+                    scD.setSchedule_state(mCursor.getShort(6));
 
                     //SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     //scD.setSchedule_registerDate1(sdf.format(scD.getTimestamp(7)));
@@ -437,26 +432,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             e.printStackTrace();
         }
         return scD;
-    }
-
-    public void updateSchedule(String updateHolidayName, String updateHolidayDate)
-    //알람 테이블에 삽입
-    {
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
-
-        cv.put(COLUMN4_DATE ,updateHolidayDate);
-
-        long result = db.update(TABLE4_NAME, cv,COLUMN4_NAME + "='" + updateHolidayName + "'",  null);
-        if (result == -1)
-        {
-            Toast.makeText(context, "수정 Failed", Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            Toast.makeText(context, "알람 데이터 수정 성공", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public void addHoliday(String addHolidayName, String addHolidayDate)
