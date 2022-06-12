@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -29,6 +30,8 @@ public class PopupActivity extends Activity {
     String userEmail = "";
     String date; //날짜
     String time;
+    int scheduleId =(int) (Math.random()*1000000000);
+    //10자리 난수
 
     EditText text1;
     LinearLayout li;
@@ -56,10 +59,11 @@ public class PopupActivity extends Activity {
             myCalendar.set(Calendar.MONTH, month);
             myCalendar.set(Calendar.DAY_OF_MONTH, day);
             String y = Integer.toString(year);
-            String m = Integer.toString(month); // 5월이면 05가 아니라 5임
+            String m = Integer.toString(month+1); // 5월이면 05가 아니라 5임
+                //month가 인덱스라 그런지 1개월 어디에 버리고 나오기 때문에 +1
             String d = Integer.toString(day);
             // 10보다 작으면 앞에 0 붙여주기
-            if (month<10) {
+            if (month<9) {
                 m = "0" + m;
             }
 
@@ -79,12 +83,14 @@ public class PopupActivity extends Activity {
         //타이틀바 없앨래
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.popup_activity);
+        Log.v("qwerqwer",scheduleId+"");
 
         SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
 
         userEmail = preferences.getString("useremail", "");
 
         li = findViewById(R.id.dynamicLayout);
+        Log.v("qwer",li.getId()+"");
         alarmBtn = findViewById(R.id.alarmBtn);
         mapBtn = findViewById(R.id.mapBtn);
         addr_name = findViewById(R.id.addra_name);
@@ -150,7 +156,7 @@ public class PopupActivity extends Activity {
 
         alarmBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
-                createTextView("ㅇ");
+                createTextView();
             }
         });
         mapBtn.setOnClickListener(new View.OnClickListener() {
@@ -180,18 +186,18 @@ public class PopupActivity extends Activity {
         }
     }
 
-    public void createTextView(String text){
+    public void createTextView(){
         //텍스트뷰 객체 생성
         //TextView textViewNm = new TextView(getApplicationContext());
         if (btn_count < 19){
-            Button btn = new Button(getApplicationContext());
+            //Button btn = new Button(getApplicationContext());
             EditText editNm = new EditText(getApplicationContext());
             //getApplicationContext 는 application context를 가르킴
             //application context:  application 자체와 연동, 어플리케이션의 life cycle이 지속되는 동안 동일한 객체
 
-            // 텍스트뷰에 들어갈 문자설정
-            //textViewNm.setText("텍스트생성");
-            btn.setText(text);
+            // 텍스트뷰에 들어갈문자설정
+            //            //textViewNm.setText("텍스트생성");
+            //            btn.setText(text);
 
             //텍스트뷰 글자크기 설정
             //textViewNm.setTextSize(12);
@@ -200,6 +206,7 @@ public class PopupActivity extends Activity {
             //String a= alarmIds[btn_count];
             editNm.setId(alarmIds[btn_count]);
             editNm.setOnClickListener(TimeAddClickList);
+            Log.v("qwe","qwe");
 
             // 레이아웃설정
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
@@ -210,7 +217,7 @@ public class PopupActivity extends Activity {
 
             //설정한 레이아웃 텍스트뷰에 적용
             //textViewNm.setLayoutParams(param);
-            btn.setLayoutParams(param);
+            //btn.setLayoutParams(param);
             editNm.setLayoutParams(param);
             btn_count++;
             //텍스트뷰 백그라운드 색상 설정
@@ -218,7 +225,9 @@ public class PopupActivity extends Activity {
 
             //li.addView(textViewNm);
             //li.addView(btn);
+            Log.v("wert",editNm.getId()+"");
             li.addView(editNm);
+            //setContentView(li);
 
             //li.setOrientation(LinearLayout.VERTICAL);
         }else{
@@ -241,7 +250,8 @@ public class PopupActivity extends Activity {
         int a = 0; //해당 스케줄 아이디
 //        searchName = " d";
         //Toast.makeText(context, userEmail, Toast.LENGTH_SHORT).show();
-        a = db.addSchedule(userEmail
+        a = db.addSchedule(scheduleId
+                ,userEmail
                 ,text1.getText().toString()
                 ,date
                 ,time
@@ -252,12 +262,12 @@ public class PopupActivity extends Activity {
         //알람 갯수만큼 입력
         for (; addCount<btn_count;addCount++){
             TextView time_view = (TextView) findViewById(alarmIds[addCount]); //메소드에 getText해서 넣어서 db에 넣어야되니깐 생성한거임
-            db.addAlarm(a
+            db.addAlarm(scheduleId
                     ,time_view.getText().toString());
         }
 
         //맵 정보 저장
-        db.addMap(a
+        db.addMap(scheduleId
                 , addr_name.getText().toString()
                 , lat
                 , lng) ;
