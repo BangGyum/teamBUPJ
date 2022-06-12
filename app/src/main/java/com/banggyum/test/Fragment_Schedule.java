@@ -64,6 +64,7 @@ public class Fragment_Schedule extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
+                listItem.clear();
                 addRecylerItem();
             }
         }
