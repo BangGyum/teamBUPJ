@@ -47,6 +47,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN5_NAME = "map_name";
     private static final String COLUMN5_LATITUDE = "map_latitude";
     private static final String COLUMN5_LONGITUDE = "map_longitude";
+    private static final String COLUMN5_STATE = "schedule_state"; //평범상태 = 1 , 삭제상태 = 0
     //List mList = new ArrayList();; //select해서 가져올 객체
 
     public MyDatabaseHelper(@Nullable Context context) {
@@ -91,6 +92,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             + COLUMN5_NAME + " TEXT, "
             + COLUMN5_LATITUDE + " DOUBLE NOT NULL, "
             + COLUMN5_LONGITUDE + " DOUBLE NOT NULL, "
+            + COLUMN_STATE + " INTEGER NOT NULL,"
             + "FOREIGN KEY(" + COLUMN5_ID + ")"
             + "REFERENCES " + TABLE_NAME + "(" + COLUMN_ID + ")); ";
 
@@ -170,14 +172,13 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         if (addName.equals("")) {
             addName = "null";
         }
-        if (lat.equals(null)) {
+        if (lat ==null) {
             lat = 0.0;
         }
-        if (lng.equals(null)) {
+        if (lng ==null) {
             lng = 0.0;
         }
 
-        int scheduleId = 0; //
         ScheduleDTO scD = new ScheduleDTO();
 
         SQLiteDatabase db = this.getWritableDatabase(); //SQLiteDatabase 객체를 만든 뒤 이 객체를 쓰기(Write)가 가능하도록 설정한다는 내용이다.
@@ -189,6 +190,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN5_NAME, addName);
         cv.put(COLUMN5_LATITUDE, lat);
         cv.put(COLUMN5_LONGITUDE, lng);
+        cv.put(COLUMN5_STATE, 1);
 
         long result = db.insert(TABLE5_NAME, null, cv);
         if (result == -1) {
@@ -196,7 +198,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         } else {
             SQLiteDatabase db2 = this.getReadableDatabase();
             Toast.makeText(context, "맵 데이터 추가 성공", Toast.LENGTH_SHORT).show();
-
         }
     }
 
@@ -211,7 +212,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
             // 쿼리
 //            String sql = "SELECT * FROM " + TABLE5_NAME + ", " + TABLE_NAME + " WHERE " + COLUMN5_ID + " = " + COLUMN_ID + ";";
-            String sql = "SELECT * FROM " + TABLE5_NAME;
+            String sql = "SELECT * FROM " + TABLE5_NAME + " WHERE " + COLUMN_STATE + " = '1'";
             // 테이블 데이터를 읽기 위한 Cursor
             //mCursor = db.query(TABLE_NAME, null, "AGE" + " < ?"
             //        , new String[]{age.toString()}, null, null, "NAME");
@@ -335,7 +336,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             String sql =
                     "SELECT * FROM " + TABLE_NAME +
                             " WHERE " + COLUMN_STATE + " = '1' AND strftime('%Y-%m-%d',"
-                            + COLUMN_DATE + ") >= strftime('%Y-%m-%d','now')";
+                            + COLUMN_DATE + ") >= strftime('%Y-%m-%d','now')" + " ORDER BY " + COLUMN_DATE;
 
               /*
             String sql =
@@ -499,17 +500,23 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return scD;
     }
 
-    public void updateSchedule ( int scheduleId)
+    public void updateSchedule (int scheduleId)
     //일정 데이터 표면상 삭제
     {
-
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
 
-        cv.put(COLUMN_STATE, 0);
+        if(scheduleId == 0){
+            cv.put(COLUMN_STATE, 1);
+            cv.put(COLUMN5_STATE, 1);
+        } else{
+            cv.put(COLUMN_STATE, 0);
+            cv.put(COLUMN5_STATE, 0);
+        }
 
-        long result = db.update(TABLE_NAME, cv, COLUMN_ID + "='" + scheduleId + "'", null);
-        if (result == -1) {
+        long resultScd = db.update(TABLE_NAME, cv, COLUMN_ID + "='" + scheduleId + "'", null);
+        long resultMap = db.update(TABLE5_NAME, cv, COLUMN5_ID + "='" + scheduleId + "'", null);
+        if (resultScd == -1 || resultMap == -1) {
             Toast.makeText(context, "수정 Failed", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, "알람 데이터 수정 성공", Toast.LENGTH_SHORT).show();
@@ -531,7 +538,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public void addHoliday (String addHolidayName, String addHolidayDate)
     //알람 테이블에 삽입
     {
-
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
 

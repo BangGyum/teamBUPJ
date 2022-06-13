@@ -31,8 +31,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.naver.maps.geometry.LatLng;
-import com.naver.maps.geometry.LatLngBounds;
-import com.naver.maps.map.CameraPosition;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.MapView;
@@ -50,10 +48,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private Context context;
     private GoogleSignInClient mGoogleSignInClient; //로그아웃을 위해서
-
-    String userEmail, userName, userPhotoUrl;
-    ImageView userImageView;
-    MyDatabaseHelper db ;
+    private String userEmail, userName, userPhotoUrl;
+    private ImageView userImageView;
+    private MyDatabaseHelper db ;
 
     //마커에 정보를 표시해주는 창
     private static class InfoWindowAdapter extends InfoWindow.ViewAdapter {
@@ -174,21 +171,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         MapFragment mapFragment = (MapFragment)getSupportFragmentManager().findFragmentById(R.id.main_frame);
         if (mapFragment == null) {
             //location 버튼 활성화, camera 지도의 초기 카메라 위치를 지정합니다. target - 카메라의 좌표 zoom - 카메라의 줌 레벨
-            mapFragment = MapFragment.newInstance(new NaverMapOptions().locationButtonEnabled(true).camera(new CameraPosition(
-                    NaverMap.DEFAULT_CAMERA_POSITION.target, NaverMap.DEFAULT_CAMERA_POSITION.zoom, 30, 45)));
-            //getSupportFragmentManager 를 통해 layout에 위 기능들을 추가해줌
-//            getSupportFragmentManager().beginTransaction().add(R.id.main_frame, mapFragment).commit();
+            mapFragment = MapFragment.newInstance(new NaverMapOptions().locationButtonEnabled(true));
         }
+
+        MapFragment finalMapFragment = mapFragment;
 
         //현재위치 사용을 위한 생성자 권한요청코드(LOCATION_PERMISSION_REQUEST_CODE) = 100
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
 
         bottomNavigationView = findViewById(R.id.bottomNav);
-
         //네비바 처음화면
         getSupportFragmentManager().beginTransaction().add(R.id.main_frame, new Fragment_Schedule()).commit();
         //네비바 안의 아이템 설정
-        MapFragment finalMapFragment = mapFragment;
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener(){
             @SuppressLint("NonConstantResourceId")
             @Override
@@ -203,13 +197,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         break;
                     case R.id.navmap_fragment:
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, finalMapFragment).commit();
+                        finalMapFragment.getMapAsync(MainActivity.this);
                         break;
                 }
                 return true;
             }
         });
-
-        mapFragment.getMapAsync(this);
     }
 
     private void revokeAccess(GoogleSignInClient googleSignInClient){
@@ -235,15 +228,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         return true;
-    }
-
-    //위치 추적 모드를 지정 none, follow, face
-    private void cancelLocationTracking() {
-        map.setLocationTrackingMode(LocationTrackingMode.None);
     }
 
     //핸드폰의 위치 추적 권한이 활성화 되어있는지 판단하여 비활성화 면 권한을 얻기위한 코드
@@ -261,10 +249,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private List<MapDTO> selectMapList = new ArrayList<MapDTO>();
     private InfoWindow infoWindow;
-    private Marker[] markers;
+
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
         map = naverMap;
+        naverMap.setLocationSource(locationSource);
+        naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
 
         // 정보창을 띄어주는 코드
         infoWindow = new InfoWindow();
@@ -279,10 +269,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
 
         selectMapList = db.selectMap();
-        markers = new Marker[selectMapList.size()];
-        LatLngBounds bounds = map.getCoveringBounds();
+//        LatLngBounds bounds = map.getCoveringBounds();
         for (int i=0; i<selectMapList.size(); i++){
-            MapDTO mdselect = new MapDTO();
+            MapDTO mdselect;
             mdselect = selectMapList.get(i);
 
             //마커를 표시하고 마커 클릭시 정보창 띄워줌
@@ -293,40 +282,26 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             });
 
+            marker.setMap(map);
             marker.setTag(mdselect.getMap_name());
-            markers[i] = marker;
-            LatLng position = marker.getPosition();
+//            LatLng position = marker.getPosition();
 
-            if(bounds.contains(position)){
-                showMarker(map, marker);
-            }else{
-                hideMarker(map, marker);
-            }
+//            if(bounds.contains(position)){
+//                marker.setVisible(false);
+//            }else{
+//                marker.setVisible(true);
+//            }
         }
-
-        naverMap.setLocationSource(locationSource);
         //위치 추적 버튼 클릭시 마다 위치추적모드를 변경
         naverMap.addOnOptionChangeListener(() -> {
             LocationTrackingMode mode = naverMap.getLocationTrackingMode();
             locationSource.setCompassEnabled(mode == LocationTrackingMode.Follow || mode == LocationTrackingMode.Face);
         });
-        naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
 
         naverMap.setOnMapClickListener((point, coord) -> {
             infoWindow.setPosition(coord);
             infoWindow.open(naverMap);
         });
     }
-
-    public void hideMarker(NaverMap map, Marker marker) {
-        if(marker.isAdded())return;
-        marker.setMap(map);
-    }
-
-    public void showMarker(NaverMap map, Marker marker) {
-        if(!marker.isAdded())return;
-        marker.setMap(null);
-    }
-
 }
 
