@@ -24,7 +24,7 @@ public class Calendar_Saturday_Color implements DayViewDecorator {
 
         int weekday = day.getDate().with(DayOfWeek.SATURDAY).getDayOfMonth();
         return weekday == day.getDay();
-    }//여기서 true가 리턴되면 decorate 함수가 실행된다.
+    }//여기서 return값이 true면 decorate 함수가 실행된다.
 
     @Override
     public void decorate(DayViewFacade view) {

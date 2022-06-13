@@ -15,24 +15,64 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 public class Fragment_Calendar extends Fragment {
 
     private MaterialCalendarView materialCalendar;
     private TextView text;
+    private TextView cal_text;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment__calendar, container, false);
 
+
+         ArrayList<Holidays> al = new ArrayList<>();
+         ArrayList<Holidays> holidaysArrayList = new ArrayList<>();
+         ArrayList<CalendarDay> calendarDayList = new ArrayList<>();
+
+
+         for (int i=0; i < holidaysArrayList.toArray().length; i++) {
+
+             String holidayDate = holidaysArrayList.get(i).getDate();
+
+             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(Locale.KOREA);
+             CalendarDay date = CalendarDay.from(LocalDate.parse(holidayDate, dtf));
+             calendarDayList.add(date);
+
+        }
+
+
+
+
+/*        //임의로 리스트 생성
+        ArrayList<CalendarDay> calendarDayList = new ArrayList<>();
+        calendarDayList.add(CalendarDay.from(2022, 06, 10));
+        calendarDayList.add(CalendarDay.from(2022, 06, 13));
+        calendarDayList.add(CalendarDay.from(2022, 06, 15));
+        calendarDayList.add(CalendarDay.from(2022, 06, 16));
+        calendarDayList.add(CalendarDay.from(2022, 06, 19));*/
+
+
+
         materialCalendar = v.findViewById(R.id.materialCalendar);
         text = v.findViewById(R.id.text);
+        cal_text = v.findViewById(R.id.cal_text);
 
 
         materialCalendar.addDecorators(
+                new Calendar_Event(calendarDayList, getActivity(), cal_text), //일정 등록이 되어있는 날짜 이벤트
+                new Calendar_Saturday_Color(),  //토요일 색상
                 new Calendar_Sunday_Color(), // 일요일 색상
-                new Calendar_Saturday_Color());// 토요일 색상
+                new Calendar_Today()); // 오늘 색상
+
 
 
 
