@@ -1,5 +1,6 @@
 package com.banggyum.test;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +25,7 @@ public class Fragment_Calendar extends Fragment {
 
     private MaterialCalendarView materialCalendar;
     private List<ScheduleDTO> selectScheList = new ArrayList<ScheduleDTO>();
-    private MyDatabaseHelper db ;
+    private MyDatabaseHelper db;
     private TextView text;
     private TextView cal_text;
 
@@ -37,6 +38,7 @@ public class Fragment_Calendar extends Fragment {
          ArrayList<Holidays> holidaysArrayList = new ArrayList<>();
          ArrayList<CalendarDay> calendarDayList = new ArrayList<>();
 
+         db = new MyDatabaseHelper(v.getContext());
 
          for (int i=0; i < holidaysArrayList.toArray().length; i++) {
 
@@ -45,7 +47,6 @@ public class Fragment_Calendar extends Fragment {
              DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(Locale.KOREA);
              CalendarDay date = CalendarDay.from(LocalDate.parse(holidayDate, dtf));
              calendarDayList.add(date);
-
         }
 
 /*        //임의로 리스트 생성
@@ -67,13 +68,11 @@ public class Fragment_Calendar extends Fragment {
                 new Calendar_Today()); // 오늘 색상
 
         materialCalendar.setOnDateChangedListener(new OnDateSelectedListener() { //날짜 선택 텍스트
+            @SuppressLint("SetTextI18n")
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView calendar, @NonNull CalendarDay date, boolean selected) {
-
-                String wdate = date.getDate().toString();
-
                 //일정 select
-                selectScheList = db.selectDateSchedules(wdate);
+                selectScheList = db.selectDateSchedules(date.getDate().toString());
                 for (int i=0; i<selectScheList.size(); i++) {
                     ScheduleDTO sdSelect;
                     sdSelect = selectScheList.get(i);

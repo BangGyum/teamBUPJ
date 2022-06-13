@@ -27,7 +27,7 @@ public class Fragment_Schedule extends Fragment {
     private ScheduleItemAdapter scheduleItemAdapter;
     private LinearLayoutManager linearLayoutManager;
     private List<ScheduleDTO> selectScheList = new ArrayList<ScheduleDTO>();
-    private MyDatabaseHelper db ;
+    private MyDatabaseHelper db;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
