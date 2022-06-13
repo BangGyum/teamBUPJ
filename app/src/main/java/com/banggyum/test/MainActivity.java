@@ -54,15 +54,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     String userEmail, userName, userPhotoUrl;
     ImageView userImageView;
     MyDatabaseHelper db ;
-    //SQLiteDatabase database;
-    public String  getUserEmail() {
-        return userEmail;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
 
     //마커에 정보를 표시해주는 창
     private static class InfoWindowAdapter extends InfoWindow.ViewAdapter {
@@ -122,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         //toolBar를 통해 App Bar 생성
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         //shared에 저장되어있는 값 가져오기
         SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
