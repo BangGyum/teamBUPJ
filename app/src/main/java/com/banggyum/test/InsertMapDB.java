@@ -77,6 +77,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         //현재위치 사용을 위한 생성자 권한요청코드(LOCATION_PERMISSION_REQUEST_CODE) = 100
         locationSource = new FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE);
     }
+
     //툴바에 main_menu.xml 을 추가함
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -91,6 +92,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         return true;
     }
 
+    //키보드의 검색 버튼을 눌렀을 시 리스너
     SearchView.OnQueryTextListener searchListener = new SearchView.OnQueryTextListener() {
         @Override
         public boolean onQueryTextSubmit(String query) {
@@ -98,8 +100,10 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    //네이버 장소 검색을 이용함
                     requestNaverLocal();
 //                    requestGeocode();
+                    //검색된 장소들을 바텀시트에 리사이클 뷰로 보여줌
                     clickOpenBottomSheetFragment();
 //                    onMapSearch();
                 }
@@ -113,14 +117,17 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         }
     };
 
+    //네이버 검색 openapi
     @SuppressLint("SetTextI18n")
     public void requestNaverLocal(){
         try{
             BufferedReader br;
             HttpURLConnection conn;
             StringBuilder sb = new StringBuilder();
+            //검색할 내용을 인코딩
             String addr = URLEncoder.encode(searchthing, "UTF-8");
             int display = 5;
+            //url을 통해 검색
             String apiURL = "https://openapi.naver.com/v1/search/local.json?query=" + addr + "&display=" + display + "&"; //
             URL url = new URL(apiURL);
             conn = (HttpURLConnection) url.openConnection();
@@ -133,9 +140,12 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                 conn.setRequestProperty("X-Naver-Client-Secret", "uemXpwpf0D");
                 conn.setDoInput(true);
 
+                //openapi 상태를 알기위함
                 int responseCode = conn.getResponseCode();
 
+                //정상 작동시
                 if(responseCode == 200){
+                    //검색된 값을 저장
                     br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 }else{
                     br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
@@ -152,6 +162,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                 String[] array = data.split("\"");
                 roadAddress = new String[display];
 
+                //검색된 값들중 도로명 주소만 저장
                 int k = 0;
                 for (int i = 0; i < array.length; i++) {
                     if (array[i].equals("roadAddress")){

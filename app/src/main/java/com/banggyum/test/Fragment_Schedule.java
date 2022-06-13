@@ -43,9 +43,12 @@ public class Fragment_Schedule extends Fragment {
 
         listItem = new ArrayList<>();
 
+        //DB를 사용하기위한 생성자
         db = new MyDatabaseHelper(view.getContext());
 
+        //리사이클러에 내용들을 추가해주기 위해 어댑터에 아이템들을 넘겨줌
         scheduleItemAdapter = new ScheduleItemAdapter(listItem);
+        //리사이클에 어댑터를 통해 아이템 추가 및 수정, 삭제
         recyclerView.setAdapter(scheduleItemAdapter);
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
