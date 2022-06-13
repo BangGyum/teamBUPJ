@@ -183,6 +183,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    //아직 미사용 추후 예정
     @SuppressLint("SetTextI18n")
     public void requestGeocode() {
         try {
@@ -243,11 +244,13 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    //검색된 장소들중 선택된 주소를 받아 정확학 위치 좌표값을 얻기위해 사용
     @SuppressLint("SetTextI18n")
     public void requestGeocodeOne(String addrone) {
         try {
             BufferedReader br;
             StringBuilder sb = new StringBuilder();
+//            선택된 주소 인코딩
             addrone = URLEncoder.encode(addrone, "UTF-8");
             String query = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=" + addrone;
             URL url = new URL(query);
@@ -277,10 +280,12 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
 
                 int indexFirst, indexLast;
 
+                //위도 값을 얻음
                 indexFirst = sb.indexOf("\"x\":\"");
                 indexLast = sb.indexOf("\",\"y\":");
                 llng = Double.parseDouble(sb.substring(indexFirst + 5, indexLast));
 
+                //경도값을 얻음
                 indexFirst = sb.indexOf("\"y\":\"");
                 indexLast = sb.indexOf("\",\"distance\":");
                 llat = Double.parseDouble(sb.substring(indexFirst + 5, indexLast));
@@ -293,6 +298,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    //하단에 검색된 장소들을 보여주고 클릭시 동작을 위함
     private void clickOpenBottomSheetFragment() {
         List<ItemObject> list = new ArrayList<>();
 
@@ -306,13 +312,16 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        //선택된 주소의 위치 값을 얻음
                         requestGeocodeOne(itemObject.getName());
+                        //선택된 주소를 맵을 통해 마커로 보여줌
                         onMapSearch(itemObject.getName());
                     }
                 }).start();
             }
         });
 
+        //검색된 장소들을 보여줌
         myBottomSheetFragment.show(getSupportFragmentManager(), myBottomSheetFragment.getTag());
     }
 
@@ -329,7 +338,8 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void onMapSearch(String roadAddress){
+    //선택된 위치를 맵을 통해 마커로 표시하고 마커 선택시시
+   public void onMapSearch(String roadAddress){
         View v = null;
         new Thread(new Runnable() {
             @Override
@@ -337,15 +347,22 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        //마커의 위치 설정
                         onemarker.setPosition(new LatLng(llat, llng));
+                        //마커를 맵에 표시
                         onemarker.setMap(map);
+                        //카메라를 마커위치에 이동
                         CameraUpdate cameraUpdate = CameraUpdate.scrollTo(new LatLng(llat, llng));
                         map.moveCamera(cameraUpdate);
+                        //바텀시트를 내려줌
                         myBottomSheetFragment.dismiss();
+                        //마커클릭시
                         onemarker.setOnClickListener(overlay -> {
+                            //팝업을 띄어줌
                             Intent mapintent = new Intent(InsertMapDB.this, Mappopup.class);
                             startActivityIfNeeded(mapintent, 1);
 
+                            //일정 추가 팝업에 값을 넘겨주기위함
                             Intent data = new Intent();
                             data.putExtra("roadAddress", roadAddress);
                             data.putExtra("searchname", searchthing);
@@ -372,6 +389,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
+                //팝업에서 확인을 클릭시 지도 종료
                 finish();
             }
         }
@@ -389,8 +407,10 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
             locationSource.setCompassEnabled(mode == LocationTrackingMode.Follow || mode == LocationTrackingMode.Face);
         });
 
+        //위치추적모드 실행
         naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
 
+        //지도에서 선택시 마커를 생성
         naverMap.setOnMapClickListener((point, coord) -> {
             onemarker.setPosition(new LatLng(coord.latitude, coord.longitude));
             onemarker.setMap(naverMap);

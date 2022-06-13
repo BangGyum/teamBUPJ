@@ -77,13 +77,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             //마커 클릭시 정보창 보여줌
             if (infoWindow.getMarker() != null) {
                 text.setText((String)infoWindow.getMarker().getTag());      //marker.setTag를 통해 일정 내용 보여줌
-            } else {    //지도 클릭시 정보창 닫음
+            } else {    //다른 곳 정보창 닫음
                 infoWindow.close();
             }
 
             return rootView;
         }
     }
+
     //이전 버튼 클릭시 Drawer 닫기
     @Override
     public void onBackPressed() {
@@ -210,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mapFragment.getMapAsync(this);
     }
+
     private void revokeAccess(GoogleSignInClient googleSignInClient){
         mGoogleSignInClient.revokeAccess()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {

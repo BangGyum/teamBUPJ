@@ -1,14 +1,14 @@
 package com.banggyum.test;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -80,10 +80,10 @@ public class Fragment_Calendar extends Fragment {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView calendar, @NonNull CalendarDay date, boolean selected) {
 
+                Log.v("date", String.valueOf(date));
                 int year = date.getYear();// 연도
                 int month = date.getMonth(); // 월
                 int day = date.getDay(); // 일
-
 
                 text.setText(year + "년 " + month + "월 " + day + "일"); // 저장된 날짜 텍스트로 불러오기
 
