@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:text="날짜를 선택해주세요!"
             android:gravity="center"/>
+
         <TextView
             android:id="@+id/cal_text"
             android:background="@drawable/calendar_text"

@@ -256,6 +256,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         if (addDate.equals("")) {
             addDate = "null";
         }
+        if (addTime.equals("")) {
+            addTime = "null";
+        }
         if (addLocation.equals("")) {
             addLocation = "null";
         }
@@ -272,7 +275,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_CONTEXT, addContext);
         cv.put(COLUMN_DATE, addDate);
         cv.put(COLUMN_TIME, addTime);
-
         cv.put(COLUMN_LOCATION, addLocation);
         cv.put(COLUMN_STATE, 1); //이거 근데 다른테이블에 넣어야될것같은데
 
@@ -370,8 +372,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                     //위가 문제
 
                     scD.setSchedule_date(mCursor.getString(3));
-                    scD.setSchedule_location(mCursor.getString(4));
-                    scD.setSchedule_state(mCursor.getShort(5));
+                    scD.setSchedule_time(mCursor.getString(4));
+                    scD.setSchedule_location(mCursor.getString(5));
+                    scD.setSchedule_state(mCursor.getShort(6));
 
                     //SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     //scD.setSchedule_registerDate1(sdf.format(scD.getTimestamp(7)));
@@ -405,7 +408,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             String sql =
                     "SELECT * FROM " + TABLE_NAME +
                             " WHERE " + COLUMN_STATE + " = '1' AND "
-                            + COLUMN_DATE + "= " + scheduleDate;
+                            + COLUMN_DATE + " = '" + scheduleDate + "'";
 
 
             Cursor mCursor = db.rawQuery(sql, null);
@@ -423,9 +426,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                     //위가 문제
 
                     scD.setSchedule_date(mCursor.getString(3));
-                    scD.setSchedule_location(mCursor.getString(4));
-                    scD.setSchedule_state(mCursor.getShort(5));
-
+                    scD.setSchedule_time(mCursor.getString(4));
+                    scD.setSchedule_location(mCursor.getString(5));
+                    scD.setSchedule_state(mCursor.getShort(6));
                     //SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     //scD.setSchedule_registerDate1(sdf.format(scD.getTimestamp(7)));
 
