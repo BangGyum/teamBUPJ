@@ -249,19 +249,19 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     //사용자 id, 내용, 일정날짜, 알람 정보(이건 배열로?),
     {
         if (addEmail.equals("")) {
-            addEmail = "null";
+            addEmail = null;
         }
         if (addContext.equals("")) {
-            addContext = "null";
+            addContext = null;
         }
         if (addDate.equals("")) {
-            addDate = "null";
+            addDate = null;
         }
         if (addTime.equals("")) {
-            addTime = "null";
+            addTime = null;
         }
         if (addLocation.equals("")) {
-            addLocation = "null";
+            addLocation = null;
         }
 
         ScheduleDTO scD = new ScheduleDTO();

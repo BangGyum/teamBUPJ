@@ -249,16 +249,18 @@ public class PopupActivity extends Activity {
         intent.putExtra("result","Close");
         setResult(RESULT_OK, intent);
         int a = 0; //해당 스케줄 아이디
-//        searchName = " d";
-        //Toast.makeText(context, userEmail, Toast.LENGTH_SHORT).show();
+
         a = db.addSchedule(scheduleId
                 ,userEmail
                 ,text1.getText().toString()
                 ,date
                 ,time
                 ,addr_name.getText().toString());
-
-        //Toast.makeText(context, a +"", Toast.LENGTH_SHORT).show();
+        //맵 정보 저장
+        db.addMap(scheduleId
+                , addr_name.getText().toString()
+                , lat
+                , lng) ;
 
         //알람 갯수만큼 입력
         for (; addCount<btn_count;addCount++){
@@ -267,11 +269,7 @@ public class PopupActivity extends Activity {
                     ,time_view.getText().toString());
         }
 
-        //맵 정보 저장
-        db.addMap(scheduleId
-                , addr_name.getText().toString()
-                , lat
-                , lng) ;
+
 
         finish();
     }

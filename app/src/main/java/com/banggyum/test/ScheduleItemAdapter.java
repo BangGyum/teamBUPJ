@@ -17,19 +17,21 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
-public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapter.ItemViewHolder>{
+public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapter.ItemViewHolder> {
 
     private List<ScheduleDTO> mListItems;
+    private ItemClickListener itemClickListener;
     private MyDatabaseHelper db;
 
-    public ScheduleItemAdapter(List<ScheduleDTO> mListItems) {
+    public ScheduleItemAdapter(List<ScheduleDTO> mListItems, ItemClickListener itemClickListener) {
         this.mListItems = mListItems;
+        this.itemClickListener = itemClickListener;
     }
 
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyleview_item, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recyleview_item, parent, false);
         ItemViewHolder itemViewHolder = new ItemViewHolder(view);
         //DB를 사용하기위한 생성자
         db = new MyDatabaseHelper(view.getContext());
@@ -62,6 +64,13 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
                 });
                 snackbar.setTextColor(Color.WHITE);
                 snackbar.show();
+            }
+        });
+
+        holder.tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                itemClickListener.onItemClick(mListItems.get(position));
             }
         });
     }
@@ -106,5 +115,9 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
             tv = itemView.findViewById(R.id.itemtv);
             cl = itemView.findViewById(R.id.Layout11);
         }
+    }
+
+    public interface ItemClickListener{
+        public void onItemClick(ScheduleDTO scheduleDTO);
     }
 }

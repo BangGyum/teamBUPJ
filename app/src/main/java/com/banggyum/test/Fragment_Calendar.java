@@ -29,6 +29,12 @@ public class Fragment_Calendar extends Fragment {
     private TextView text;
     private TextView cal_text;
 
+    public static Fragment_Calendar newInstance(){
+        Fragment_Calendar fragment = new Fragment_Calendar();
+        return fragment;
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

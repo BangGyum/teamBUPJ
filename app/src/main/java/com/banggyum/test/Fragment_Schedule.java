@@ -21,13 +21,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Fragment_Schedule extends Fragment {
+public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.ItemClickListener {
     private ArrayList<ScheduleDTO> listItem;
     private RecyclerView recyclerView;
     private ScheduleItemAdapter scheduleItemAdapter;
     private LinearLayoutManager linearLayoutManager;
     private List<ScheduleDTO> selectScheList = new ArrayList<ScheduleDTO>();
     private MyDatabaseHelper db;
+
+    public static Fragment_Schedule newInstance(){
+        Fragment_Schedule fragment = new Fragment_Schedule();
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,7 +52,7 @@ public class Fragment_Schedule extends Fragment {
         db = new MyDatabaseHelper(view.getContext());
 
         //리사이클러에 내용들을 추가해주기 위해 어댑터에 아이템들을 넘겨줌
-        scheduleItemAdapter = new ScheduleItemAdapter(listItem);
+        scheduleItemAdapter = new ScheduleItemAdapter(listItem, this);
         //리사이클에 어댑터를 통해 아이템 추가 및 수정, 삭제
         recyclerView.setAdapter(scheduleItemAdapter);
 
@@ -96,4 +101,9 @@ public class Fragment_Schedule extends Fragment {
         }
     }
 
+    @Override
+    public void onItemClick(ScheduleDTO scheduleDTO) {
+        ScheduleBottomSheet scheduleBottomSheet = new ScheduleBottomSheet(scheduleDTO);
+        scheduleBottomSheet.show(getActivity().getSupportFragmentManager(), scheduleBottomSheet.getTag());
+    }
 }
