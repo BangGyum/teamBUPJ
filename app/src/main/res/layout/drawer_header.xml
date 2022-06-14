@@ -6,7 +6,7 @@ android:id="@+id/drawer_layout"
     android:layout_height="300dp"
     android:background="#4A5554"
     android:gravity="center|bottom">
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/userImageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
