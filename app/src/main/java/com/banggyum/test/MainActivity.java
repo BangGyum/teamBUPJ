@@ -22,6 +22,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -203,6 +204,17 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             }
         });
+
+        //drawer 안에 사용자 정보
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView navUserEmail = (TextView) headerView.findViewById(R.id.email);
+        navUserEmail.setText(userEmail);
+        TextView navUserName = (TextView) headerView.findViewById(R.id.name);
+        navUserName.setText(userName);
+        ImageView userImageView = (ImageView) headerView.findViewById(R.id.userImageView) ;
+
+        Glide.with(this).load(userPhotoUrl).into(userImageView);
     }
 
     private void revokeAccess(GoogleSignInClient googleSignInClient){
