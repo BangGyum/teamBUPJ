@@ -1,5 +1,5 @@
 package com.banggyum.test;
-
+//SQLite 관할
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
@@ -81,7 +81,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     //사용자 table
     String query_user = "CREATE TABLE " + TABLE3_NAME
             + " (" + COLUMN3_EMAIL + " TEXT  PRIMARY KEY NOT NULL, "
-            + COLUMN3_NAME + " TEXT );";
+            +  COLUMN3_NAME + " TEXT );";
 
     String query_calender = "CREATE TABLE " + TABLE4_NAME
             + " (" + COLUMN4_NAME + " TEXT  PRIMARY KEY NOT NULL,"

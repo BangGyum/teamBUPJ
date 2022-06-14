@@ -15,7 +15,7 @@
  */
 
 package com.banggyum.test;
-
+//구글 ID토큰을 사용하여 Google Firebase 인증
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,9 +36,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-/**
- * Demonstrate Firebase Authentication using a Google ID Token.
- */
 public class GoogleSignInActivity extends Activity {
 
     private static final String TAG = "GoogleActivity";

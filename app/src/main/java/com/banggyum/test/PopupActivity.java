@@ -34,7 +34,7 @@ public class PopupActivity extends Activity {
     //10자리 난수
 
     EditText text1;
-    LinearLayout li;
+    LinearLayout li,liBottom;
     Button alarmBtn ;
     Button mapBtn;
     Calendar myCalendar = Calendar.getInstance();
@@ -90,6 +90,7 @@ public class PopupActivity extends Activity {
         userEmail = preferences.getString("useremail", "");
 
         li = findViewById(R.id.dynamicLayout);
+        liBottom = findViewById(R.id.dynamicLayout2);
         Log.v("qwer",li.getId()+"");
         alarmBtn = findViewById(R.id.alarmBtn);
         mapBtn = findViewById(R.id.mapBtn);
@@ -226,7 +227,7 @@ public class PopupActivity extends Activity {
             //li.addView(textViewNm);
             //li.addView(btn);
             Log.v("wert",editNm.getId()+"");
-            li.addView(editNm);
+            liBottom.addView(editNm);
             //setContentView(li);
 
             //li.setOrientation(LinearLayout.VERTICAL);

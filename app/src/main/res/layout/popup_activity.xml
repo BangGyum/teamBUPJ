@@ -88,6 +88,13 @@
                 android:layout_height="wrap_content"
                 android:text="지도 추가"
                 />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/dynamicLayout2"
+            android:padding="24dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         </LinearLayout>
     </LinearLayout>

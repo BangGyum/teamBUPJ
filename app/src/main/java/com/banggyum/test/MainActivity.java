@@ -133,10 +133,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
 
-//                if (id == R.id.loginform) {
-//                    Intent loginIntent = new Intent(MainActivity.this, LoginPage.class);
-//                    startActivity(loginIntent);
-                    if (id == R.id.logoutform){
+                if (id == R.id.loginform) {
+                    Intent loginIntent = new Intent(MainActivity.this, LoginPage.class);
+                    startActivity(loginIntent);
+                }
+                /*else if (id == R.id.logoutform){
 //                    Log.v("sds","sdsd");
                     LoginPage lp = new LoginPage();
                     mGoogleSignInClient=lp.getmGoogleSignInClient();
@@ -153,7 +154,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 //
 //// Build a GoogleSignInClient with the options specified by gso.
 //                    mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-                }
+                 */
+
                 return true;
             }
         });
