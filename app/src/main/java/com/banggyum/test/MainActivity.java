@@ -131,11 +131,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-
-                if (id == R.id.loginform) {
-                    Intent loginIntent = new Intent(MainActivity.this, LoginPage.class);
-                    startActivity(loginIntent);
+                switch (item.getItemId()) {
+                    case R.id.loginform:
+                        Intent loginintent = new Intent(MainActivity.this,LoginPage.class);
+                        startActivity(loginintent);
+                        break;
+                    case R.id.gone_schedule:
+                        Intent goneintent = new Intent(MainActivity.this,Gone_Schedule.class);
+                        startActivity(goneintent);
+                        break;
                 }
                 /*else if (id == R.id.logoutform){
 //                    Log.v("sds","sdsd");
