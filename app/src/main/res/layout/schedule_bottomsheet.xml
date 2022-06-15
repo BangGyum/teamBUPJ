@@ -6,32 +6,102 @@
     android:orientation="vertical"
     android:id="@+id/fragment_sc"
     android:padding="15dp">
-    <TextView
-        android:id="@+id/txt_date"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:text="날짜"/>
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="일정 : "
+            android:textColor="@color/black"
+            android:textSize="20sp"/>
+        <EditText
+            android:id="@+id/ed_sc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:hint="수정할 일정"/>
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/txt_sch"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:text="일정"/>
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="날짜 : "
+            android:textColor="@color/black"
+            android:textSize="20sp"/>
+        <EditText
+            android:id="@+id/ed_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:hint="수정할 날짜"/>
+        <Button
+            android:id="@+id/dateupdatebtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:backgroundTint="#00BCD4"
+            android:text="날짜 수정" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/txt_loc"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:text="장소"/>
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="시간 : "
+            android:textColor="@color/black"
+            android:textSize="20sp"/>
+        <EditText
+            android:id="@+id/ed_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:hint="수정할 시간"/>
+        <Button
+            android:id="@+id/timeupdatebtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:backgroundTint="#FFEB3B"
+            android:text="시간 수정" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="장소 : "
+            android:textColor="@color/black"
+            android:textSize="20sp"/>
+        <EditText
+            android:id="@+id/ed_loc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:hint="수정할 장소"/>
+        <Button
+            android:id="@+id/mapupdateBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:backgroundTint="#8BC34A"
+            android:text="지도 수정" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,6 +111,13 @@
             android:id="@+id/rgb1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="위험! 누르지마시오"
+            android:textColor="#FF0000"
+            android:textSize="20sp"
             android:layout_gravity="center"/>
         <LinearLayout
             android:layout_width="match_parent"

@@ -500,13 +500,38 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return scD;
     }
 
-    public void updateSchedule (int scheduleId)
+    public int selectState(int scheduleId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        int state = 0;
+        try {
+            // 쿼리
+            String sql = "SELECT "
+                    + COLUMN_STATE + " FROM " + TABLE_NAME + " WHERE " + COLUMN_ID +" = " + scheduleId;
+
+            // 테이블 데이터를 읽기 위한 Cursor
+            Cursor mCursor = db.rawQuery(sql, null);
+
+            // 테이블 끝까지 읽기
+            if (mCursor != null) {
+                // 다음 Row로 이동
+                while (mCursor.moveToNext()) {
+                    // 해당 Row 저장
+                    state = mCursor.getInt(0);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return state;
+    }
+
+    public void updateSchedule (int scheduleId, int state)
     //일정 데이터 표면상 삭제
     {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
 
-        if(scheduleId == 0){
+        if(state == 0){
             cv.put(COLUMN_STATE, 1);
             cv.put(COLUMN5_STATE, 1);
         } else{

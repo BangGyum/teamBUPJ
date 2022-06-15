@@ -5,11 +5,11 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -47,14 +47,12 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
         }
 
         holder.itemView.setTag(position);
-        holder.tv.setText("제목 : " + SD.getSchedule_context() + "\n");
-        holder.tv.append("날짜 : " + SD.getSchedule_date() + "\n");
-        holder.tv.append("시간 : " + SD.getSchedule_time() + "\n");
+        holder.tv.setText("일정 : " + SD.getSchedule_context() + "\n");
         holder.rb.setChecked(false);
         holder.rb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                remove(holder.getAbsoluteAdapterPosition(), SD.getSchedule_id());
+                remove(holder.getAbsoluteAdapterPosition(), SD.getSchedule_id(), SD.getSchedule_state());
                 @SuppressLint("ShowToast") Snackbar snackbar = Snackbar.make(holder.cl, "완료했습니다.", BaseTransientBottomBar.LENGTH_LONG);
                 snackbar.setAction("실행취소", new View.OnClickListener() {
                     @Override
@@ -83,9 +81,9 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
         return 0;
     }
 
-    public void remove(int position, int sdId){
+    public void remove(int position, int sdId, int state){
         try{
-            db.updateSchedule(sdId);
+            db.updateSchedule(sdId, state);
             mListItems.remove(position);
             notifyItemRemoved(position);
         }catch (IndexOutOfBoundsException ex){
@@ -96,7 +94,8 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
     @SuppressLint("NotifyDataSetChanged")
     public void undoItem(ScheduleDTO SD, int position){
         try{
-            db.updateSchedule(SD.getSchedule_id());
+            int state = db.selectState(SD.getSchedule_id());
+            db.updateSchedule(SD.getSchedule_id(), state);
             mListItems.add(position, SD);
             notifyDataSetChanged();
         }catch (IndexOutOfBoundsException ex){
@@ -107,7 +106,7 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
     public class ItemViewHolder extends RecyclerView.ViewHolder{
         private RadioButton rb;
         private TextView tv;
-        private ConstraintLayout cl;
+        private LinearLayout cl;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
