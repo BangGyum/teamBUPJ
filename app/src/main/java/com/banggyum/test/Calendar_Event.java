@@ -2,34 +2,31 @@ package com.banggyum.test;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
-import android.text.style.TypefaceSpan;
-import android.widget.TextView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
-
+// 일정 등록 캘린더 표시
 public class Calendar_Event implements DayViewDecorator {
 
     private final Drawable drawable;
 
     private HashSet<CalendarDay> dates;
-    private TextView textView;
+    private ConstraintLayout cal_layout;
 
-    public Calendar_Event(Collection<CalendarDay> dates, Activity context, TextView textView) {
+    public Calendar_Event(Collection<CalendarDay> dates, Activity context, ConstraintLayout cal_layout) {
         // 이미지
         drawable = context.getResources().getDrawable(R.drawable.calendar_background);
 
         this.dates = new HashSet<>(dates);
-        this.textView = textView;
+        this.cal_layout = cal_layout;
 
     }
 
@@ -46,7 +43,4 @@ public class Calendar_Event implements DayViewDecorator {
         view.addSpan(new ForegroundColorSpan(Color.BLACK)); //선택 날짜 안의 색상
     }
 
-    public void setText(String text){
-        textView.setText(text);
-    }
 }

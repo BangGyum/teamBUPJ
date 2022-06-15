@@ -10,7 +10,7 @@ import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import org.threeten.bp.DayOfWeek;
 
 import java.util.Calendar;
-
+// 캘린더 토요일 색상
 public class Calendar_Saturday_Color implements DayViewDecorator {
     private Calendar calendar = Calendar.getInstance();
     private CalendarDay date;
