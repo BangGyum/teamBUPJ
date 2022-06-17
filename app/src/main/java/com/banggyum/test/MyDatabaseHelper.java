@@ -170,13 +170,13 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     //사용자 id, 내용, 일정날짜, 알람 정보(이건 배열로?),
     {
         if (addName.equals("")) {
-            addName = "null";
+            addName = null;
         }
-        if (lat ==null) {
-            lat = 0.0;
+        if (lat == null) {
+            lat = null;
         }
-        if (lng ==null) {
-            lng = 0.0;
+        if (lng == null) {
+            lng = null;
         }
 
         ScheduleDTO scD = new ScheduleDTO();

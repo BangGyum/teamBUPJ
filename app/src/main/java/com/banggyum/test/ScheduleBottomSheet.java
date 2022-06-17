@@ -1,5 +1,7 @@
 package com.banggyum.test;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -81,6 +83,7 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment {
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
+
         btn_time = view.findViewById(R.id.timeupdatebtn);
         btn_time.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,12 +109,14 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment {
                 mTimePicker.show();
             }
         });
+
         btn_map = view.findViewById(R.id.mapupdateBtn);
         btn_map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intentDB = new Intent(view.getContext(), InsertMapDB.class);
                 startActivityForResult(intentDB, 1);
+
             }
         });
 
@@ -154,4 +159,22 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment {
             }
         }
     };
+
+    String roadAddress, searchName;
+    Double lat, lng;
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                searchName = data.getStringExtra("searchname");
+                lat = data.getDoubleExtra("lat", 0);
+                lng = data.getDoubleExtra("lng", 0);
+
+                edloc.setText(searchName);
+            }
+        }
+    }
 }

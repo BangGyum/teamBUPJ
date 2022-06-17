@@ -46,7 +46,7 @@
         <Button
             android:id="@+id/dateupdatebtn"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:backgroundTint="#00BCD4"
             android:text="날짜 수정" />
     </LinearLayout>
@@ -72,7 +72,7 @@
         <Button
             android:id="@+id/timeupdatebtn"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:backgroundTint="#FFEB3B"
             android:text="시간 수정" />
     </LinearLayout>
