@@ -67,6 +67,7 @@ public class PopupActivity extends Activity {
                 m = "0" + m;
             }
 
+
             if (day<10){
                 d = "0" + d;
             }

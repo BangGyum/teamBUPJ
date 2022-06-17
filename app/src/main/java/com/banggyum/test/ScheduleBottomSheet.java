@@ -115,6 +115,7 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment {
             }
         });
 
+
         edsc.setText(sd.getSchedule_context());
         dateupdate.setText(sd.getSchedule_date());
         timeudate.setText(sd.getSchedule_time());
