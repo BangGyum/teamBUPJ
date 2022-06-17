@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -340,7 +339,6 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
 
     //선택된 위치를 맵을 통해 마커로 표시하고 마커 선택시시
    public void onMapSearch(String roadAddress){
-        View v = null;
         new Thread(new Runnable() {
             @Override
             public void run() {
