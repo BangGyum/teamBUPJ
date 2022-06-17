@@ -35,8 +35,8 @@
             android:text="날짜 : "
             android:textColor="@color/black"
             android:textSize="20sp"/>
-        <EditText
-            android:id="@+id/ed_date"
+        <TextView
+            android:id="@+id/updatedate_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -61,8 +61,8 @@
             android:text="시간 : "
             android:textColor="@color/black"
             android:textSize="20sp"/>
-        <EditText
-            android:id="@+id/ed_time"
+        <TextView
+            android:id="@+id/updatetime_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
