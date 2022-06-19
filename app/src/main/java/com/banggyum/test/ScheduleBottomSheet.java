@@ -34,6 +34,7 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment {
     private TextView timeudate, dateupdate;
     private ScheduleDTO sd;
     private ScheduleItemAdapter scheduleItemAdapter;
+    MyDatabaseHelper db ;
 
     public ScheduleBottomSheet(ScheduleDTO sd) {
         this.sd = sd;
@@ -76,6 +77,8 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment {
         timeudate = view.findViewById(R.id.updatetime_view);
         dateupdate = view.findViewById(R.id.updatedate_view);
         btn_date = view.findViewById(R.id.dateupdatebtn);
+        db = new MyDatabaseHelper(getContext());
+
         btn_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,12 +101,21 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment {
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         String state = "AM";
                         // 선택한 시간이 12를 넘을경우 "PM"으로 변경 및 -12시간하여 출력 (ex : PM 6시 30분)
-                        if (selectedHour > 12) {
-                            selectedHour -= 12;
-                            state = "PM";
+                        String h = Integer.toString(selectedHour);
+                        String m = Integer.toString(selectedMinute);
+                        if (selectedHour<10){
+                            h = "0"+h;
                         }
-                        timeudate.setText(state + " " + selectedHour + "시" +
-                                selectedMinute + "분");
+                        if (selectedMinute<10){
+                            m = "0"+m;
+                        }
+
+//                        if (selectedHour > 12) {
+//                            selectedHour -= 12;
+//                            state = "PM";
+//                        }
+                        timeudate.setText(h +
+                                m );
                     }
                 },hour,minute,false);
                 mTimePicker.setTitle("Select Time");
@@ -156,7 +168,15 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment {
                     dismiss();
                     break;
                 case R.id.update_btn:
+                    db.updateSchedule(sd.getSchedule_id()
+                                    ,edsc.getText().toString()
+                                    ,dateupdate.getText().toString()
+                                    ,timeudate.getText().toString()
+                                    ,edloc.getText().toString());
                     Toast.makeText(getContext(), sd.getSchedule_id()+"", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), dateupdate.getText(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), timeudate.getText(), Toast.LENGTH_SHORT).show();
+
                     break;
             }
         }

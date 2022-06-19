@@ -96,6 +96,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             + "FOREIGN KEY(" + COLUMN5_ID + ")"
             + "REFERENCES " + TABLE_NAME + "(" + COLUMN_ID + ")); ";
 
+
+
     public void a() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(query_user);
@@ -289,6 +291,26 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
         //return scheduleId;
         return scD.getSchedule_id(); //일정 id값 반환
+    }
+
+    public void updateSchedule (int scheduleId,  String addContext,
+                                String addDate, String addTime, String addLocation)
+    //일정 데이터 표면상 삭제
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
+        cv.put(COLUMN_CONTEXT, addContext);
+        cv.put(COLUMN_DATE, addDate);
+        cv.put(COLUMN_TIME, addTime);
+        cv.put(COLUMN_LOCATION, addLocation);
+
+
+        long resultScd = db.update(TABLE_NAME, cv, COLUMN_ID + "='" + scheduleId + "'", null);
+        if (resultScd == -1) {
+            Toast.makeText(context, "수정 Failed", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "알람 데이터 수정 성공", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void addAlarm(int addScheduleId, String addAlarmTime)
@@ -491,7 +513,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return state;
     }
 
-    public void updateSchedule (int scheduleId, int state)
+
+    public void updateScheduleState (int scheduleId, int state)
     //일정 데이터 표면상 삭제
     {
         SQLiteDatabase db = this.getWritableDatabase();

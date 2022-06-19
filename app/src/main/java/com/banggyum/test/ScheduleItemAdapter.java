@@ -83,7 +83,7 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
 
     public void remove(int position, int sdId, int state){
         try{
-            db.updateSchedule(sdId, state);
+            db.updateScheduleState(sdId, state);
             mListItems.remove(position);
             notifyItemRemoved(position);
         }catch (IndexOutOfBoundsException ex){
@@ -95,7 +95,7 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
     public void undoItem(ScheduleDTO SD, int position){
         try{
             int state = db.selectState(SD.getSchedule_id());
-            db.updateSchedule(SD.getSchedule_id(), state);
+            db.updateScheduleState(SD.getSchedule_id(), state);
             mListItems.add(position, SD);
             notifyDataSetChanged();
         }catch (IndexOutOfBoundsException ex){
