@@ -2,7 +2,6 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 // 일정등록된 날짜 선택했을 때의 모형과 색상, 아이콘
     <item>
-
         <shape
             android:shape="rectangle">
             <stroke
@@ -10,16 +9,12 @@
                 android:color="#A7E6EF">
             </stroke>
             <corners android:radius="2dp"></corners>
-
             <size
                 android:width="16dp"
                 android:height="16dp">
-
             </size>
         </shape>
-
     </item>
-
     <item
         android:width="10dp"
         android:height="10dp"

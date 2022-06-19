@@ -24,7 +24,6 @@
             android:text="날짜를 선택해주세요!"
             android:gravity="center"/>
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cal_rcv"
             android:layout_width="match_parent"

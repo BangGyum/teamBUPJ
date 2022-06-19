@@ -2,7 +2,6 @@ package com.banggyum.test;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +18,25 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.threeten.bp.LocalDate;
 import org.threeten.bp.format.DateTimeFormatter;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 public class Fragment_Calendar extends Fragment {
 
     private MaterialCalendarView materialCalendar;
-    private List<ScheduleDTO> selectScheList = new ArrayList<ScheduleDTO>();
-    private List<ScheduleDTO> selectScheList1 = new ArrayList<ScheduleDTO>();
+    private HashMap<CalendarDay, String> hol = new HashMap<>(); // 공휴일 날짜와 이름 담는 곳
+    private List<ScheduleDTO> selectScheList = new ArrayList<ScheduleDTO>(); // 리사이클러뷰 일정 리스트
+    private List<ScheduleDTO> selectScheList1 = new ArrayList<ScheduleDTO>(); //캘린더 이벤트 일정 리스트
     private ArrayList<ScheduleDTO> listItem;
     private MyDatabaseHelper db;
     private TextView text;
@@ -48,6 +54,12 @@ public class Fragment_Calendar extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment__calendar, container, false);
 
+        materialCalendar = v.findViewById(R.id.materialCalendar);
+        text = v.findViewById(R.id.text);
+        cal_tv = v.findViewById(R.id.cal_tv);
+        sch_tv = v.findViewById(R.id.sch_tv);
+        cal_Layout = v.findViewById(R.id.cal_Layout);
+
         //캘린더 리사이클러뷰
         recyclerView = v.findViewById(R.id.cal_rcv);
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -55,11 +67,13 @@ public class Fragment_Calendar extends Fragment {
         RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(itemDecoration);
 
+        //리사이클러 아이템 생성자
+        listItem = new ArrayList<>();
+
         ArrayList<CalendarDay> eventDay = new ArrayList<>();
         //캘린더 일정 리스트
         ArrayList<CalendarDay> calendarDayList = new ArrayList<>();
 
-        listItem = new ArrayList<>();
         //DB 생성자
         db = new MyDatabaseHelper(v.getContext());
         //리사이클러에 내용들을 추가해주기 위해 어댑터에 아이템들을 넘겨줌
@@ -73,28 +87,67 @@ public class Fragment_Calendar extends Fragment {
             ScheduleDTO sdAllSelect;
             sdAllSelect = selectScheList1.get(i);
             String event = sdAllSelect.getSchedule_date();
-            Log.v("date", event);
-
+            //String을 CalendarDay형식으로 포맷
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd").withLocale(Locale.KOREA);
             CalendarDay eventDate = CalendarDay.from(LocalDate.parse(event, dtf));
             calendarDayList.add(eventDate);
         }
+        // 법정공휴일 리스트
+        ArrayList<CalendarDay> HolidayList = new ArrayList<>();
+        String json = "";
+        JSONArray holidayArray = new JSONArray(); // 공휴일 json 파일 안의 날짜와 이름을 담는 곳
+
+        try {
+            InputStream is = getActivity().getAssets().open("holiday.json");
+
+            int size = is.available();
+
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
 
 
-        materialCalendar = v.findViewById(R.id.materialCalendar);
-        text = v.findViewById(R.id.text);
-        cal_tv = v.findViewById(R.id.cal_tv);
-        sch_tv = v.findViewById(R.id.sch_tv);
-        cal_Layout = v.findViewById(R.id.cal_Layout);
+            JSONObject jsonObject = new JSONObject(json);
+            String response = jsonObject.getString("response");
+            JSONObject jsonObject1 = new JSONObject(response);
+            String body = jsonObject1.getString("body");
+            JSONObject jsonObject2 = new JSONObject(body);
+            String items = jsonObject2.getString("items");
+            JSONObject jsonObject3 = new JSONObject(items);
+
+
+            holidayArray = jsonObject3.getJSONArray("item");
+
+            for (int i = 0; i < holidayArray.length(); i++) {
+                JSONObject holidayObject = holidayArray.getJSONObject(i);
+                String day = holidayObject.getString("locdate");
+
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(Locale.KOREA);
+                CalendarDay date = CalendarDay.from(LocalDate.parse(day, dtf));
+                HolidayList.add(date);
+
+            }
+            System.out.println(holidayArray);
+
+
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
 
         materialCalendar.addDecorators(
                 new Calendar_Event(calendarDayList, getActivity(), cal_Layout), //일정 등록이 되어있는 날짜 이벤트
                 new Calendar_Saturday_Color(),  //토요일 색상
                 new Calendar_Sunday_Color(), // 일요일 색상
+                new HolidayColor(HolidayList), // 공휴일 색상
                 new Calendar_Today()); // 오늘 색상
 
-
+        JSONArray finalHolidayArray = holidayArray; // 공휴일 날짜와 이름이 담긴 리스트
         materialCalendar.setOnDateChangedListener(new OnDateSelectedListener() { //날짜 선택 텍스트
             @SuppressLint("SetTextI18n")
             @Override
@@ -104,28 +157,58 @@ public class Fragment_Calendar extends Fragment {
                 int year = date.getYear();// 연도
                 int month = date.getMonth(); // 월
                 int day = date.getDay(); // 일
-                listItem.clear();
-                addRecylerItem();
+                // 휴일명
+                String name = "";
 
+                for (int i = 0; i < finalHolidayArray.length(); i++) {
+                    JSONObject holidayObject = null;
+                    try {
+                        holidayObject = finalHolidayArray.getJSONObject(i);
+                        String d1 = holidayObject.getString("locdate");
+                        String n1 = holidayObject.getString("dateName");
 
-                text.setText(year + "년 " + month + "월 " + day + "일"); // 저장된 날짜 텍스트로 불러오기
+                        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(Locale.KOREA);
+                        CalendarDay d2 = CalendarDay.from(LocalDate.parse(d1, dtf));
+                        hol.put(d2, n1);
+
+                        if (hol.containsKey(date)) {
+                            name = hol.get(date);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                text.setText(year + "년 " + month + "월 " + day + "일" + "\n"); // 저장된 날짜 텍스트로 불러오기
+                text.append(name);
+
+                listRefresh(); // 레이아웃 초기화(다른날짜 누르면 초기화)
+                listItem.clear(); //아이템 초기화
+                addRecylerItem(); // 아이템 추가
             }
         });
 
 
         return v;
     }
-    public void addRecylerItem() {
-        //일정 select
 
+
+
+
+    public void addRecylerItem() {
         //DB에 일정들 순서대로 추가
         for (int i=0; i<selectScheList.size(); i++){
             ScheduleDTO sdSelect1;
             sdSelect1 = selectScheList.get(i);
 
-            ScheduleDTO SD = new ScheduleDTO(sdSelect1.getSchedule_id(), sdSelect1.getSchedule_context(), sdSelect1.getSchedule_date(), sdSelect1.getSchedule_time(),sdSelect1.getSchedule_location(), sdSelect1.getSchedule_state(), sdSelect1.getSchedule_registerDate(), sdSelect1.getSchedule_registerDate1());
+            ScheduleDTO SD = new ScheduleDTO(sdSelect1.getSchedule_id(), sdSelect1.getSchedule_context(),
+                    sdSelect1.getSchedule_date(), sdSelect1.getSchedule_time(),sdSelect1.getSchedule_location(),
+                    sdSelect1.getSchedule_state(), sdSelect1.getSchedule_registerDate(), sdSelect1.getSchedule_registerDate1());
             listItem.add(SD);
             calendar_Item.notifyDataSetChanged();
         }
+    }
+    private void listRefresh() {
+        recyclerView.removeAllViewsInLayout();
+        recyclerView.setAdapter(calendar_Item);
     }
 }
