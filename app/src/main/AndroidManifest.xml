@@ -25,7 +25,6 @@
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="8dvuu6gc91" />
         <!-- 알람 사용하기 위한 리시버 -->
-        <receiver android:name=".AlertReceiver"/>
         <activity
             android:name=".LoginPage"
             android:exported="true">
@@ -34,6 +33,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".AlarmReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.test.alarmtestous.ALARM_START" />
+                <!-- 알람 매니저에 해당 receiver을 연결?시켜주는 이름-->
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -54,7 +63,7 @@
 
         <activity
             android:name=".PopupActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.Dialog"/>
+            android:theme="@android:style/Theme.DeviceDefault.Light.Dialog"/>
 
         <activity
             android:name=".Mappopup"
