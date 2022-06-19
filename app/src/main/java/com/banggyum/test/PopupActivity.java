@@ -1,8 +1,14 @@
 package com.banggyum.test;
 
 import android.app.Activity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,12 +24,16 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.fragment.app.DialogFragment;
+
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
 // input 팝업창
-public class PopupActivity extends Activity {
+public class PopupActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener{
+    private TextView mTextView;
 
     private android.content.Context context;
     MainActivity ma = new MainActivity();
@@ -78,12 +88,14 @@ public class PopupActivity extends Activity {
 
     private EditText addr_name;
     private TextView addr_view;
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //타이틀바 없앨래
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.popup_activity);
         Log.v("qwerqwer",scheduleId+"");
+
+        mTextView =  findViewById(R.id.textView);
 
         SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
 
@@ -167,7 +179,66 @@ public class PopupActivity extends Activity {
                 startActivityIfNeeded(intentmap, 1);
             }
         });
+        //알람추가 버튼 메소드
+        Button button = (Button) findViewById(R.id.alarmBtn);
+        button.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                DialogFragment timePicker = new TimePickerFragment();
+                timePicker.show(getSupportFragmentManager(), "time picker");
+            }
+
+        });
+        //알람 캔슬 버튼 메소드
+        Button buttonCancelAlarm = findViewById(R.id.alarmcancel_button);
+        buttonCancelAlarm.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick (View v) {
+                cancelAlarm();
+            }
+        });
     }
+
+    //알람 시간설정 코드
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        c.set(Calendar.MINUTE, minute);
+        c.set(Calendar.SECOND, 0);
+
+        updateTimeText(c);
+        startAlarm(c);
+    }
+    //시간 설정하면 텍스트뷰에 텍스트 뜨게하는 코드
+    private void updateTimeText(Calendar c){
+        String timeText = "Alarm set for : ";
+        timeText += DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
+
+        mTextView.setText(timeText);
+    }
+    private void startAlarm(Calendar c){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+
+        if(c.before((Calendar.getInstance()))){
+            c.add(Calendar.DATE, 1);
+        }
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+        //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), 1*60*1000 ,  pendingIntent);
+    }
+    // 설정되어있는 알람 취소 코드
+    private void cancelAlarm(){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+
+        alarmManager.cancel(pendingIntent);
+        mTextView.setText("Alarm canceled");
+    }
+
+
 
     String roadAddress, searchName;
     Double lat, lng;
