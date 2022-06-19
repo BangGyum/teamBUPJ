@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -151,10 +152,11 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment {
         public void onClick(View view) {
             switch (view.getId()){
                 case R.id.cls_btn:
+                    Toast.makeText(getContext(), "닫기버튼", Toast.LENGTH_SHORT).show();
                     dismiss();
                     break;
                 case R.id.update_btn:
-
+                    Toast.makeText(getContext(), sd.getSchedule_id()+"", Toast.LENGTH_SHORT).show();
                     break;
             }
         }

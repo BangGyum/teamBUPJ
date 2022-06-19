@@ -46,9 +46,9 @@ public class PopupActivity extends Activity {
 */
     MyDatabaseHelper db ;
     int alarmIds[] = new int[]{1000023,1000021,1000029,1000027,1000014,1000011,1000019,1000016,1000035,1000022
-                            ,1000024,1000028,1000030,1000012,1000015,1000017,1000020,1000034,1000036};
+            ,1000024,1000028,1000030,1000012,1000015,1000017,1000020,1000034,1000036};
     int addCount = 0 ; // db에 넣을때, 알람이 어려개라 for ( int i ... 에서 int i 대신에 만든 것.
-                // 리스너에서도 이걸 사용해서 alarmEdit[addCount] 로 id값 찾으려고
+    // 리스너에서도 이걸 사용해서 alarmEdit[addCount] 로 id값 찾으려고
 
     int btn_count=0; //버튼 생성에
     //데이트피커다이얼로그
@@ -60,13 +60,12 @@ public class PopupActivity extends Activity {
             myCalendar.set(Calendar.DAY_OF_MONTH, day);
             String y = Integer.toString(year);
             String m = Integer.toString(month+1); // 5월이면 05가 아니라 5임
-                //month가 인덱스라 그런지 1개월 어디에 버리고 나오기 때문에 +1
+            //month가 인덱스라 그런지 1개월 어디에 버리고 나오기 때문에 +1
             String d = Integer.toString(day);
             // 10보다 작으면 앞에 0 붙여주기
             if (month<9) {
                 m = "0" + m;
             }
-
 
             if (day<10){
                 d = "0" + d;
@@ -202,12 +201,13 @@ public class PopupActivity extends Activity {
             //            btn.setText(text);
 
             //텍스트뷰 글자크기 설정
-            //textViewNm.setTextSize(12);
+            editNm.setTextSize(12);
             //textViewNm.setId(0);
-            editNm.setTextSize(9);
             //String a= alarmIds[btn_count];
             editNm.setId(alarmIds[btn_count]);
             editNm.setOnClickListener(TimeAddClickList);
+            editNm.setFocusable(false);
+            editNm.setClickable(true);
             Log.v("qwe","qwe");
 
             // 레이아웃설정
@@ -217,10 +217,12 @@ public class PopupActivity extends Activity {
             );
             param.leftMargin=30;
 
+
             //설정한 레이아웃 텍스트뷰에 적용
             //textViewNm.setLayoutParams(param);
             //btn.setLayoutParams(param);
             editNm.setLayoutParams(param);
+            editNm.getLayoutParams().width=240; //edit size 조절
             btn_count++;
             //텍스트뷰 백그라운드 색상 설정
             //textViewNm.setBackgroundColor(Color.rgb(174,234,174));
@@ -318,7 +320,7 @@ public class PopupActivity extends Activity {
     public void onBackPressed(){
         return;
     }
-// 데이트피커 다이얼로그 뜨게만들기
+    // 데이트피커 다이얼로그 뜨게만들기
     private void updateLabel() {
         String myFormat = "yyyy/MM/dd"; //출력형식
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);

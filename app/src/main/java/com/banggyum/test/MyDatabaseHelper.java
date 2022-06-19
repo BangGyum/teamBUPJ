@@ -107,7 +107,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db)
-    //db가 처음 생성될때 호출되는 메소드, execsql을 호출해 데이터를 채우는 작업
+    //db가 처음 생성될때 호출되는 메소드, execSQL을 호출해 데이터를 채우는 작업
     {
         db.execSQL(query_user);
         db.execSQL(query_schedule);
@@ -131,35 +131,20 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     //알람 테이블에 삽입
     {
         try {
-            SQLiteDatabase db = this.getReadableDatabase();
-            UserDTO uD = new UserDTO();
-            // 쿼리
-            String sql = "SELECT * FROM " + TABLE3_NAME + " WHERE " + COLUMN3_EMAIL + " = '" + addEmail + "';";
 
-            Cursor mCursor = db.rawQuery(sql, null);
-
-            uD.setUser_email(mCursor.getString(0));
-            Toast.makeText(context, "e", Toast.LENGTH_SHORT).show();
-
-            if ("".equals("")) {// 테이블 끝까지 읽기
-                Toast.makeText(context, "응애2", Toast.LENGTH_SHORT).show();
-                Toast.makeText(context, mCursor.getString(0) + "응애", Toast.LENGTH_SHORT).show();
-                return;
-            } else {
-                Toast.makeText(context, "응애3", Toast.LENGTH_SHORT).show();
                 SQLiteDatabase db2 = this.getWritableDatabase();
-                ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
-
+                ContentValues cv = new ContentValues();
+                //. ContentValues = ContentResolver 가 처리할 수 있는 값 집합을 저장
+                //ContentResolver 는 contentProvider 와 비지니스 로직의 중계자 역할 (운송)
                 cv.put(COLUMN3_EMAIL, addEmail);
                 cv.put(COLUMN3_NAME, addName);
 
                 long result = db2.insert(TABLE3_NAME, null, cv);
                 if (result == -1) {
-                    Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "기존 사용자", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, "알람 데이터 추가 성공", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "유저 데이터 추가 성공", Toast.LENGTH_SHORT).show();
                 }
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -337,25 +322,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                     "SELECT * FROM " + TABLE_NAME +
                             " WHERE " + COLUMN_STATE + " = '1' AND strftime('%Y-%m-%d',"
                             + COLUMN_DATE + ") >= strftime('%Y-%m-%d','now')" + " ORDER BY " + COLUMN_DATE;
-
-              /*
-            String sql =
-                    "SELECT * FROM " + TABLE_NAME +
-                            " WHERE " + COLUMN_STATE + " = '1' AND "
-                            + COLUMN_DATE + " >= strftime('%Y-%m-%d','now')" ;
-                            */
-            /*
-            String sql =
-                    "SELECT * FROM " + TABLE_NAME +
-                            " WHERE " + COLUMN_STATE + " = '1' AND "
-                            + COLUMN_DATE + " < '20220601'" ;
-
-             */
-
-            // 테이블 데이터를 읽기 위한 Cursor
-            //mCursor = db.query(TABLE_NAME, null, "AGE" + " < ?"
-            //        , new String[]{age.toString()}, null, null, "NAME");
-            //Cursor mCursor = db.query(TABLE_NAME, null, null, null, null, null, null);
 
             Cursor mCursor = db.rawQuery(sql, null);
 

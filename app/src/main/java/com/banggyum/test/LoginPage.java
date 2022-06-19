@@ -41,11 +41,8 @@ public class LoginPage extends AppCompatActivity
 {
     SignInButton btnSign;
 
-    EditText title_input, author_input, pages_input;
     Button btnLogout;
 
-    DrawerLayout drawerLayout;
-    NavigationView navigationView;
 
     ActionBarDrawerToggle drawerToggle;
     private GoogleSignInClient mGoogleSignInClient;
@@ -88,12 +85,11 @@ public class LoginPage extends AppCompatActivity
     //팝업창에서 자신의 이메일 칸을 클릭하면, 이 메소드가 호출되고  요청의 값이 RC와 같은지?
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try{
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account.getIdToken());
+                firebaseAuthWithGoogle(account.getIdToken()); //구글 자격 증명
 
                 SharedPreferences.Editor editor = getApplicationContext()
                         .getSharedPreferences("MyPrefs", MODE_PRIVATE)
@@ -138,7 +134,6 @@ public class LoginPage extends AppCompatActivity
                 .build();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        Log.v("ddd",mGoogleSignInClient.toString());
 
         SharedPreferences.Editor client = getApplicationContext()
                 .getSharedPreferences("MyPrefs", MODE_PRIVATE)
@@ -147,15 +142,7 @@ public class LoginPage extends AppCompatActivity
         client.apply(); //구글 사용자의 이름, 이메일, 프로필사진을 가져옴
 
     }
-    public void signOut2() {
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // ...
-                    }
-                });
-    }
+
     public void signOut() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {
@@ -165,6 +152,7 @@ public class LoginPage extends AppCompatActivity
                         startActivity(new Intent(getApplicationContext(),LoginPage.class));
                     }
                 });
+        Toast.makeText(LoginPage.this, "Sign Out Success", Toast.LENGTH_SHORT).show();
     }
 
 }

@@ -75,3 +75,40 @@
 //
 //}
 //
+
+              /*
+            String sql =
+                    "SELECT * FROM " + TABLE_NAME +
+                            " WHERE " + COLUMN_STATE + " = '1' AND "
+                            + COLUMN_DATE + " >= strftime('%Y-%m-%d','now')" ;
+                            */
+            /*
+            String sql =
+                    "SELECT * FROM " + TABLE_NAME +
+                            " WHERE " + COLUMN_STATE + " = '1' AND "
+                            + COLUMN_DATE + " < '20220601'" ;
+
+             */
+
+// 테이블 데이터를 읽기 위한 Cursor
+//mCursor = db.query(TABLE_NAME, null, "AGE" + " < ?"
+//        , new String[]{age.toString()}, null, null, "NAME");
+//Cursor mCursor = db.query(TABLE_NAME, null, null, null, null, null, null);
+                /*else if (id == R.id.logoutform){
+//                    Log.v("sds","sdsd");
+                    LoginPage lp = new LoginPage();
+                    mGoogleSignInClient=lp.getmGoogleSignInClient();
+                    //Log.v("ddd",mGoogleSignInClient.toString());
+                    //mGoogleSignInClient.signOut()
+                    GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(getApplicationContext(), GoogleSignInOptions.DEFAULT_SIGN_IN);
+//                    lp.requestGoogleSignIn();
+                    lp.signOut();
+                    //revokeAccess(googleSignInClient);
+                    //signOut();
+//                    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                            .requestEmail()
+//                            .build();
+//
+//// Build a GoogleSignInClient with the options specified by gso.
+//                    mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+                 */

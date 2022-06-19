@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -141,24 +142,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         startActivity(goneintent);
                         break;
                 }
-                /*else if (id == R.id.logoutform){
-//                    Log.v("sds","sdsd");
-                    LoginPage lp = new LoginPage();
-                    mGoogleSignInClient=lp.getmGoogleSignInClient();
-                    //Log.v("ddd",mGoogleSignInClient.toString());
-                    //mGoogleSignInClient.signOut()
-                    GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(getApplicationContext(), GoogleSignInOptions.DEFAULT_SIGN_IN);
-//                    lp.requestGoogleSignIn();
-                    lp.signOut();
-                    //revokeAccess(googleSignInClient);
-                    //signOut();
-//                    GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                            .requestEmail()
-//                            .build();
-//
-//// Build a GoogleSignInClient with the options specified by gso.
-//                    mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-                 */
 
                 return true;
             }
