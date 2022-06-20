@@ -226,7 +226,6 @@ public class PopupActivity extends Activity{
             );
             param.leftMargin=30;
 
-
             //설정한 레이아웃 텍스트뷰에 적용
             //textViewNm.setLayoutParams(param);
             //btn.setLayoutParams(param);
@@ -262,7 +261,7 @@ public class PopupActivity extends Activity{
         setResult(RESULT_OK, intent);
         int a = 0; //해당 스케줄 아이디
 
-        a = db.addSchedule(scheduleId
+        db.addSchedule(scheduleId
                 ,userEmail
                 ,text1.getText().toString()
                 ,date

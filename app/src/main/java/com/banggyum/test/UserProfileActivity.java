@@ -76,6 +76,31 @@
 //}
 //
 
+//getApplicationContext 는 application context를 가르킴
+//application context:  application 자체와 연동, 어플리케이션의 life cycle이 지속되는 동안 동일한 객체
+
+// 텍스트뷰에 들어갈문자설정
+//            //textViewNm.setText("텍스트생성");
+//            btn.setText(text);
+
+//텍스트뷰 글자크기 설정
+
+//Button btn = new Button(getApplicationContext());
+
+//설정한 레이아웃 텍스트뷰에 적용
+//textViewNm.setLayoutParams(param);
+//btn.setLayoutParams(param);
+
+//텍스트뷰 백그라운드 색상 설정
+//textViewNm.setBackgroundColor(Color.rgb(174,234,174));
+
+//li.addView(textViewNm);
+//li.addView(btn);
+
+//setContentView(li);
+
+//li.setOrientation(LinearLayout.VERTICAL);
+
               /*
             String sql =
                     "SELECT * FROM " + TABLE_NAME +

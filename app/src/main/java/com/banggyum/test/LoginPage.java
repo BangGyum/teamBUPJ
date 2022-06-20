@@ -142,7 +142,15 @@ public class LoginPage extends AppCompatActivity
         client.apply(); //구글 사용자의 이름, 이메일, 프로필사진을 가져옴
 
     }
-
+    public void signOut2() {
+        mGoogleSignInClient.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        // ...
+                    }
+                });
+    }
     public void signOut() {
         mGoogleSignInClient.signOut()
                 .addOnCompleteListener(this, new OnCompleteListener<Void>() {

@@ -7,6 +7,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +35,7 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment{
     private TextView timeudate, dateupdate;
     private ScheduleDTO sd;
     private MyDatabaseHelper db;
+    private String date;
 
     public ScheduleBottomSheet() {
     }
@@ -54,6 +57,19 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment{
             myCalendar.set(Calendar.YEAR, year);
             myCalendar.set(Calendar.MONTH, month);
             myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            String y = Integer.toString(year);
+            String m = Integer.toString(month+1); // 5월이면 05가 아니라 5임
+            //month가 인덱스라 그런지 1개월 어디에 버리고 나오기 때문에 +1
+            String d = Integer.toString(dayOfMonth);
+            // 10보다 작으면 앞에 0 붙여주기
+            if (month<9) {
+                m = "0" + m;
+            }
+
+            if (dayOfMonth<10){
+                d = "0" + d;
+            }
+            date = y + "-" + m + "-" + d ;
             updateLabel();
         }
     };
@@ -106,11 +122,6 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment{
                         if (selectedMinute < 10) {
                             m = "0" + m;
                         }
-
-//                        if (selectedHour > 12) {
-//                            selectedHour -= 12;
-//                            state = "PM";
-//                        }
                         timeudate.setText(h +
                                 m);
                     }
@@ -132,6 +143,7 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment{
 
         edsc.setText(sd.getSchedule_context());
         dateupdate.setText(sd.getSchedule_date());
+        date=sd.getSchedule_date();
         timeudate.setText(sd.getSchedule_time());
         edloc.setText(sd.getSchedule_location());
 
@@ -155,6 +167,9 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment{
         }
     };
 
+    private String searchName;
+    private Double lat, lng;
+
     View.OnClickListener btnListener = new View.OnClickListener() {
         @SuppressLint("NonConstantResourceId")
         @Override
@@ -166,9 +181,17 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment{
                 case R.id.update_btn:
                     db.updateSchedule(sd.getSchedule_id()
                             , edsc.getText().toString()
-                            , dateupdate.getText().toString()
+                            , date
                             , timeudate.getText().toString()
                             , edloc.getText().toString());
+                    if(lat != null) {
+                        Log.v("asdf", lat + "");
+
+                        db.updateMap(sd.getSchedule_id()
+                                , searchName
+                                , lat
+                                , lng);
+                    }
                     dismiss();
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new Fragment_Schedule()).commit();
                     break;
@@ -176,8 +199,6 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment{
         }
     };
 
-    private String searchName;
-    private Double lat, lng;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override

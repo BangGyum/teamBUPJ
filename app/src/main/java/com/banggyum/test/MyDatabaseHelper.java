@@ -62,7 +62,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_CONTEXT + " TEXT NOT NULL, "
             + COLUMN_DATE + " TEXT NOT NULL, "
             + COLUMN_TIME + " TEXT NOT NULL, "
-            + COLUMN_LOCATION + " TEXT,"
+            + COLUMN_LOCATION + " TEXT ,"
             + COLUMN_STATE + " INTEGER NOT NULL,"
             + COLUMN_REGISTER_DATE + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
             + "FOREIGN KEY(" + COLUMN_EMAIL + ")"
@@ -188,6 +188,24 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void updateMap (int scheduleId,  String locName, Double lat, Double lng)
+    //일정 데이터 표면상 삭제
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
+        cv.put(COLUMN5_NAME, locName);
+        cv.put(COLUMN5_LATITUDE, lat);
+        cv.put(COLUMN5_LONGITUDE, lng);
+
+
+        long resultScd = db.update(TABLE5_NAME, cv, COLUMN5_ID + "='" + scheduleId + "'", null);
+        if (resultScd == -1) {
+            Toast.makeText(context, "수정 Failed", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "알람 데이터 수정 성공", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @SuppressLint("Range")
     public List<MapDTO> selectMap() {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -231,7 +249,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return mList;
     }
 
-    public int addSchedule(int scheduleId, String addEmail, String addContext,
+    public void addSchedule(int scheduleId, String addEmail, String addContext,
                            String addDate, String addTime, String addLocation)
     //사용자 id, 내용, 일정날짜, 알람 정보(이건 배열로?),
     {
@@ -270,27 +288,26 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         if (result == -1) {
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
         } else {
-            SQLiteDatabase db2 = this.getReadableDatabase();
+            //SQLiteDatabase db2 = this.getReadableDatabase();
             Toast.makeText(context, "데이터 추가 성공", Toast.LENGTH_SHORT).show();
-            try {
-                // 쿼리
-                String sql = "SELECT " + COLUMN_ID + " FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 1;";
-
-                Cursor mCursor = db2.rawQuery(sql, null);
-
-                if (mCursor != null) {// 테이블 끝까지 읽기
-
-                    while (mCursor.moveToNext()) {// 다음 Row로 이동
-                        // 해당 Row 저장
-                        scD.setSchedule_id(mCursor.getInt(0));
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//            try {
+//                // 쿼리
+//                String sql = "SELECT " + COLUMN_ID + " FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 1;";
+//
+//                Cursor mCursor = db2.rawQuery(sql, null);
+//
+//                if (mCursor != null) {// 테이블 끝까지 읽기
+//
+//                    while (mCursor.moveToNext()) {// 다음 Row로 이동
+//                        // 해당 Row 저장
+//                        scD.setSchedule_id(mCursor.getInt(0));
+//                    }
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
         }
-        //return scheduleId;
-        return scD.getSchedule_id(); //일정 id값 반환
+        //return scD.getSchedule_id(); //일정 id값 반환
     }
 
     public void updateSchedule (int scheduleId,  String addContext,
