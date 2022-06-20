@@ -10,15 +10,11 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class HolidayColor implements DayViewDecorator {
-
     private HashSet<CalendarDay> dates;
-
     public HolidayColor(Collection<CalendarDay> dates){
         this.dates = new HashSet<>(dates);
     }
-
     public HolidayColor() {
-
     }
 
     @Override

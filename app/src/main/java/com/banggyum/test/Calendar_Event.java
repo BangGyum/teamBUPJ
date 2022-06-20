@@ -26,7 +26,6 @@ public class Calendar_Event implements DayViewDecorator {
         this.dates = new HashSet<>(dates);
         this.cal_layout = cal_layout;
     }
-
     @Override
     public boolean shouldDecorate(CalendarDay day) {
         return dates.contains(day);

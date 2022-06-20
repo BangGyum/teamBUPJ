@@ -30,7 +30,6 @@ public class Calendar_Item extends RecyclerView.Adapter<Calendar_Item.ItemViewHo
         ItemViewHolder itemViewHolder = new ItemViewHolder(view);
         //DB를 사용하기위한 생성자
         db = new MyDatabaseHelper(view.getContext());
-
         return itemViewHolder;
     }
 
@@ -47,7 +46,6 @@ public class Calendar_Item extends RecyclerView.Adapter<Calendar_Item.ItemViewHo
         holder.cal_tv.append("시간 : " + SD.getSchedule_time() + "\n");
         holder.cal_tv.append("장소 : " + SD.getSchedule_location() + "\n");
         holder.cal_tv.append("\n");
-
     }
 
     @Override
@@ -58,11 +56,9 @@ public class Calendar_Item extends RecyclerView.Adapter<Calendar_Item.ItemViewHo
         return 0;
     }
 
-
     public class ItemViewHolder extends RecyclerView.ViewHolder{
         private TextView cal_tv;
         private ConstraintLayout cal_layout;
-
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             cal_tv = itemView.findViewById(R.id.cal_tv);
