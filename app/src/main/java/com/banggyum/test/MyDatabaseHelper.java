@@ -315,7 +315,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public void addAlarm(int addScheduleId, String addAlarmTime)
     //알람 테이블에 삽입
     {
-
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
 

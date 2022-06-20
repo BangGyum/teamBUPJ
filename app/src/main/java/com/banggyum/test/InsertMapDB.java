@@ -414,6 +414,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
             onemarker.setPosition(new LatLng(coord.latitude, coord.longitude));
             onemarker.setMap(naverMap);
 
+
             llat = coord.latitude;
             llng = coord.longitude;
             onemarker.setOnClickListener(overlay -> {
