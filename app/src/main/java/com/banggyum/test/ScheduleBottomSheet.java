@@ -142,7 +142,7 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment{
     }
 
     private void updateLabel() {
-        String myFormat = "yyyy/MM/dd";    // 출력형식   2021/07/26
+        String myFormat = "yyyy-MM-dd";    // 출력형식   2021/07/26
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.KOREA);
 
         dateupdate.setText(sdf.format(myCalendar.getTime()));
