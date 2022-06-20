@@ -1,14 +1,8 @@
 package com.banggyum.test;
 
 import android.app.Activity;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,9 +18,6 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import androidx.fragment.app.DialogFragment;
-
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -279,8 +270,6 @@ public class PopupActivity extends Activity{
             db.addAlarm(scheduleId
                     ,time_view.getText().toString());
         }
-
-
 
         finish();
     }

@@ -7,7 +7,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -184,11 +182,10 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment{
                             , date
                             , timeudate.getText().toString()
                             , edloc.getText().toString());
-                    if(lat != null) {
-                        Log.v("asdf", lat + "");
 
+                    if(lat != null) {
                         db.updateMap(sd.getSchedule_id()
-                                , searchName
+                                , edloc.getText().toString()
                                 , lat
                                 , lng);
                     }
@@ -198,7 +195,6 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment{
             }
         }
     };
-
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
