@@ -81,6 +81,7 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
         return 0;
     }
 
+    //삭제 버튼 클릭시 동작
     public void remove(int position, int sdId, int state){
         try{
             db.updateScheduleState(sdId, state);
@@ -91,6 +92,7 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
         }
     }
 
+    //실행취소 클릭시 동작
     @SuppressLint("NotifyDataSetChanged")
     public void undoItem(ScheduleDTO SD, int position){
         try{
@@ -116,7 +118,8 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
         }
     }
 
+    //일정 텍스트 클릭시 동작을 위한 리스너
     public interface ItemClickListener{
-        public void onItemClick(ScheduleDTO scheduleDTO);
+        void onItemClick(ScheduleDTO scheduleDTO);
     }
 }

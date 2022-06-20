@@ -21,17 +21,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.ItemClickListener {
+public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.ItemClickListener{
     private ArrayList<ScheduleDTO> listItem;
     private RecyclerView recyclerView;
     private ScheduleItemAdapter scheduleItemAdapter;
     private LinearLayoutManager linearLayoutManager;
-    private List<ScheduleDTO> selectScheList = new ArrayList<ScheduleDTO>();
     private MyDatabaseHelper db;
 
-    public static Fragment_Schedule newInstance(){
-        Fragment_Schedule fragment = new Fragment_Schedule();
-        return fragment;
+    public Fragment_Schedule() {
     }
 
     @Override
@@ -89,9 +86,9 @@ public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.I
     @SuppressLint("NotifyDataSetChanged")
     public void addRecylerItem(){
         //일정 select
-        selectScheList = db.selectSchedules();
+        List<ScheduleDTO> selectScheList = db.selectSchedules();
         //DB에 일정들 순서대로 추가
-        for (int i=0; i<selectScheList.size(); i++){
+        for (int i = 0; i< selectScheList.size(); i++){
             ScheduleDTO sdSelect;
             sdSelect = selectScheList.get(i);
 
@@ -101,6 +98,7 @@ public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.I
         }
     }
 
+    //일정의 텍스트 클릭시 자세한 일정 보여주는 창 띄어줌
     @Override
     public void onItemClick(ScheduleDTO scheduleDTO) {
         ScheduleBottomSheet scheduleBottomSheet = new ScheduleBottomSheet(scheduleDTO);

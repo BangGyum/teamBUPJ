@@ -156,6 +156,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                     sb.append(line + "\n");
                 }
 
+                //data 에 검색된 json 파일 저장
                 String data = sb.toString();
 
                 String[] array = data.split("\"");
@@ -337,7 +338,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    //선택된 위치를 맵을 통해 마커로 표시하고 마커 선택시시
+    //선택된 위치를 맵을 통해 마커로 표시하고 마커 선택시 동작 구현
    public void onMapSearch(String roadAddress){
         new Thread(new Runnable() {
             @Override
@@ -354,7 +355,7 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
                         map.moveCamera(cameraUpdate);
                         //바텀시트를 내려줌
                         myBottomSheetFragment.dismiss();
-                        //마커클릭시
+                        //마커클릭시 동작
                         onemarker.setOnClickListener(overlay -> {
                             //팝업을 띄어줌
                             Intent mapintent = new Intent(InsertMapDB.this, Mappopup.class);
