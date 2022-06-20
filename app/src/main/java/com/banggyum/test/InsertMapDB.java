@@ -414,8 +414,23 @@ public class InsertMapDB extends AppCompatActivity implements OnMapReadyCallback
             onemarker.setPosition(new LatLng(coord.latitude, coord.longitude));
             onemarker.setMap(naverMap);
 
+
             llat = coord.latitude;
             llng = coord.longitude;
+            onemarker.setOnClickListener(overlay -> {
+                //팝업을 띄어줌
+                Intent mapintent = new Intent(InsertMapDB.this, Mappopup.class);
+                startActivityIfNeeded(mapintent, 1);
+
+                //일정 추가 팝업에 값을 넘겨주기위함
+                Intent data = new Intent();
+                data.putExtra("roadAddress", roadAddress);
+                data.putExtra("searchname", searchthing);
+                data.putExtra("lat", llat);
+                data.putExtra("lng", llng);
+                setResult(RESULT_OK, data);
+                return true;
+            });
         });
     }
 }

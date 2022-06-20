@@ -321,7 +321,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_TIME, addTime);
         cv.put(COLUMN_LOCATION, addLocation);
 
-
         long resultScd = db.update(TABLE_NAME, cv, COLUMN_ID + "='" + scheduleId + "'", null);
         if (resultScd == -1) {
             Toast.makeText(context, "수정 Failed", Toast.LENGTH_SHORT).show();
@@ -333,7 +332,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public void addAlarm(int addScheduleId, String addAlarmTime)
     //알람 테이블에 삽입
     {
-
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
 
