@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    // 텍스트 상자 색상
+    // 일정 텍스트 상자 색상
     <solid
-        android:color="#ffbacedd" />
+        android:color="#5786F405" />
     <padding
         android:left="45px"
         android:top="15px"

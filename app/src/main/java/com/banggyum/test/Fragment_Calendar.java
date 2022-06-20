@@ -98,7 +98,7 @@ public class Fragment_Calendar extends Fragment {
         JSONArray holidayArray = new JSONArray(); // 공휴일 json 파일 안의 날짜와 이름을 담는 곳
 
         try {
-            InputStream is = getActivity().getAssets().open("holiday.json");
+            InputStream is = getActivity().getAssets().open("holiday.json");//JSON파일 읽어오기
 
             int size = is.available();
 
@@ -107,7 +107,7 @@ public class Fragment_Calendar extends Fragment {
             is.close();
             json = new String(buffer, "UTF-8");
 
-
+            //JSON파일 각 경로 데이터 저장
             JSONObject jsonObject = new JSONObject(json);
             String response = jsonObject.getString("response");
             JSONObject jsonObject1 = new JSONObject(response);
@@ -116,9 +116,9 @@ public class Fragment_Calendar extends Fragment {
             String items = jsonObject2.getString("items");
             JSONObject jsonObject3 = new JSONObject(items);
 
-
             holidayArray = jsonObject3.getJSONArray("item");
 
+            //locdate(날짜 데이터 변환하여 저장)
             for (int i = 0; i < holidayArray.length(); i++) {
                 JSONObject holidayObject = holidayArray.getJSONObject(i);
                 String day = holidayObject.getString("locdate");
@@ -126,11 +126,7 @@ public class Fragment_Calendar extends Fragment {
                 DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(Locale.KOREA);
                 CalendarDay date = CalendarDay.from(LocalDate.parse(day, dtf));
                 HolidayList.add(date);
-
             }
-            System.out.println(holidayArray);
-
-
 
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -138,13 +134,11 @@ public class Fragment_Calendar extends Fragment {
             e.printStackTrace();
         }
 
-
-
-        materialCalendar.addDecorators(
+        materialCalendar.addDecorators( //캘린더에 데코레이터 적용
                 new Calendar_Event(calendarDayList, getActivity(), cal_Layout), //일정 등록이 되어있는 날짜 이벤트
                 new Calendar_Saturday_Color(),  //토요일 색상
                 new Calendar_Sunday_Color(), // 일요일 색상
-                new HolidayColor(HolidayList), // 공휴일 색상
+                new HolidayColor(HolidayList),// 공휴일 색상
                 new Calendar_Today()); // 오늘 색상
 
         JSONArray finalHolidayArray = holidayArray; // 공휴일 날짜와 이름이 담긴 리스트
@@ -152,14 +146,14 @@ public class Fragment_Calendar extends Fragment {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView calendar, @NonNull CalendarDay date, boolean selected) {
-                //일정 select
-                selectScheList = db.selectDateSchedules(date.getDate().toString());
                 int year = date.getYear();// 연도
                 int month = date.getMonth(); // 월
                 int day = date.getDay(); // 일
+
+                selectScheList = db.selectDateSchedules(date.getDate().toString());
+
                 // 휴일명
                 String name = "";
-
                 for (int i = 0; i < finalHolidayArray.length(); i++) {
                     JSONObject holidayObject = null;
                     try {
@@ -186,23 +180,18 @@ public class Fragment_Calendar extends Fragment {
                 addRecylerItem(); // 아이템 추가
             }
         });
-
-
         return v;
     }
-
-
-
 
     public void addRecylerItem() {
         //DB에 일정들 순서대로 추가
         for (int i=0; i<selectScheList.size(); i++){
-            ScheduleDTO sdSelect1;
-            sdSelect1 = selectScheList.get(i);
+            ScheduleDTO sdSelect;
+            sdSelect = selectScheList.get(i);
 
-            ScheduleDTO SD = new ScheduleDTO(sdSelect1.getSchedule_id(), sdSelect1.getSchedule_context(),
-                    sdSelect1.getSchedule_date(), sdSelect1.getSchedule_time(),sdSelect1.getSchedule_location(),
-                    sdSelect1.getSchedule_state(), sdSelect1.getSchedule_registerDate(), sdSelect1.getSchedule_registerDate1());
+            ScheduleDTO SD = new ScheduleDTO(sdSelect.getSchedule_id(), sdSelect.getSchedule_context(),
+                    sdSelect.getSchedule_date(), sdSelect.getSchedule_time(),sdSelect.getSchedule_location(),
+                    sdSelect.getSchedule_state(), sdSelect.getSchedule_registerDate(), sdSelect.getSchedule_registerDate1());
             listItem.add(SD);
             calendar_Item.notifyDataSetChanged();
         }
