@@ -304,7 +304,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_TIME, addTime);
         cv.put(COLUMN_LOCATION, addLocation);
 
-
         long resultScd = db.update(TABLE_NAME, cv, COLUMN_ID + "='" + scheduleId + "'", null);
         if (resultScd == -1) {
             Toast.makeText(context, "수정 Failed", Toast.LENGTH_SHORT).show();
