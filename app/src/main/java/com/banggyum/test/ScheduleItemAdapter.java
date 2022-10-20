@@ -47,7 +47,7 @@ public class ScheduleItemAdapter extends RecyclerView.Adapter<ScheduleItemAdapte
         }
 
         holder.itemView.setTag(position);
-        holder.tv.setText(" " + SD.getSchedule_context() + "\n");
+        holder.tv.setText(" " + SD.getSchedule_context());
         holder.rb.setChecked(false);
         holder.rb.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -15,4 +15,14 @@
     <color name="colorPrimary">#673AB7</color>
     <color name="colorPrimaryDark">#9C27B0</color>
     <color name="colorAccent">#E91E63</color>
+    <color name="lavender">#FEC1A9</color>
+    <color name="dark_purple">#27353F</color>
+    <color name="pastel1">#B1B2FF</color>
+    <color name="pastel2">#AAC4FF</color>
+    <color name="pastel3">#D2DAFF</color>
+    <color name="pastel4">#EEF1FF</color>
+    <color name="line1">#F38181</color>
+    <color name="line2">#FCE38A</color>
+    <color name="line3">#EAFFD0</color>
+    <color name="lightgray">#C6CDE9</color>
 </resources>

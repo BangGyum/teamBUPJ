@@ -3,21 +3,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/Layout11"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <RadioButton
-        android:layout_marginLeft="10dp"
-        android:id="@+id/itemrb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-    <TextView
-        android:id="@+id/itemtv"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textColor="@color/black"
-        android:textSize="20sp"/>
+        android:layout_height="55dp"
+        android:background="@drawable/round"
+        >
+        <RadioButton
+            android:layout_marginLeft="10dp"
+            android:id="@+id/itemrb"
+            android:layout_width="wrap_content"
+            android:layout_height="55dp"/>
+        <TextView
+            android:id="@+id/itemtv"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="30dp"
+            android:text="dddddddd"
+            android:textColor="@color/purple_500"
+            android:textSize="25sp"
+            android:gravity="fill_vertical"
+            android:layout_toRightOf="@id/itemrb"/>
+
+    </RelativeLayout>
+
+
 
 </LinearLayout>

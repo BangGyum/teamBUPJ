@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     // 일정 텍스트 상자 색상
     <solid
-        android:color="#5786F405" />
+        android:color="@color/white" />
     <padding
         android:left="45px"
         android:top="15px"

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -27,6 +28,7 @@ public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.I
     private ScheduleItemAdapter scheduleItemAdapter;
     private LinearLayoutManager linearLayoutManager;
     private MyDatabaseHelper db;
+
 
     public Fragment_Schedule() {
     }

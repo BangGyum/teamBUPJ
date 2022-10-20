@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String userEmail, userName, userPhotoUrl;
     private ImageView userImageView;
     private MyDatabaseHelper db ;
+    private long backKeyPressedTime = 0;
+
 
     //마커에 정보를 표시해주는 창
     private static class InfoWindowAdapter extends InfoWindow.ViewAdapter {
@@ -84,17 +86,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    //이전 버튼 클릭시 Drawer 닫기
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
     BottomNavigationView bottomNavigationView; //네비게이션뷰
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;    //권한 코드 번호
     private MapView mapView;
@@ -102,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Nullable
     private Runnable locationActivationCallback;
     private NaverMap map;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -204,6 +196,16 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         ImageView userImageView = (ImageView) headerView.findViewById(R.id.userImageView) ;
 
         Glide.with(this).load(userPhotoUrl).into(userImageView);
+    }
+    //이전 버튼 클릭시 Drawer 닫기
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void revokeAccess(GoogleSignInClient googleSignInClient){
