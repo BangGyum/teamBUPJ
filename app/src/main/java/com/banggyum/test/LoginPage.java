@@ -37,8 +37,10 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 
 
 
+
 public class LoginPage extends AppCompatActivity
 {
+    private MyDatabaseHelper db ;
     SignInButton btnSign;
 
     Button btnLogout;

@@ -143,7 +143,7 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment{
         dateupdate.setText(sd.getSchedule_date());
         date=sd.getSchedule_date();
         timeudate.setText(sd.getSchedule_time());
-        edloc.setText(sd.getSchedule_location());
+        //edloc.setText(sd.getSchedule_location());
 
         rgb1.setOnClickListener(rgbListener);
         btn_cls.setOnClickListener(btnListener);

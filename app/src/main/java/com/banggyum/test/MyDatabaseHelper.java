@@ -1,19 +1,35 @@
 package com.banggyum.test;
 //SQLite 관할
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.ListAdapter;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.google.gson.JsonParser;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MyDatabaseHelper extends SQLiteOpenHelper {
+    private static final String TAG = MainActivity.class.getSimpleName();;
+    private ProgressDialog pDialog;
     private Context context;
     private Context context_alarm;
     private static final String DATABASE_NAME = "schedule.db"; //db이름
@@ -24,9 +40,10 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_CONTEXT = "schedule_context"; //내용
     private static final String COLUMN_DATE = "schedule_date"; //일정 날짜
     private static final String COLUMN_TIME = "schedule_time"; //일정 날짜
-    private static final String COLUMN_LOCATION = "schedule_location"; //일정 지도 fk 예정
+    //private static final String COLUMN_LOCATION = "schedule_location"; //일정 지도 fk 예정
     private static final String COLUMN_STATE = "schedule_state"; //평범상태 = 1 , 삭제상태 = 0
     private static final String COLUMN_REGISTER_DATE = "schedule_registerDate"; //만든 날짜
+    private static final String COLUMN_MODI_DATE = "schedule_modiRegisterDate"; //만든 날짜
 
     private static final int DATABASE_VERSION2 = 1;
     private static final String TABLE2_NAME = "alarm"; //테이블명 (알람 테이블)
@@ -40,7 +57,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE4_NAME = "holiday"; //테이블명 (공휴일 테이블)
     private static final String COLUMN4_NAME = "holiday_name";
     private static final String COLUMN4_DATE = "holiday_date";
-
 
     private static final String TABLE5_NAME = "map"; //테이블명 (지도 테이블)
     private static final String COLUMN5_ID = "schedule_id_fk";
@@ -62,9 +78,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_CONTEXT + " TEXT NOT NULL, "
             + COLUMN_DATE + " TEXT NOT NULL, "
             + COLUMN_TIME + " TEXT NOT NULL, "
-            + COLUMN_LOCATION + " TEXT ,"
             + COLUMN_STATE + " INTEGER NOT NULL,"
             + COLUMN_REGISTER_DATE + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+            + COLUMN_MODI_DATE + " TIMESTAMP,"
             + "FOREIGN KEY(" + COLUMN_EMAIL + ")"
             + "REFERENCES " + TABLE3_NAME + "(" + COLUMN3_EMAIL + ")); ";
 
@@ -95,7 +111,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             + COLUMN_STATE + " INTEGER NOT NULL,"
             + "FOREIGN KEY(" + COLUMN5_ID + ")"
             + "REFERENCES " + TABLE_NAME + "(" + COLUMN_ID + ")); ";
-
 
 
     public void a() {
@@ -147,6 +162,28 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                 } else {
                     Toast.makeText(context, "유저 데이터 추가 성공", Toast.LENGTH_SHORT).show();
                 }
+            HashMap<String, String> requestedParams = new HashMap<>();
+            requestedParams.put("email", addEmail);
+            requestedParams.put("name", addName);
+            Log.d("HashMap", requestedParams.get("email"));
+            PostRequestHandler postRequestHandler = new PostRequestHandler(Constant.CREATE_URL, requestedParams);
+            postRequestHandler.execute();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void deleteUser(String addEmail)
+    //알람 테이블에 삽입
+    {
+        try {
+            HashMap<String, String> requestedParams = new HashMap<>();
+            requestedParams.put("email", addEmail);
+            Log.d("HashMap", requestedParams.get("email"));
+            PostRequestHandler postRequestHandler = new PostRequestHandler(Constant.DELETE, requestedParams);
+            postRequestHandler.execute();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -186,9 +223,17 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             SQLiteDatabase db2 = this.getReadableDatabase();
             Toast.makeText(context, "맵 데이터 추가 성공", Toast.LENGTH_SHORT).show();
         }
+        HashMap<String, String> requestedParams = new HashMap<>();
+        requestedParams.put("schedule_id", Integer.toString(schedule_id));
+        requestedParams.put("map_name", addName);
+        requestedParams.put("lat", Double.toString(lat));
+        requestedParams.put("lng", Double.toString(lng));
+        Log.d("HashMap", requestedParams.get("map_name"));
+        PostRequestHandler postRequestHandler = new PostRequestHandler(Constant.MapCREATE_URL, requestedParams);
+        postRequestHandler.execute();
     }
 
-    public void updateMap (int scheduleId,  String locName, Double lat, Double lng)
+    public void updateMap (int scheduleId, String locName, Double lat, Double lng)
     //일정 데이터 표면상 삭제
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -196,14 +241,13 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN5_NAME, locName);
         cv.put(COLUMN5_LATITUDE, lat);
         cv.put(COLUMN5_LONGITUDE, lng);
-
-
         long resultScd = db.update(TABLE5_NAME, cv, COLUMN5_ID + "='" + scheduleId + "'", null);
         if (resultScd == -1) {
             Toast.makeText(context, "수정 Failed", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, "알람 데이터 수정 성공", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     @SuppressLint("Range")
@@ -211,7 +255,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         List<MapDTO> mList = new ArrayList<MapDTO>();
         List<ScheduleDTO> sList = new ArrayList<ScheduleDTO>();
-        //Cursor mCursor = null;
         try {
             // 테이블 정보를 저장할 List
 
@@ -249,6 +292,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         return mList;
     }
 
+
     public void addSchedule(int scheduleId, String addEmail, String addContext,
                            String addDate, String addTime, String addLocation)
     //사용자 id, 내용, 일정날짜, 알람 정보(이건 배열로?),
@@ -281,15 +325,68 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_CONTEXT, addContext);
         cv.put(COLUMN_DATE, addDate);
         cv.put(COLUMN_TIME, addTime);
-        cv.put(COLUMN_LOCATION, addLocation);
-        cv.put(COLUMN_STATE, 1); //이거 근데 다른테이블에 넣어야될것같은데
+        cv.put(COLUMN_STATE, 1);
 
         long result = db.insert(TABLE_NAME, null, cv);
+
+        HashMap<String, String> requestedParams = new HashMap<>();
+        requestedParams.put("email", addEmail);
+        requestedParams.put("schedule_id", Integer.toString(scheduleId));
+        requestedParams.put("schedule_context", addContext);
+        requestedParams.put("schedule_date", addDate);
+        requestedParams.put("schedule_time", addTime);
+
+        Log.d("HashMap", requestedParams.get("email"));
+        PostRequestHandler postRequestHandler = new PostRequestHandler(Constant.ScheduleCREATE_URL, requestedParams);
+        postRequestHandler.execute();
+
         if (result == -1) {
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
         } else {
             //SQLiteDatabase db2 = this.getReadableDatabase();
             Toast.makeText(context, "데이터 추가 성공", Toast.LENGTH_SHORT).show();
+        }
+        //return scD.getSchedule_id(); //일정 id값 반환
+    }
+    public void addLocalSchedule(int scheduleId, String addEmail, String addContext,
+                            String addDate, String addTime, int schedule_state)
+    //사용자 id, 내용, 일정날짜, 알람 정보(이건 배열로?),
+    {
+        if (addEmail.equals("")) {
+            addEmail = null;
+        }
+        if (addContext.equals("")) {
+            addContext = null;
+        }
+        if (addDate.equals("")) {
+            addDate = null;
+        }
+        if (addTime.equals("")) {
+            addTime = null;
+        }
+
+
+        ScheduleDTO scD = new ScheduleDTO();
+
+        SQLiteDatabase db = this.getWritableDatabase(); //SQLiteDatabase 객체를 만든 뒤 이 객체를 쓰기(Write)가 가능하도록 설정한다는 내용이다.
+        // 이 처리를 해줘야 테이블에 데이터를 추가할 수 있다.
+        ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
+
+        //cv.put();// 사용자 id 추가
+        cv.put(COLUMN_ID, scheduleId);
+        cv.put(COLUMN_EMAIL, addEmail);
+        cv.put(COLUMN_CONTEXT, addContext);
+        cv.put(COLUMN_DATE, addDate);
+        cv.put(COLUMN_TIME, addTime);
+        cv.put(COLUMN_STATE, schedule_state);
+
+        long result = db.insert(TABLE_NAME, null, cv);
+
+        if (result == -1) {
+      //      Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+        } else {
+            //SQLiteDatabase db2 = this.getReadableDatabase();
+      //      Toast.makeText(context, "데이터 추가 성공", Toast.LENGTH_SHORT).show();
 //            try {
 //                // 쿼리
 //                String sql = "SELECT " + COLUMN_ID + " FROM " + TABLE_NAME + " ORDER BY " + COLUMN_ID + " DESC LIMIT 1;";
@@ -307,19 +404,37 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 //                e.printStackTrace();
 //            }
         }
-        //return scD.getSchedule_id(); //일정 id값 반환
     }
+    public void deleteSchedule(int scheduleId)
+    //알람 테이블에 삽입
+    {
+        try {
+            HashMap<String, String> requestedParams = new HashMap<>();
+            requestedParams.put("schedule_id", Integer.toString(scheduleId));
+            Log.d("HashMap", requestedParams.get("email"));
+            PostRequestHandler postRequestHandler = new PostRequestHandler(Constant.ScheduleDELETE_URL, requestedParams);
+            postRequestHandler.execute();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 
     public void updateSchedule (int scheduleId,  String addContext,
                                 String addDate, String addTime, String addLocation)
-    //일정 데이터 표면상 삭제
+    //일정 수정
     {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        //sdf.format(timestamp)
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
         cv.put(COLUMN_CONTEXT, addContext);
         cv.put(COLUMN_DATE, addDate);
         cv.put(COLUMN_TIME, addTime);
-        cv.put(COLUMN_LOCATION, addLocation);
 
         long resultScd = db.update(TABLE_NAME, cv, COLUMN_ID + "='" + scheduleId + "'", null);
         if (resultScd == -1) {
@@ -327,6 +442,16 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "알람 데이터 수정 성공", Toast.LENGTH_SHORT).show();
         }
+        HashMap<String, String> requestedParams = new HashMap<>();
+        requestedParams.put("schedule_modiRegisterDate", sdf.format(timestamp));
+        requestedParams.put("schedule_id", Integer.toString(scheduleId));
+        requestedParams.put("schedule_context", addContext);
+        requestedParams.put("schedule_date", addDate);
+        requestedParams.put("schedule_time", addTime);
+
+        Log.d("HashMap", requestedParams.get("schedule_modiRegisterDate"));
+        PostRequestHandler postRequestHandler = new PostRequestHandler(Constant.ScheduleUpdate_URL, requestedParams);
+        postRequestHandler.execute();
     }
 
     public void addAlarm(int addScheduleId, String addAlarmTime)
@@ -346,8 +471,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+
+
+
     @SuppressLint("Range")
     public List<ScheduleDTO> selectSchedules() {
+
         SQLiteDatabase db = this.getReadableDatabase();
         List<ScheduleDTO> mList = new ArrayList<ScheduleDTO>();
         //Cursor mCursor = null;
@@ -377,7 +506,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
                     scD.setSchedule_date(mCursor.getString(3));
                     scD.setSchedule_time(mCursor.getString(4));
-                    scD.setSchedule_location(mCursor.getString(5));
+                    //scD.setSchedule_location(mCursor.getString(5));
                     scD.setSchedule_state(mCursor.getShort(6));
 
                     //SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -402,6 +531,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public List<ScheduleDTO> selectDateSchedules (String scheduleDate)
     //날짜를 기준으로 select
     {
+        ArrayList<HashMap<String, String>> contactList = null;
         SQLiteDatabase db = this.getReadableDatabase();
         List<ScheduleDTO> mList = new ArrayList<ScheduleDTO>();
         //Cursor mCursor = null;
@@ -431,7 +561,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
 
                     scD.setSchedule_date(mCursor.getString(3));
                     scD.setSchedule_time(mCursor.getString(4));
-                    scD.setSchedule_location(mCursor.getString(5));
+                    //scD.setSchedule_location(mCursor.getString(5));
                     scD.setSchedule_state(mCursor.getShort(6));
                     //SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     //scD.setSchedule_registerDate1(sdf.format(scD.getTimestamp(7)));
@@ -441,12 +571,74 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                     // List에 해당 Row 추가
                     mList.add(scD);
                 }
-            } else {
-                Toast.makeText(context, "데이터 안읽힘", Toast.LENGTH_SHORT).show();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            HashMap<String, String> requestedParams = new HashMap<>();
+            requestedParams.put("scheduleDate", scheduleDate);
+
+            Log.d("HashMap", requestedParams.get("scheduleDate"));
+            PostRequestHandler postRequestHandler = new PostRequestHandler(Constant.ScheduleDateSelect_URL, requestedParams);
+
+
+            String jsonStr = postRequestHandler.doInBackground();
+            if (jsonStr != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(jsonStr);
+                    JSONArray employeeArray = jsonObj.getJSONArray("result");// Getting JSON Array node
+                    for (int i = 0; i < employeeArray.length(); i++) { // looping through All Contacts
+                        JSONObject c = employeeArray.getJSONObject(i);
+                        String schedule_id = c.getString("schedule_id");
+                        String schedule_email = c.getString("schedule_email");
+                        String schedule_context = c.getString("schedule_context");
+                        String schedule_date = c.getString("schedule_date");
+                        String schedule_time = c.getString("schedule_time");
+                        String schedule_state = c.getString("schedule_state");
+                        String schedule_registerDate = c.getString("schedule_registerDate");
+
+
+                        HashMap<String, String> schedule_list = new HashMap<>();
+                        // adding each child node to HashMap key => value
+                        schedule_list.put("schedule_id", schedule_id);
+                        schedule_list.put("schedule_email", schedule_email);
+                        schedule_list.put("schedule_context", schedule_context);
+                        schedule_list.put("schedule_date", schedule_date);
+                        schedule_list.put("schedule_time", schedule_time);
+                        contactList.add(schedule_list);
+
+                    }
+                    for (int i = 0; i < contactList.size(); i++) {
+                        HashMap<String, String> sdSelect;
+                        sdSelect = contactList.get(i);
+
+                        ScheduleDTO SD = new ScheduleDTO(Integer.parseInt(sdSelect.get("schedule_id")),
+                                sdSelect.get("schedule_context"),
+                                sdSelect.get("schedule_date"),
+                                sdSelect.get("schedule_time"),
+                                (short) 1,
+                                sdSelect.get("schedule_registerDate"),
+                                sdSelect.get("schedule_email")
+                        );
+                    }
+
+
+//                        mList.add(SD);
+
+                } catch (final JSONException e) {
+                    Log.e(TAG, "Json parsing error: " + e.getMessage());
+
+                }
+
+            }
+            postRequestHandler.execute();
+
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+//            } else {
+//                Toast.makeText(context, "데이터 안읽힘", Toast.LENGTH_SHORT).show();
+//            }
+
         return mList;
     }
 
@@ -464,7 +656,6 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                     + COLUMN_ID + ", "
                     + COLUMN_CONTEXT + ", "
                     + COLUMN_DATE + ", "
-                    + COLUMN_LOCATION + ", "
                     + COLUMN_STATE + ", "
                     + "to_char(" + COLUMN_REGISTER_DATE + ") "
                     + " FROM " + TABLE_NAME + "WHERE state =" + state;
@@ -486,7 +677,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                     //1은 사용자
                     scD.setSchedule_context(mCursor.getString(2));
                     scD.setSchedule_date(mCursor.getString(3));
-                    scD.setSchedule_location(mCursor.getString(4));
+                    //scD.setSchedule_location(mCursor.getString(4));
                     scD.setSchedule_state(mCursor.getShort(5));
 
                     //SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -532,6 +723,12 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     public void updateScheduleState (int scheduleId, int state)
     //일정 데이터 표면상 삭제
     {
+        HashMap<String, String> requestedParams = new HashMap<>();
+        requestedParams.put("schedule_id", Integer.toString(scheduleId));
+        Log.d("HashMap", requestedParams.get("schedule_id"));
+        PostRequestHandler postRequestHandler = new PostRequestHandler(Constant.ScheduleDELETE_URL, requestedParams);
+        postRequestHandler.execute();
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
 
@@ -550,19 +747,20 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "알람 데이터 수정 성공", Toast.LENGTH_SHORT).show();
         }
+
     }
 
-    public void deleteSchedule (int scheduleId)
-    //일정 데이터 실제로 삭제
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        long result = db.delete(TABLE_NAME, COLUMN_ID + "='" + scheduleId + "'", null);
-        if (result == -1) {
-            Toast.makeText(context, "삭제 실패", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "데이터 삭제 성공", Toast.LENGTH_SHORT).show();
-        }
-    }
+//    public void deleteSchedule (int scheduleId)
+//    //일정 데이터 실제로 삭제
+//    {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        long result = db.delete(TABLE_NAME, COLUMN_ID + "='" + scheduleId + "'", null);
+//        if (result == -1) {
+//            Toast.makeText(context, "삭제 실패", Toast.LENGTH_SHORT).show();
+//        } else {
+//            Toast.makeText(context, "데이터 삭제 성공", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     public void addHoliday (String addHolidayName, String addHolidayDate)
     //알람 테이블에 삽입

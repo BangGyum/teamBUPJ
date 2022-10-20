@@ -6,10 +6,12 @@ public class ScheduleDTO {
     private String schedule_context;
     private String schedule_date;
     private String schedule_time;
-    private String schedule_location;
+    //private String schedule_location;
     private short schedule_state;
-    private String schedule_registerDate1;
+//    private String schedule_registerDate1;
     private String schedule_registerDate;
+    private String schedule_email;
+
 
     public ScheduleDTO() {
     }
@@ -21,16 +23,20 @@ public class ScheduleDTO {
     public ScheduleDTO(String schedule_context) {
         this.schedule_context = schedule_context;
     }
+    public ScheduleDTO(Short schedule_state) {
+        this.schedule_state = schedule_state;
+    }
 
-    public ScheduleDTO(int schedule_id, String schedule_context, String schedule_date, String schedule_time,String schedule_location, short schedule_state, String schedule_registerDate1, String schedule_registerDate) {
+    public ScheduleDTO(int schedule_id, String schedule_context, String schedule_date, String schedule_time, short schedule_state, String schedule_registerDate,String schedule_email) {
         this.schedule_id = schedule_id;
         this.schedule_context = schedule_context;
         this.schedule_date = schedule_date;
         this.schedule_time = schedule_time;
-        this.schedule_location = schedule_location;
+        //this.schedule_location = schedule_location;
         this.schedule_state = schedule_state;
-        this.schedule_registerDate1 = schedule_registerDate1;
+//        this.schedule_registerDate1 = schedule_registerDate1;
         this.schedule_registerDate = schedule_registerDate;
+        this.schedule_email = schedule_email;
     }
 
     public void setSchedule_registerDate(String schedule_registerDate) {
@@ -52,6 +58,13 @@ public class ScheduleDTO {
 //    public void setUser_id(String user_id) {
 //        this.user_id = user_id;
 //    }
+    public String getschedule_email() {
+    return schedule_email;
+}
+
+    public void setschedule_email(String schedule_email) {
+        this.schedule_email = schedule_email;
+    }
 
     public String getSchedule_context() {
         return schedule_context;
@@ -76,13 +89,13 @@ public class ScheduleDTO {
         this.schedule_date = schedule_date;
     }
 
-    public String getSchedule_location() {
-        return schedule_location;
-    }
-
-    public void setSchedule_location(String schedule_location) {
-        this.schedule_location = schedule_location;
-    }
+//    public String getSchedule_location() {
+//        return schedule_location;
+//    }
+//
+//    public void setSchedule_location(String schedule_location) {
+//        this.schedule_location = schedule_location;
+//    }
 
     public short getSchedule_state() {
         return schedule_state;
@@ -91,12 +104,12 @@ public class ScheduleDTO {
     public void setSchedule_state(short schedule_state) {
         this.schedule_state = schedule_state;
     }
-
-    public String getSchedule_registerDate1() {
-        return schedule_registerDate1;
-    }
-
-    public void setSchedule_registerDate1(String schedule_registerDate) {
-        this.schedule_registerDate1 = schedule_registerDate;
-    }
+//
+//    public String getSchedule_registerDate1() {
+//        return schedule_registerDate1;
+//    }
+//
+//    public void setSchedule_registerDate1(String schedule_registerDate) {
+//        this.schedule_registerDate1 = schedule_registerDate;
+//    }
 }

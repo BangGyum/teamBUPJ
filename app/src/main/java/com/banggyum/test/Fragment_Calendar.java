@@ -1,11 +1,16 @@
 package com.banggyum.test;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -47,6 +52,8 @@ public class Fragment_Calendar extends Fragment {
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
     private Calendar_Item calendar_Item;
+    private String TAG = MainActivity.class.getSimpleName();
+    ArrayList<HashMap<String, String>> contactList;
 
 
     @Override
@@ -83,7 +90,7 @@ public class Fragment_Calendar extends Fragment {
 
         selectScheList1 = db.selectSchedules();
         //캘린더 등록된 일정 이벤트 리스트에 추가
-        for (int i=0; i<selectScheList1.size(); i++) {
+        for (int i = 0; i < selectScheList1.size(); i++) {
             ScheduleDTO sdAllSelect;
             sdAllSelect = selectScheList1.get(i);
             String event = sdAllSelect.getSchedule_date();
@@ -152,6 +159,7 @@ public class Fragment_Calendar extends Fragment {
 
                 selectScheList = db.selectDateSchedules(date.getDate().toString());
 
+
                 // 휴일명
                 String name = "";
                 for (int i = 0; i < finalHolidayArray.length(); i++) {
@@ -185,19 +193,94 @@ public class Fragment_Calendar extends Fragment {
 
     public void addRecylerItem() {
         //DB에 일정들 순서대로 추가
-        for (int i=0; i<selectScheList.size(); i++){
+        for (int i = 0; i < selectScheList.size(); i++) {
             ScheduleDTO sdSelect;
             sdSelect = selectScheList.get(i);
 
             ScheduleDTO SD = new ScheduleDTO(sdSelect.getSchedule_id(), sdSelect.getSchedule_context(),
-                    sdSelect.getSchedule_date(), sdSelect.getSchedule_time(),sdSelect.getSchedule_location(),
-                    sdSelect.getSchedule_state(), sdSelect.getSchedule_registerDate(), sdSelect.getSchedule_registerDate1());
+                    sdSelect.getSchedule_date(), sdSelect.getSchedule_time(),
+                    //sdSelect.getSchedule_location(),
+                    sdSelect.getSchedule_state(), sdSelect.getSchedule_registerDate()
+                    //, sdSelect.getSchedule_registerDate1()
+                    ,sdSelect.getschedule_email()
+            );
             listItem.add(SD);
             calendar_Item.notifyDataSetChanged();
         }
     }
+
     private void listRefresh() {
         recyclerView.removeAllViewsInLayout();
         recyclerView.setAdapter(calendar_Item);
+    }
+
+    /**
+     * Async task class to get json by making HTTP call
+     */
+    private class Handler extends AsyncTask<Void, Void, Void> {
+        private ListAdapter adapter;
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            JsonParser sh = new JsonParser();
+            String jsonStr = sh.convertJson(Constant.ScheduleAllSelect_URL);// Making a request to url and getting response
+            Log.e(TAG, "Response from url: " + jsonStr);
+            if (jsonStr != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(jsonStr);
+                    JSONArray employeeArray = jsonObj.getJSONArray("result");// Getting JSON Array node
+                    for (int i = 0; i < employeeArray.length(); i++) { // looping through All Contacts
+                        JSONObject c = employeeArray.getJSONObject(i);
+                        String schedule_id = c.getString("schedule_id");
+                        String schedule_email = c.getString("schedule_email");
+                        String schedule_context = c.getString("schedule_context");
+                        String schedule_date = c.getString("schedule_date");
+                        String schedule_time = c.getString("schedule_time");
+                        String schedule_state = c.getString("schedule_state");
+                        String schedule_registerDate = c.getString("schedule_registerDate");
+
+
+                        HashMap<String, String> schedule_list = new HashMap<>();
+                        // adding each child node to HashMap key => value
+                        schedule_list.put("schedule_id", schedule_id);
+                        schedule_list.put("schedule_email", schedule_email);
+                        schedule_list.put("schedule_context", schedule_context);
+                        schedule_list.put("schedule_date", schedule_date);
+                        schedule_list.put("schedule_time", schedule_time);
+                        contactList.add(schedule_list);
+
+                    }
+                } catch (final JSONException e) {
+                    Log.e(TAG, "Json parsing error: " + e.getMessage());
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(),
+                                    "Json parsing error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            } else {
+                Log.e(TAG, "Couldn't get json from server.");
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(),
+                                        "Couldn't get json from server. Check LogCat for possible errors!",
+                                        Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+            }
+            return null;
+        }
     }
 }

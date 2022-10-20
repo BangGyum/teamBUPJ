@@ -102,12 +102,14 @@
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/first_login.xml" value="0.1" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/fragment__calendar.xml" value="0.25364583333333335" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/fragment__schedule.xml" value="0.25364583333333335" />
+        <entry key="..\:/teamBUPJ/app/src/main/res/layout/gone_schedule.xml" value="0.1859375" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/layout_bottom_sheet.xml" value="0.25" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/layout_item.xml" value="0.25364583333333335" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/map_marker_popup.xml" value="0.23802083333333332" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/popup_activity.xml" value="0.1890625" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/popup_activity_update.xml" value="0.1" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/recyleview_item.xml" value="0.1" />
+        <entry key="..\:/teamBUPJ/app/src/main/res/layout/schedule_bottomsheet.xml" value="0.13125" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/schedule_list.xml" value="0.264" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/schedule_list_fg.xml" value="0.25364583333333335" />
         <entry key="..\:/teamBUPJ/app/src/main/res/layout/search.xml" value="0.25364583333333335" />

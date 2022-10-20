@@ -44,7 +44,7 @@ public class Calendar_Item extends RecyclerView.Adapter<Calendar_Item.ItemViewHo
         holder.cal_tv.setText("제목 : " + SD.getSchedule_context() + "\n");
         holder.cal_tv.append("날짜 : " + SD.getSchedule_date() + "\n");
         holder.cal_tv.append("시간 : " + SD.getSchedule_time() + "\n");
-        holder.cal_tv.append("장소 : " + SD.getSchedule_location() + "\n");
+        //holder.cal_tv.append("장소 : " + SD.getSchedule_location() + "\n");
         holder.cal_tv.append("\n");
     }
 

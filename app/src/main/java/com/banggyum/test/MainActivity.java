@@ -1,16 +1,20 @@
 package com.banggyum.test;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PointF;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,16 +47,22 @@ import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
-
+    private String TAG = MainActivity.class.getSimpleName();
     private Context context;
     private GoogleSignInClient mGoogleSignInClient; //로그아웃을 위해서
     private String userEmail, userName, userPhotoUrl;
     private ImageView userImageView;
     private MyDatabaseHelper db ;
+    ArrayList<HashMap<String, String>> contactList;
     private long backKeyPressedTime = 0;
 
 
@@ -94,13 +104,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Runnable locationActivationCallback;
     private NaverMap map;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         db = new MyDatabaseHelper(this);
         userImageView =  findViewById(R.id.userImageView);
+
+        new Handler().execute();
+        contactList = new ArrayList<>();
 
         //toolBar를 통해 App Bar 생성
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -114,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         userPhotoUrl = preferences.getString("userPhoto","");
         //db.a();
         db.addUser(userEmail,userName);
+        //db.deleteUser(userEmail);
 
         //App Bar의 좌측 영영에 Drawer를 Open 하기 위한 Incon 추가
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -274,19 +287,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         selectMapList = db.selectMap();
 //        LatLngBounds bounds = map.getCoveringBounds();
         for (int i=0; i<selectMapList.size(); i++){
+
             MapDTO mdselect;
             mdselect = selectMapList.get(i);
 
+            HashMap<String, String> mdSelect;
+            mdSelect = contactList.get(i);
+
+            MapDTO MD = new MapDTO(Integer.parseInt(mdSelect.get("schedule_id_fk")),
+                    mdSelect.get("map_name"),
+                    Double.parseDouble(mdSelect.get("map_latitude")),
+                    Double.parseDouble(mdSelect.get("map_longitude"))
+            );
+
+
             //마커를 표시하고 마커 클릭시 정보창 띄워줌
+//            Marker marker = new Marker();
+//            marker.setPosition(new LatLng(mdselect.getMap_latitude(), mdselect.getMap_longitude()));
+//            marker.setOnClickListener(overlay -> {
+//                infoWindow.open(marker);
+//                return true;
+//            });
             Marker marker = new Marker();
-            marker.setPosition(new LatLng(mdselect.getMap_latitude(), mdselect.getMap_longitude()));
+            marker.setPosition(new LatLng(MD.getMap_latitude(), MD.getMap_longitude()));
             marker.setOnClickListener(overlay -> {
                 infoWindow.open(marker);
                 return true;
             });
 
             marker.setMap(map);
-            marker.setTag(mdselect.getMap_name());
+            marker.setTag(MD.getMap_name());
 //            LatLng position = marker.getPosition();
 
 //            if(bounds.contains(position)){
@@ -305,6 +335,69 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             infoWindow.setPosition(coord);
             infoWindow.open(naverMap);
         });
+    }
+    /**      * Async task class to get json by making HTTP call */
+    private class Handler extends AsyncTask<Void, Void, Void> {
+        private ListAdapter adapter;
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            JsonParser sh = new JsonParser();
+            String jsonStr = sh.convertJson(Constant.MapAllSelect_URL);// Making a request to url and getting response
+            Log.e(TAG, "Response from url: " + jsonStr);
+            if (jsonStr != null) {
+                try {
+                    JSONObject jsonObj = new JSONObject(jsonStr);
+                    JSONArray employeeArray = jsonObj.getJSONArray("result");// Getting JSON Array node
+                    for (int i = 0; i < employeeArray.length(); i++) { // looping through All Contacts
+                        ScheduleDTO scD = new ScheduleDTO();
+                        JSONObject c = employeeArray.getJSONObject(i);
+                        String schedule_id_fk = c.getString("schedule_id_fk");
+                        String map_name = c.getString("map_name");
+                        String map_latitude = c.getString("map_latitude");
+                        String map_longitude = c.getString("map_longitude");
+
+
+                        HashMap<String, String> map_list = new HashMap<>();
+                        // adding each child node to HashMap key => value
+                        map_list.put("schedule_id_fk", schedule_id_fk);
+                        map_list.put("map_name", map_name);
+                        map_list.put("map_latitude", map_latitude);
+                        map_list.put("map_longitude", map_longitude);
+                        contactList.add(map_list);
+
+                    }
+                } catch (final JSONException e) {
+                    Log.e(TAG, "Json parsing error: " + e.getMessage());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Json parsing error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            } else {
+                Log.e(TAG, "Couldn't get json from server.");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                        "Couldn't get json from server. Check LogCat for possible errors!",
+                                        Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+            }
+            return null;
+        }
     }
 }
 

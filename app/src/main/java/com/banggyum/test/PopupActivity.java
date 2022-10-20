@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -16,6 +17,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -196,35 +198,39 @@ public class PopupActivity extends Activity{
         //텍스트뷰 객체 생성
         //TextView textViewNm = new TextView(getApplicationContext());
         if (btn_count < 19){
-            //Button btn = new Button(getApplicationContext());
+            Button btnCancel = new Button(getApplicationContext());
             EditText editNm = new EditText(getApplicationContext());
             //getApplicationContext 는 application context를 가르킴
             //application context:  application 자체와 연동, 어플리케이션의 life cycle이 지속되는 동안 동일한 객체
 
             // 텍스트뷰에 들어갈문자설정
             //            //textViewNm.setText("텍스트생성");
-            //            btn.setText(text);
+            btnCancel.setText("취소");
 
             //텍스트뷰 글자크기 설정
             editNm.setTextSize(12);
             //textViewNm.setId(0);
             //String a= alarmIds[btn_count];
             editNm.setId(alarmIds[btn_count]);
+            btnCancel.setId(alarmIds[btn_count]+100000);
             editNm.setOnClickListener(TimeAddClickList);
+            btnCancel.setOnClickListener(btnCancelListener);
             editNm.setFocusable(false);
             editNm.setClickable(true);
+
+
             Log.v("qwe","qwe");
 
             // 레이아웃설정
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                    ,LinearLayout.LayoutParams.WRAP_CONTENT
+            ScrollView.LayoutParams param = new ScrollView.LayoutParams(
+                    ScrollView.LayoutParams.WRAP_CONTENT
+                    ,ScrollView.LayoutParams.WRAP_CONTENT
             );
             param.leftMargin=30;
 
             //설정한 레이아웃 텍스트뷰에 적용
             //textViewNm.setLayoutParams(param);
-            //btn.setLayoutParams(param);
+            btnCancel.setLayoutParams(param);
             editNm.setLayoutParams(param);
             editNm.getLayoutParams().width=240; //edit size 조절
             btn_count++;
@@ -235,9 +241,10 @@ public class PopupActivity extends Activity{
             //li.addView(btn);
             Log.v("wert",editNm.getId()+"");
             liBottom.addView(editNm);
+            liBottom.addView(btnCancel);
             //setContentView(li);
 
-            //li.setOrientation(LinearLayout.VERTICAL);
+                    liBottom.setOrientation(LinearLayout.VERTICAL);
         }else{
             Toast.makeText(this, "더 이상 알람을 설정할 수 없습니다",Toast.LENGTH_SHORT).show();
         }
@@ -279,6 +286,8 @@ public class PopupActivity extends Activity{
         finish();
     }
 
+
+
     View.OnClickListener TimeAddClickList = new View.OnClickListener(){
         public void onClick(View v) {
             Calendar mcurrentTime = Calendar.getInstance();
@@ -306,6 +315,15 @@ public class PopupActivity extends Activity{
             }, hour, minute, false); //true의 경우24시간 형식의 TimePicker출현
             mTimePicker.setTitle("Select Time");
             mTimePicker.show();
+        }
+    };
+    View.OnClickListener btnCancelListener = new View.OnClickListener(){
+        public void onClick(View v) {
+            EditText editNm = findViewById(v.getId() -100000); // 생성했던 View의 ID 가져오기
+            liBottom.removeView(editNm);
+            Button dynamicButton = findViewById(v.getId()); // 생성했던 View의 ID 가져오기
+            liBottom.removeView(dynamicButton);
+
         }
     };
 
