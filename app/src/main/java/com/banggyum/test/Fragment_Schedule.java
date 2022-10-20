@@ -11,13 +11,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -71,6 +74,14 @@ public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.I
         scheduleItemAdapter = new ScheduleItemAdapter(listItem, this);
         //리사이클에 어댑터를 통해 아이템 추가 및 수정, 삭제
         recyclerView.setAdapter(scheduleItemAdapter);
+        //리사이클뷰 새로고침
+        SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.swipeLayout);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -349,7 +360,8 @@ public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.I
 //
 
 
-        }}
+        }
+    }
 
 
 

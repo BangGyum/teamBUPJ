@@ -113,4 +113,6 @@ dependencies {
 
     //애니메이션
     implementation 'com.daimajia.androidanimations:library:2.4@aar'
+    //새로고침
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 }

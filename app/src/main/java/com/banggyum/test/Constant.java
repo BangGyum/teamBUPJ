@@ -6,7 +6,7 @@ public class Constant {
     //private static final String BASE_PATH = "C:/xampp/htdocs/";
     //private static final String BASE_PATH = "file:///C:/xampp/htdocs/";
     //private static final String BASE_PATH = "https://127.0.0.1/";
-    private static final String BASE_PATH = "http://172.16.10.123/";
+    private static final String BASE_PATH = "http://172.16.10.139/";
     //private static final String BASE_PATH = "https://172.16.1.81/";
     //private static final String BASE_PATH = "http://192.168.0.14/";
     //private static final String BASE_PATH = "http://172.17.11.224/";
