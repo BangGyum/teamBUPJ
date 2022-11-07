@@ -35,14 +35,13 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".AlarmReceiver"
-            android:exported="true">
+        <receiver android:name=".AlarmReceiver"
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.test.alarmtestous.ALARM_START" />
-                <!-- 알람 매니저에 해당 receiver을 연결?시켜주는 이름-->
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-        </activity>
+        </receiver>
 
         <activity
             android:name=".MainActivity"
@@ -50,6 +49,8 @@
 
 
         </activity>
+
+
         <activity
             android:name=".Gone_Schedule"
             android:exported="true">
@@ -62,8 +63,10 @@
             android:exported="true" >
         </activity>
 
+
         <activity
             android:name=".PopupActivity"
+            android:exported="true"
             android:theme="@android:style/Theme.DeviceDefault.Light.Dialog"/>
 
         <activity

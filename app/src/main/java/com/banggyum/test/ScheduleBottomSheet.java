@@ -77,7 +77,7 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.schedule_bottomsheet, container, false);
-
+        //xml로 정의된 view (또는 menu 등)를 실제 객체화 시키는 용도
         edsc = view.findViewById(R.id.ed_sc);
         edloc = view.findViewById(R.id.ed_loc);
 

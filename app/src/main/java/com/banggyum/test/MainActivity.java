@@ -1,12 +1,16 @@
 package com.banggyum.test;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -20,10 +24,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -37,12 +43,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigation.NavigationView;
 import com.naver.maps.geometry.LatLng;
+import com.naver.maps.geometry.LatLngBounds;
 import com.naver.maps.map.LocationTrackingMode;
 import com.naver.maps.map.MapFragment;
 import com.naver.maps.map.MapView;
 import com.naver.maps.map.NaverMap;
 import com.naver.maps.map.NaverMapOptions;
 import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.overlay.Align;
 import com.naver.maps.map.overlay.InfoWindow;
 import com.naver.maps.map.overlay.Marker;
 import com.naver.maps.map.util.FusedLocationSource;
@@ -51,9 +59,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
     private String TAG = MainActivity.class.getSimpleName();
@@ -64,6 +78,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private MyDatabaseHelper db ;
     ArrayList<HashMap<String, String>> contactList;
     private long backKeyPressedTime = 0;
+    private AlarmManager alarmManager;// 5줄 알림에 필요
+    private GregorianCalendar mCalender;
+    private boolean noti = true;
+    private NotificationManager notificationManager;
+    NotificationCompat.Builder builder;
+    private ArrayList<ScheduleDTO> listItem; //알림을 위해 필요
+    private ScheduleItemAdapter scheduleItemAdapter;
+    private List<ScheduleDTO> schedule = new ArrayList<ScheduleDTO>();
+    private List<AlarmDTO> alarm = new ArrayList<AlarmDTO>();
 
 
     //마커에 정보를 표시해주는 창
@@ -104,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Runnable locationActivationCallback;
     private NaverMap map;
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +137,14 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         new Handler().execute();
         contactList = new ArrayList<>();
+
+        notificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        mCalender = new GregorianCalendar();
+
+        if (noti == true) {
+            setAlarm();
+        }
 
         //toolBar를 통해 App Bar 생성
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -143,8 +175,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         startActivity(loginintent);
                         break;
                     case R.id.gone_schedule:
-                        Intent goneintent = new Intent(MainActivity.this,Gone_Schedule.class);
-                        startActivity(goneintent);
+                        SharedPreferences.Editor state = getApplicationContext()
+                                .getSharedPreferences("state", MODE_PRIVATE)
+                                .edit();
+                        state.putString("schedule_state", "0");
+                        state.apply();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new Fragment_Schedule()).commit();
                         break;
                 }
 
@@ -185,12 +221,27 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 switch (menuItem.getItemId()) {
                     //네비바 버튼을 클릭시 id값을 가져와 FrameLayout에 fragment띄우기
                     case R.id.schedule_fragment:
+                        SharedPreferences.Editor state =  getApplicationContext()
+                                .getSharedPreferences("state", MODE_PRIVATE)
+                                .edit();
+                        state.putString("schedule_state", "1");
+                        state.apply();
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new Fragment_Schedule()).commit();
                         break;
                     case R.id.calender_fragment:
+                        state =  getApplicationContext()
+                                .getSharedPreferences("state", MODE_PRIVATE)
+                                .edit();
+                        state.putString("schedule_state", "1");
+                        state.apply();
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new Fragment_Calendar()).commit();
                         break;
                     case R.id.navmap_fragment:
+                        state =  getApplicationContext()
+                                .getSharedPreferences("state", MODE_PRIVATE)
+                                .edit();
+                        state.putString("schedule_state", "1");
+                        state.apply();
                         getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, finalMapFragment).commit();
                         finalMapFragment.getMapAsync(MainActivity.this);
                         break;
@@ -264,78 +315,135 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private List<MapDTO> selectMapList = new ArrayList<MapDTO>();
-    private InfoWindow infoWindow;
-
+    long mNow;
+    Date mDate;
+    private Vector<Marker> activeMarkers;
     @Override
     public void onMapReady(@NonNull NaverMap naverMap) {
-        map = naverMap;
-        naverMap.setLocationSource(locationSource);
-        naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
+//        naverMap.setLocationSource(locationSource);
+//        naverMap.setLocationTrackingMode(LocationTrackingMode.Follow);
 
-        // 정보창을 띄어주는 코드
-        infoWindow = new InfoWindow();
-        infoWindow.setAnchor(new PointF(0, 1));
-        //
-        infoWindow.setOffsetX(getResources().getDimensionPixelSize(R.dimen.custom_info_window_offset_x));
-        infoWindow.setOffsetY(getResources().getDimensionPixelSize(R.dimen.custom_info_window_offset_y));
-        infoWindow.setAdapter(new MainActivity.InfoWindowAdapter(this));
-        infoWindow.setOnClickListener(overlay -> {
-            infoWindow.close();
-            return true;
-        });
+        mNow = System.currentTimeMillis();
+        mDate = new Date(mNow);
 
         selectMapList = db.selectMap();
-//        LatLngBounds bounds = map.getCoveringBounds();
-        for (int i=0; i<selectMapList.size(); i++){
 
-            MapDTO mdselect;
-            mdselect = selectMapList.get(i);
-
-            HashMap<String, String> mdSelect;
-            mdSelect = contactList.get(i);
-
-            MapDTO MD = new MapDTO(Integer.parseInt(mdSelect.get("schedule_id_fk")),
-                    mdSelect.get("map_name"),
-                    Double.parseDouble(mdSelect.get("map_latitude")),
-                    Double.parseDouble(mdSelect.get("map_longitude"))
-            );
-
-
-            //마커를 표시하고 마커 클릭시 정보창 띄워줌
-//            Marker marker = new Marker();
-//            marker.setPosition(new LatLng(mdselect.getMap_latitude(), mdselect.getMap_longitude()));
-//            marker.setOnClickListener(overlay -> {
-//                infoWindow.open(marker);
-//                return true;
-//            });
-            Marker marker = new Marker();
-            marker.setPosition(new LatLng(MD.getMap_latitude(), MD.getMap_longitude()));
-            marker.setOnClickListener(overlay -> {
-                infoWindow.open(marker);
-                return true;
-            });
-
-            marker.setMap(map);
-            marker.setTag(MD.getMap_name());
-//            LatLng position = marker.getPosition();
-
-//            if(bounds.contains(position)){
-//                marker.setVisible(false);
-//            }else{
-//                marker.setVisible(true);
-//            }
-        }
         //위치 추적 버튼 클릭시 마다 위치추적모드를 변경
         naverMap.addOnOptionChangeListener(() -> {
             LocationTrackingMode mode = naverMap.getLocationTrackingMode();
             locationSource.setCompassEnabled(mode == LocationTrackingMode.Follow || mode == LocationTrackingMode.Face);
         });
 
-        naverMap.setOnMapClickListener((point, coord) -> {
-            infoWindow.setPosition(coord);
-            infoWindow.open(naverMap);
+        // 카메라 이동 되면 호출 되는 이벤트
+        naverMap.addOnCameraChangeListener(new NaverMap.OnCameraChangeListener() {
+            @Override
+            public void onCameraChange(int reason, boolean animated) {
+                freeActiveMarkers();
+                // 정의된 마커위치들중 가시거리 내에있는것들만 마커 생성
+                LatLngBounds currentPosition = getCurrentPosition(naverMap);
+
+                for (int i=0;i<selectMapList.size();i++) {
+                    MapDTO mapDTO = selectMapList.get(i);
+                    //!withinSightMarker (currentPosition, new LatLng(mapDTO.getMap_latitude(), mapDTO.getMap_longitude()))
+                    if (!currentPosition.contains(new LatLng(mapDTO.getMap_latitude(), mapDTO.getMap_longitude())))
+                        continue;
+                    Marker marker = new Marker();
+                    marker.setPosition(new LatLng(mapDTO.getMap_latitude(), mapDTO.getMap_longitude()));
+                    marker.setOnClickListener(overlay -> {
+                        return true;
+                    });
+                    marker.setCaptionText(mapDTO.getMap_name());
+                    marker.setCaptionAligns(Align.Top);
+                    marker.setCaptionOffset(20);
+                    marker.setCaptionTextSize(16);
+                    marker.setHideCollidedSymbols(true);
+                    marker.setIconPerspectiveEnabled(true);
+                    marker.setMap(naverMap);
+                    activeMarkers.add(marker);
+                }
+            }
         });
     }
+
+    // 현재 카메라가 보고있는 위치
+    public LatLngBounds getCurrentPosition(NaverMap naverMap) {
+        LatLngBounds cureentPosition = naverMap.getContentBounds();
+        return cureentPosition;
+    }
+
+    // 지도상에 표시되고있는 마커들 지도에서 삭제
+    private void freeActiveMarkers() {
+        if (activeMarkers == null) {
+            activeMarkers = new Vector<Marker>();
+            return;
+        }
+        for (Marker activeMarker: activeMarkers) {
+            activeMarker.setMap(null);
+        }
+        activeMarkers = new Vector<Marker>();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N) //알림 설정
+    private void setAlarm() {
+        //AlarmReceiver에 값 전달
+        Intent receiverIntent = new Intent(MainActivity.this, AlarmReceiver.class);
+        //PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, receiverIntent, 0);
+        PendingIntent pendingIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+            Log.v("qqww","true");
+            pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, receiverIntent, PendingIntent.FLAG_IMMUTABLE);
+        }else {
+            Log.v("qqww","false");
+            pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+
+        ArrayList<Date> CalList = new ArrayList<>();
+
+
+        Calendar cal = Calendar.getInstance();
+        schedule = db.selectSchedules();
+
+
+        //캘린더 등록된 일정 이벤트 리스트에 추가
+        int i, j;  // 알림 울리는 시점
+        for (i = 0; i < schedule.size(); i++) {
+            ScheduleDTO SD = new ScheduleDTO();
+            SD = schedule.get(i);
+            alarm = db.selectAlarm();
+            for(j = 0; j < alarm.size(); j++) { // schedule에 대한 alramTime
+                AlarmDTO AD = new AlarmDTO();
+                AD = alarm.get(j);
+                Log.d("alarm",""+alarm.get((j)));
+                // DB 스케줄 id에 대한 날짜와 시간
+
+                // 알림 날짜 및 시간
+                Log.v("alarm",AD.getAlarm_date() + AD.getAlarm_time());
+
+                //날짜 포맷을 바꿔주는 소스코드
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+
+                try {
+                    Date date1 = sdf.parse(AD.getAlarm_date() + AD.getAlarm_time());
+                    Log.d("date", "" + date1);
+                    CalList.add(date1);
+                    cal.setTime(CalList.get(j));
+                    Log.d("123", " " + CalList.get(j));
+
+
+                    Log.d("Time : ", "1 : " + new Date(cal.getTimeInMillis()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    Log.d("XXXXX", "xxxxx");
+                }
+
+                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+                        AlarmManager.INTERVAL_DAY, pendingIntent);
+                //        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),pendingIntent);
+            }
+        }
+    }
+
+
     /**      * Async task class to get json by making HTTP call */
     private class Handler extends AsyncTask<Void, Void, Void> {
         private ListAdapter adapter;

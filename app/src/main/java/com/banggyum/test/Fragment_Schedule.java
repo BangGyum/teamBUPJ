@@ -4,7 +4,9 @@ import static android.app.Activity.RESULT_OK;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.ItemClickListener{
+public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.ItemClickListener {
     private ArrayList<ScheduleDTO> listItem;
     List<ScheduleDTO> mList = new ArrayList<ScheduleDTO>();
     ArrayList<HashMap<String, String>> contactList;
@@ -45,6 +47,7 @@ public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.I
     private MyDatabaseHelper db;
     private ProgressDialog pDialog;
     private String TAG = MainActivity.class.getSimpleName();
+    String schedule_state;
 
     public Fragment_Schedule() {
     }
@@ -106,124 +109,22 @@ public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.I
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 //리사이클뷰 초기화
+                listItem.clear();
                 contactList.clear();
                 //다시 추가
-
-                //addRecylerItem(); 이거는 다시 확인할 수가 있나?
+                new Handler().execute();
+                addRecylerItem();// 이거는 다시 확인할 수가 있나?
 
             }
         }
     }
 
-    //리사이클뷰에 DB에 있는 일정들 추가
-//    @SuppressLint("NotifyDataSetChanged")
-//    public void addRecylerItem(){
-//        //일정 select
-//        //List<ScheduleDTO> selectScheList = db.selectSchedules();
-//
-//        //DB에 일정들 순서대로 추가
-//        for (int i = 0; i< contactList.size(); i++){
-//            HashMap<String, String> sdSelect;
-//            sdSelect = contactList.get(i);
-//
-//            ScheduleDTO SD = new ScheduleDTO(Integer.parseInt(sdSelect.get("schedule_id")),
-//                                    sdSelect.get("schedule_context"),
-//                                    sdSelect.get("schedule_date"),
-//                                    sdSelect.get("schedule_date"),
-//                                    sdSelect.get("schedule_time"),
-//                                    (short)1,
-//                                    sdSelect.get("schedule_time"),
-//                                    sdSelect.get("schedule_time")
-//                    );
-//            listItem.add(SD);
-//            scheduleItemAdapter.notifyDataSetChanged();
-//        }
-//    }
-/*
-    public void add2() {
 
-//        pDialog = new ProgressDialog(getContext());// Showing progress dialog
-//        pDialog.setMessage("Please wait...");
-//        pDialog.setCancelable(false);
-//        pDialog.show();
-        JsonParser sh = new JsonParser();
-        String jsonStr = sh.convertJson(Constant.ScheduleAllSelect_URL);// Making a request to url and getting response
-        Log.e(TAG, "Response from url: " + jsonStr);
-        //Log.v("ad",jsonStr);
-        if (jsonStr != null) {
-            try {
-                JSONObject jsonObj = new JSONObject(jsonStr);
-                JSONArray employeeArray = jsonObj.getJSONArray("result");// Getting JSON Array node
-                for (int i = 0; i < employeeArray.length(); i++) { // looping through All Contacts
-                    ScheduleDTO scD = new ScheduleDTO();
-                    JSONObject c = employeeArray.getJSONObject(i);
-                    String schedule_id = c.getString("schedule_id");
-                    String schedule_email = c.getString("schedule_email");
-                    String schedule_context = c.getString("schedule_context");
-                    String schedule_date = c.getString("schedule_date");
-                    String schedule_time = c.getString("schedule_time");
-                    String schedule_state = c.getString("schedule_state");
-                    String schedule_registerDate = c.getString("schedule_registerDate");
-                    // Phone node is JSON Object //
-                    // JSONObject phone = c.getJSONObject("phone");
-                    // String mobile = phone.getString("mobile");
-                    // String home = phone.getString("home");
-                    // String office = phone.getString("office");
-                    // tmp hash map for single contact
-                    //                        HashMap<String, String> employee = new HashMap<>();
-                    // adding each child node to HashMap key => value
-                    //                        employee.put("id", schedule_id);
-                    //                        employee.put("email", email);
-                    //                        employee.put("schedule_context", schedule_context);
-                    //                        employee.put("salary", salary);
-                    // adding contact to contact list
-
-                    HashMap<String, String> schedule_list = new HashMap<>();
-                    // adding each child node to HashMap key => value
-                    schedule_list.put("schedule_id", schedule_id);
-                    schedule_list.put("schedule_email", schedule_email);
-                    schedule_list.put("schedule_context", schedule_context);
-                    schedule_list.put("schedule_date", schedule_date);
-                    schedule_list.put("schedule_time", schedule_time);
-                    contactList.add(schedule_list);
-                    Log.v("태그","check");
-//
-//                    scD.setSchedule_id(Integer.parseInt(schedule_id));
-//                    scD.setschedule_email(schedule_email);
-//                    scD.setSchedule_context(schedule_context);
-//                    scD.setSchedule_date(schedule_date);
-//                    scD.setSchedule_time(schedule_time);
-//                    scD.setSchedule_state(Short.parseShort(schedule_state));
-//
-//
-//                    mList.add(scD);
-//                    //scD.add(employee);
-//                    listItem.add(scD);
-//
-//                        ////리사이클러에 내용들을 추가해주기 위해 어댑터에 아이템들을 넘겨줌
-//                        scheduleItemAdapter = new ScheduleItemAdapter(mList, (ScheduleItemAdapter.ItemClickListener) this);
-//                        ////리사이클에 어댑터를 통해 아이템 추가 및 수정, 삭제
-//                        recyclerView.setAdapter(scheduleItemAdapter);
-//
-//                        scheduleItemAdapter.notifyDataSetChanged(); //리스트의 크기와 아이템이 둘 다 변경되는 경우에 사용
-                }
-            } catch (final JSONException e) {
-                Log.e(TAG, "Json parsing error: " + e.getMessage());
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Toast.makeText(getContext(),
-//                                "Json parsing error: " + e.getMessage(),
-//                                Toast.LENGTH_LONG).show();
-//                    }
-//                });
-            }
-        }
-    }
-*/
-
-    /**      * Async task class to get json by making HTTP call */
+    /**
+     * Async task class to get json by making HTTP call
+     */
     private class Handler extends AsyncTask<Void, Void, Void> {
+
         private ListAdapter adapter;
 
 
@@ -236,6 +137,7 @@ public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.I
             pDialog.setCancelable(false);
             pDialog.show();
         }
+
         @Override
         protected Void doInBackground(Void... arg0) {
             JsonParser sh = new JsonParser();
@@ -255,19 +157,6 @@ public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.I
                         String schedule_time = c.getString("schedule_time");
                         String schedule_state = c.getString("schedule_state");
                         String schedule_registerDate = c.getString("schedule_registerDate");
-                        // Phone node is JSON Object //
-                            // JSONObject phone = c.getJSONObject("phone");
-                            // String mobile = phone.getString("mobile");
-                            // String home = phone.getString("home");
-                            // String office = phone.getString("office");
-                            // tmp hash map for single contact
-    //                        HashMap<String, String> employee = new HashMap<>();
-        //                            // adding each child node to HashMap key => value
-        //    //                        employee.put("id", schedule_id);
-    //                        employee.put("email", email);
-    //                        employee.put("schedule_context", schedule_context);
-    //                        employee.put("salary", salary);
-                            // adding contact to contact list
 
                         HashMap<String, String> schedule_list = new HashMap<>();
                         // adding each child node to HashMap key => value
@@ -276,28 +165,10 @@ public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.I
                         schedule_list.put("schedule_context", schedule_context);
                         schedule_list.put("schedule_date", schedule_date);
                         schedule_list.put("schedule_time", schedule_time);
+                        schedule_list.put("schedule_state", schedule_state);
                         contactList.add(schedule_list);
-                        db.addLocalSchedule(Integer.parseInt(schedule_id),schedule_email,schedule_context,
+                        db.addLocalSchedule(Integer.parseInt(schedule_id), schedule_email, schedule_context,
                                 schedule_date, schedule_time, Integer.parseInt(schedule_state));
-//
-//                        scD.setSchedule_id(Integer.parseInt(schedule_id));
-//                        scD.setschedule_email(schedule_email);
-//                        scD.setSchedule_context(schedule_context);
-//                        scD.setSchedule_date(schedule_date);
-//                        scD.setSchedule_time(schedule_time);
-//                        scD.setSchedule_state(Short.parseShort(schedule_state));
-//
-//
-//                        mList.add(scD);
-//                        //scD.add(employee);
-//                        listItem.add(scD);
-//
-//                        ////리사이클러에 내용들을 추가해주기 위해 어댑터에 아이템들을 넘겨줌
-//                        scheduleItemAdapter = new ScheduleItemAdapter(mList, (ScheduleItemAdapter.ItemClickListener) this);
-//                        ////리사이클에 어댑터를 통해 아이템 추가 및 수정, 삭제
-//                        recyclerView.setAdapter(scheduleItemAdapter);
-//
-//                        scheduleItemAdapter.notifyDataSetChanged(); //리스트의 크기와 아이템이 둘 다 변경되는 경우에 사용
                     }
                 } catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());
@@ -324,19 +195,11 @@ public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.I
             }
             return null;
         }
+
         @Override
         protected void onPostExecute(Void result) {
-//            super.onPostExecute(result);
-//            if (pDialog.isShowing())
-//                pDialog.dismiss();
-//            /**              * Updating parsed JSON data into ListView              */
-//            ListAdapter adapter = new SimpleAdapter(
-//                    getContext(),
-//                    contactList,
-//                    R.layout.recyleview_item,
-//                    new String[]{"schedule_id", "schedule_context", "schedule_date"}
-//                    , new int[]{R.id.itemtv}); //원래 editText네
-//            recyclerView.setAdapter((RecyclerView.Adapter) adapter);
+            a();
+
             if (pDialog.isShowing())
                 pDialog.dismiss();
             for (int i = 0; i < contactList.size(); i++) {
@@ -347,23 +210,69 @@ public class Fragment_Schedule extends Fragment implements ScheduleItemAdapter.I
                         sdSelect.get("schedule_context"),
                         sdSelect.get("schedule_date"),
                         sdSelect.get("schedule_time"),
-                        (short) 1,
+                        Short.valueOf(sdSelect.get("schedule_state")),
                         sdSelect.get("schedule_registerDate"),
                         sdSelect.get("schedule_email")
                 );
+                Log.v("bbbb", schedule_state);
+                Log.v("bbb1", String.valueOf(SD.getSchedule_state()));
+                if (schedule_state.equals(String.valueOf(SD.getSchedule_state()))) {
 
-                if((int) SD.getSchedule_state()==1) {
                     listItem.add(SD);
                     scheduleItemAdapter.notifyDataSetChanged();
-                }
-            }
+//                if( SD.getSchedule_state() == 1) {
 //
+//                    listItem.add(SD);
+//                    scheduleItemAdapter.notifyDataSetChanged();
+//                }
 
-
+                }
+                //b();
+            }
         }
     }
 
+    private void a(){
+        SharedPreferences preferences = this.getActivity().getSharedPreferences("state", Context.MODE_PRIVATE);
+        schedule_state = preferences.getString("schedule_state", "");
+        Log.v("bbb",schedule_state);
+    }
+    private void b() {
+        SharedPreferences.Editor state =  this.getActivity()
+                .getSharedPreferences("state", Context.MODE_PRIVATE)
+                .edit();
+        state.putString("schedule_state", "0");
+        state.apply();
+    }
 
+    public void addRecylerItem() {
+        for (int i = 0; i < contactList.size(); i++) {
+            HashMap<String, String> sdSelect;
+            sdSelect = contactList.get(i);
+
+            ScheduleDTO SD = new ScheduleDTO(Integer.parseInt(sdSelect.get("schedule_id")),
+                    sdSelect.get("schedule_context"),
+                    sdSelect.get("schedule_date"),
+                    sdSelect.get("schedule_time"),
+                    Short.valueOf(sdSelect.get("schedule_state")),
+                    sdSelect.get("schedule_registerDate"),
+                    sdSelect.get("schedule_email")
+            );
+            Log.v("aaaaaaa", Integer.toString(SD.getSchedule_state()));
+
+
+            Log.v("bbbb", schedule_state);
+            //if( SD.getSchedule_state() == 1) {
+
+            if (schedule_state.equals("0")) {
+
+                listItem.add(SD);
+                scheduleItemAdapter.notifyDataSetChanged();
+            }
+        }
+
+
+    }
 
     //일정의 텍스트 클릭시 자세한 일정 보여주는 창 띄어줌
     @Override

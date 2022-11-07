@@ -104,6 +104,8 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$ok_http_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$ok_http_version"
 
+    implementation 'androidx.work:work-runtime:2.7.1'
+
     //gson
     implementation 'com.google.code.gson:gson:2.8.6'
 

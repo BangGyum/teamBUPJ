@@ -68,6 +68,7 @@ public class LoginPage extends AppCompatActivity
 
         btnSign.setOnClickListener(view -> {
             signIn(); //클릭시 호출
+
         });
         btnLogout.setOnClickListener(view -> {
             signOut(); //클릭시 호출
@@ -100,6 +101,14 @@ public class LoginPage extends AppCompatActivity
                 editor.putString("useremail", account.getEmail());
                 editor.putString("userPhoto", account.getPhotoUrl().toString());
                 editor.apply(); //구글 사용자의 이름, 이메일, 프로필사진을 가져옴
+
+                SharedPreferences.Editor state = getApplicationContext()
+                        .getSharedPreferences("state", MODE_PRIVATE)
+                        .edit();
+                state.putString("schedule_state", "1");
+                state.apply();
+
+
 
             } catch (ApiException e) {
                 Toast.makeText(LoginPage.this, "Authentication Failed" +e.getMessage(), Toast.LENGTH_SHORT).show();

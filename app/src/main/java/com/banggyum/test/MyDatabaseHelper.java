@@ -48,7 +48,9 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION2 = 1;
     private static final String TABLE2_NAME = "alarm"; //테이블명 (알람 테이블)
     private static final String COLUMN2_ID = "schedule_id_fk";
+    private static final String COLUMN2_DATE = "alarm_date";
     private static final String COLUMN2_TIME = "alarm_time";
+
 
     private static final String TABLE3_NAME = "user"; //테이블명 (유저 테이블)
     private static final String COLUMN3_EMAIL = "user_email";
@@ -87,6 +89,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     //알람 table
     String query_alarm = "CREATE TABLE " + TABLE2_NAME
             + " (" + COLUMN2_ID + " INTEGER NOT NULL, "
+            + COLUMN2_DATE + " TIMESTAMP, "
             + COLUMN2_TIME + " TIMESTAMP, "
             + "FOREIGN KEY(" + COLUMN2_ID + ")"
             + "REFERENCES " + TABLE_NAME + "(" + COLUMN_ID + ")); ";
@@ -120,6 +123,41 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(query_alarm);
         db.execSQL(query_pragma);
         db.execSQL(query_calender);
+    }
+
+    public List<AlarmDTO> selectAlarm() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<AlarmDTO> mList = new ArrayList<AlarmDTO>();
+        //Cursor mCursor = null;
+        try {
+
+            String sql = "SELECT * FROM " + TABLE2_NAME +", "+ TABLE_NAME + " WHERE "+ COLUMN_ID + "=" + COLUMN2_ID + " AND " +" "+ COLUMN_STATE + " = '1'";
+            Cursor mCursor = db.rawQuery(sql, null);
+
+            if (mCursor != null) {// 테이블 끝까지 읽기
+
+                while (mCursor.moveToNext()) {// 다음 Row로 이동
+                    // 해당 Row 저장
+                    AlarmDTO AD = new AlarmDTO();
+                    ScheduleDTO SD = new ScheduleDTO();
+
+                    AD.setSchedule_id_fk(mCursor.getInt(0));
+                    AD.setAlarm_date(mCursor.getString(1));
+                    AD.setAlarm_time(mCursor.getString(2));
+                    AD.setSchedule_date(mCursor.getString(6));
+                    AD.setSchedule_time(mCursor.getString(7));
+
+                    // List에 해당 Row 추가
+                    mList.add(AD);
+//                    sList.add(SD);
+                }
+            } else {
+                Toast.makeText(context, "Alarm 데이터 안읽힘", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return mList;
     }
 
     @Override
@@ -247,6 +285,16 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "알람 데이터 수정 성공", Toast.LENGTH_SHORT).show();
         }
+
+        HashMap<String, String> requestedParams = new HashMap<>();
+        requestedParams.put("schedule_id", Integer.toString(scheduleId));
+        requestedParams.put("map_name", locName);
+        requestedParams.put("lat", Double.toString(lat));
+        requestedParams.put("lng", Double.toString(lng));
+
+        Log.d("HashMap", requestedParams.get("schedule_id"));
+        PostRequestHandler postRequestHandler = new PostRequestHandler(Constant.MapUpdate_URL, requestedParams);
+        postRequestHandler.execute();
 
     }
 
@@ -443,24 +491,27 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
             Toast.makeText(context, "알람 데이터 수정 성공", Toast.LENGTH_SHORT).show();
         }
         HashMap<String, String> requestedParams = new HashMap<>();
+        Log.v("rrrr",sdf.format(timestamp));
         requestedParams.put("schedule_modiRegisterDate", sdf.format(timestamp));
         requestedParams.put("schedule_id", Integer.toString(scheduleId));
         requestedParams.put("schedule_context", addContext);
         requestedParams.put("schedule_date", addDate);
         requestedParams.put("schedule_time", addTime);
 
-        Log.d("HashMap", requestedParams.get("schedule_modiRegisterDate"));
+        Log.d("HashMap", requestedParams.get("schedule_id"));
         PostRequestHandler postRequestHandler = new PostRequestHandler(Constant.ScheduleUpdate_URL, requestedParams);
         postRequestHandler.execute();
     }
 
-    public void addAlarm(int addScheduleId, String addAlarmTime)
+    public void addAlarm(int addScheduleId,String addAlarmDate, String addAlarmTime)
     //알람 테이블에 삽입
     {
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues(); //. ContentValues란 addBook()에 들어오는 데이터를 저장하는 객체다
 
         cv.put(COLUMN2_ID, addScheduleId);
+        cv.put(COLUMN2_DATE, addAlarmDate);
         cv.put(COLUMN2_TIME, addAlarmTime);
 
         long result = db.insert(TABLE2_NAME, null, cv);
@@ -469,8 +520,8 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "알람 데이터 추가 성공", Toast.LENGTH_SHORT).show();
         }
-    }
 
+    }
 
 
 
@@ -684,6 +735,45 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
                     //scD.setSchedule_registerDate1(sdf.format(scD.getTimestamp(7)));
                     scD.setSchedule_registerDate(mCursor.getString(6));
 
+                    // List에 해당 Row 추가
+                    Toast.makeText(context, "가져옴", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return scD;
+    }
+
+    public ScheduleDTO getOneContext(int schedule_fk)
+    //일정 데이터 하나만 select
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        ScheduleDTO scD = new ScheduleDTO();
+        try {
+            // 테이블 정보를 저장할 List
+
+
+            // 쿼리
+            String sql = "SELECT "
+                    + COLUMN_CONTEXT + ", "
+                    + COLUMN_DATE + ", "
+                    + COLUMN_TIME
+                    + " FROM " + TABLE_NAME + " WHERE schedule_id =" + schedule_fk;
+            // 테이블 데이터를 읽기 위한 Cursor
+            Cursor mCursor = db.rawQuery(sql, null);
+
+            // 테이블 끝까지 읽기
+            if (mCursor != null) {
+
+                // 다음 Row로 이동
+                while (mCursor.moveToNext()) {
+
+                    scD.setSchedule_context(mCursor.getString(0));
+                    scD.setSchedule_date(mCursor.getString(1));
+                    //1은 사용자
+                    scD.setSchedule_time(mCursor.getString(2));
+                    Log.v("eee","eee");
                     // List에 해당 Row 추가
                     Toast.makeText(context, "가져옴", Toast.LENGTH_SHORT).show();
                 }
