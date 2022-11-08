@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:id="@+id/drawer_layout"
+    android:id="@+id/drawer_layout"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="300dp"
-    android:background="#4A5554"
+    android:background="@color/pastel2"
     android:gravity="center|bottom">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/userImageView"

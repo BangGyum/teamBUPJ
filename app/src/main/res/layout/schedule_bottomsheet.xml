@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/pastel2"
     android:id="@+id/fragment_sc"
     android:padding="15dp">
     <LinearLayout
@@ -21,8 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:textSize="20sp"
-            android:hint="수정할 일정"/>
+            android:textSize="20sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -35,20 +35,19 @@
             android:text="날짜 : "
             android:textColor="@color/black"
             android:textSize="20sp"/>
-        <TextView
+        <EditText
             android:id="@+id/updatedate_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="@color/black"
-            android:textSize="20sp"
-            android:hint="수정할 날짜"/>
-        <Button
+            android:textSize="20sp"/>
+        <ImageButton
             android:id="@+id/dateupdatebtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#00BCD4"
-            android:text="날짜 수정" />
+            android:backgroundTint="@color/pastel1"
+            android:src="@drawable/ic_baseline_create_24"/>
     </LinearLayout>
 
     <LinearLayout
@@ -61,20 +60,19 @@
             android:text="시간 : "
             android:textColor="@color/black"
             android:textSize="20sp"/>
-        <TextView
+        <EditText
             android:id="@+id/updatetime_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="@color/black"
-            android:textSize="20sp"
-            android:hint="수정할 시간"/>
-        <Button
+            android:textSize="20sp" />
+        <ImageButton
             android:id="@+id/timeupdatebtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#FFEB3B"
-            android:text="시간 수정" />
+            android:backgroundTint="@color/pastel1"
+            android:src="@drawable/ic_baseline_create_24" />
     </LinearLayout>
 
     <LinearLayout
@@ -93,53 +91,33 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textColor="@color/black"
-            android:textSize="20sp"
-            android:hint="수정할 장소"/>
-        <Button
+            android:textSize="20sp"/>
+        <ImageButton
             android:id="@+id/mapupdateBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:backgroundTint="#8BC34A"
-            android:text="지도 수정" />
+            android:backgroundTint="@color/pastel1"
+            android:src="@drawable/ic_baseline_create_24"/>
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal">
-        <RadioButton
-            android:id="@+id/rgb1"
+        <Button
+            android:id="@+id/cls_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
-        <TextView
+            android:backgroundTint="@color/pastel1"
+            android:textColor="@color/pastel4"
+            android:text="닫기"/>
+
+        <Button
+            android:id="@+id/update_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="위험! 누르지마시오"
-            android:textColor="#FF0000"
-            android:textSize="20sp"
-            android:layout_gravity="center"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/cls_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#FFFFFF"
-                android:textColor="#FF0000"
-                android:text="닫기"/>
-
-            <Button
-                android:id="@+id/update_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#FFFFFF"
-                android:textColor="#0027FF"
-                android:text="수정"/>
-        </LinearLayout>
+            android:backgroundTint="@color/pastel1"
+            android:textColor="@color/pastel4"
+            android:text="수정"/>
     </LinearLayout>
 </LinearLayout>

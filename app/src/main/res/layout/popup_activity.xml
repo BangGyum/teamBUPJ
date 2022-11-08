@@ -9,115 +9,114 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:text="schedule"
-            android:textSize="20sp"
-            android:textColor="#fff"
-            android:gravity="center"
-            android:background="@color/pastel1"
-            android:layout_width="match_parent"
-            android:layout_height="53dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:padding="10dp"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/text1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:hint="일정"/>
-        <TextView
-            android:id="@+id/time_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="시간"
-            android:gravity="center"
-            android:clickable="true"/>
-        <TextView
-            android:id="@+id/date_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="날짜"
-            android:gravity="center"
-            android:clickable="true"/>
-        <EditText
-            android:id="@+id/addra_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:hint="장소명"/>
-        <TextView
-            android:id="@+id/addr_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="주소"
-            android:clickable="true"/>
-        <LinearLayout
-            android:id="@+id/dynamicLayout"
-            android:padding="24dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/alarmBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:text="알람 추가"
-                android:backgroundTint="@color/pastel3"
-                />
-            <Button
-                android:id="@+id/mapBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="지도 추가"
-                android:backgroundTint="@color/pastel3"
-                />
+            <TextView
+                android:text="schedule"
+                android:textSize="20sp"
+                android:textColor="#fff"
+                android:gravity="center"
+                android:background="@color/pastel1"
+                android:layout_width="match_parent"
+                android:layout_height="53dp" />
         </LinearLayout>
+
         <LinearLayout
-            android:id="@+id/dynamicLayout2"
-            android:paddingLeft="24dp"
-            android:orientation="horizontal"
+            android:padding="10dp"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/text1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="일정"/>
+            <TextView
+                android:id="@+id/time_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="시간"
+                android:gravity="center"
+                android:clickable="true"/>
+            <TextView
+                android:id="@+id/date_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="날짜"
+                android:gravity="center"
+                android:clickable="true"/>
+            <EditText
+                android:id="@+id/addra_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="장소명"/>
+            <TextView
+                android:id="@+id/addr_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="주소"
+                android:clickable="true"/>
+            <LinearLayout
+                android:id="@+id/dynamicLayout"
+                android:padding="24dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/alarmBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:text="알람 추가"
+                    android:backgroundTint="@color/pastel3"
+                    />
+                <Button
+                    android:id="@+id/mapBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="지도 추가"
+                    android:backgroundTint="@color/pastel3"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/dynamicLayout2"
+                android:paddingLeft="24dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            </LinearLayout>
+        </LinearLayout>
+        <!-- 버튼 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/btn_shake"
+                android:text="확인"
+                android:textSize="15sp"
+                android:textColor="@color/teal_700"
+                android:padding="8dp"
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:onClick="mOnConfirm"
+                android:backgroundTint="@color/pastel4"/>
+            <Button
+                android:text="@string/check"
+                android:textSize="15sp"
+                android:textColor="@color/teal_700"
+                android:padding="8dp"
+                android:layout_width="125dp"
+                android:layout_height="wrap_content"
+                android:onClick="mOnClose"
+                android:backgroundTint="@color/pastel4"/>
 
         </LinearLayout>
-    </LinearLayout>
-    <!-- 버튼 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/btn_shake"
-            android:text="확인"
-            android:textSize="15sp"
-            android:textColor="#ff7a00"
-            android:padding="8dp"
-            android:layout_width="125dp"
-            android:layout_height="wrap_content"
-            android:onClick="mOnConfirm"
-            android:backgroundTint="@color/pastel4"/>
-        <Button
-            android:text="@string/check"
-            android:textSize="15sp"
-            android:textColor="#ff7a00"
-            android:padding="8dp"
-            android:layout_width="125dp"
-            android:layout_height="wrap_content"
-            android:onClick="mOnClose"
-            android:backgroundTint="@color/pastel4"/>
-
-    </LinearLayout>
     </LinearLayout>
     <!--// 닫기 버튼 -->
 </ScrollView>
-

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -27,10 +28,9 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class ScheduleBottomSheet extends BottomSheetDialogFragment{
-    private EditText edsc, edloc;
-    private RadioButton rgb1;
-    private Button btn_cls, btn_update, btn_date, btn_time, btn_map;
-    private TextView timeudate, dateupdate;
+    private EditText edsc, edloc, timeudate, dateupdate;
+    private Button btn_cls, btn_update;
+    private ImageButton btn_date, btn_time, btn_map;
     private ScheduleDTO sd;
     private MyDatabaseHelper db;
     private String date;
@@ -81,7 +81,6 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment{
         edsc = view.findViewById(R.id.ed_sc);
         edloc = view.findViewById(R.id.ed_loc);
 
-        rgb1 = view.findViewById(R.id.rgb1);
         btn_cls = view.findViewById(R.id.cls_btn);
         btn_update = view.findViewById(R.id.update_btn);
 
@@ -145,7 +144,6 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment{
         timeudate.setText(sd.getSchedule_time());
         //edloc.setText(sd.getSchedule_location());
 
-        rgb1.setOnClickListener(rgbListener);
         btn_cls.setOnClickListener(btnListener);
         btn_update.setOnClickListener(btnListener);
         return view;
@@ -157,13 +155,6 @@ public class ScheduleBottomSheet extends BottomSheetDialogFragment{
 
         dateupdate.setText(sdf.format(myCalendar.getTime()));
     }
-
-    View.OnClickListener rgbListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-
-        }
-    };
 
     private String searchName;
     private Double lat, lng;

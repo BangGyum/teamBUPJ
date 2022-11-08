@@ -34,7 +34,6 @@
             android:layout_height="match_parent"
             android:layout_above="@id/bottomNav"
             android:layout_below="@+id/toolbar">
-
         </FrameLayout>
 
 
@@ -42,6 +41,7 @@
     <!--왼쪽에 숨어있는 Drawer메뉴 영역-->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"
+        android:layout_marginTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="start"
